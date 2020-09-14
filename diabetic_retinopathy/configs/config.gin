@@ -1,0 +1,4 @@
+main.mode = 'train'
+
+# layers
+vgg_block.kernel_size = (3, 3)
