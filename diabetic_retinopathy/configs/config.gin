@@ -1,4 +1,21 @@
-main.mode = 'train'
+# Architectures
+vgg_like.base_filters = 8
+vgg_like.n_blocks = 3
+vgg_like.dense_units = 32
+vgg_like.dropout_rate = 0.2
 
-# layers
+# Layers
 vgg_block.kernel_size = (3, 3)
+
+# Training
+Trainer.total_steps = 5e4
+Trainer.log_interval = 5e3
+Trainer.ckpt_interval = 1e4
+
+# Input pipeline
+load.name = 'mnist'
+load.data_dir = '/mnt/data/public/tensorflow_datasets'
+preprocess.img_height = 28
+preprocess.img_width = 28
+prepare.batch_size = 32
+prepare.caching = False
