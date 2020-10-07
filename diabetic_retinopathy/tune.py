@@ -15,9 +15,8 @@ def train_func(config):
         bindings.append(f'{key} = {value}')
 
     # generate folder structures
-    path_model_root = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'experiments'))
-    path_model_id = os.path.join(path_model_root, tune.get_trial_dir().split(os.pathsep)[-1])
-    run_paths = utils_params.gen_run_folder(path_model_id)
+    run_paths = utils_params.gen_run_folder()
+    print(run_paths)
 
     # gin-config
     gin.parse_config_files_and_bindings(['/mnt/home/repos/dl-lab-skeleton/diabetic_retinopathy/configs/config.gin'], bindings)
@@ -34,9 +33,9 @@ def train_func(config):
 
 
 analysis = tune.run(
-    train_func, num_samples=20, resources_per_trial={'gpu': 1},
+    train_func, num_samples=20, resources_per_trial={'gpu': 1, 'cpu': 4},
     config={
-        "Trainer.total_steps": tune.grid_search([5e4]),
+        "Trainer.total_steps": tune.grid_search([1e7]),
         "vgg_like.base_filters": tune.choice([8, 16]),
         "vgg_like.n_blocks": tune.choice([2, 3, 4, 5]),
         "vgg_like.dense_units": tune.choice([32, 64]),

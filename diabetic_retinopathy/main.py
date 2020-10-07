@@ -21,6 +21,7 @@ def main(argv):
 
     # gin-config
     gin.parse_config_files_and_bindings(['configs/config.gin'], [])
+    utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
     ds_train, ds_val, ds_test, ds_info = datasets.load()
