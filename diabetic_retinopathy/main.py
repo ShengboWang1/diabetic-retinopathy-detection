@@ -1,10 +1,11 @@
 import gin
-from absl import app, flags, logging
+import logging
+from absl import app, flags
 
 from train import Trainer
 from evaluation.eval import evaluate
 from input_pipeline import datasets
-from utils import utils_params
+from utils import utils_params, utils_misc
 from models.architectures import vgg_like
 
 FLAGS = flags.FLAGS
@@ -16,8 +17,7 @@ def main(argv):
     run_paths = utils_params.gen_run_folder()
 
     # set loggers
-    logging.set_stderrthreshold('info')
-    logging.get_absl_handler().use_absl_log_file('log', run_paths['path_logs_train'])
+    utils_misc.set_loggers(run_paths['path_logs_train'], logging.INFO)
 
     # gin-config
     gin.parse_config_files_and_bindings(['configs/config.gin'], [])

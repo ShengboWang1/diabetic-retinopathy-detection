@@ -1,7 +1,7 @@
 import gin
+import logging
 import tensorflow as tf
 import tensorflow_datasets as tfds
-from absl import logging
 
 from input_pipeline.preprocessing import preprocess, augment
 
