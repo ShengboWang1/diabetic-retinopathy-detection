@@ -14,7 +14,7 @@ Trainer.ckpt_interval = 1e4
 
 # Input pipeline
 load.name = 'mnist'
-load.data_dir = '/home/data/public/tensorflow_datasets'
+load.data_dir = '/home/data/tensorflow_datasets'
 preprocess.img_height = 28
 preprocess.img_width = 28
 prepare.batch_size = 32
