@@ -1,5 +1,5 @@
 # TeamXX
-- Name (st169852)
+- Shengbo Wang (st169852)
 - Junmao Liao (st165800)
 
 # How to run the code
