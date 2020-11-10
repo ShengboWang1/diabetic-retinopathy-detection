@@ -2,7 +2,7 @@ import logging
 import tensorflow as tf
 
 
-def set_loggers(path_log=None, logging_level=0, b_stream=True, b_debug=False):
+def set_loggers(path_log=None, logging_level=0, b_stream=False, b_debug=False):
 
     # std. logger
     logger = logging.getLogger()
