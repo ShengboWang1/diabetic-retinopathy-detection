@@ -1,6 +1,6 @@
 import gin
 import tensorflow as tf
-from absl import logging
+import logging
 
 @gin.configurable
 class Trainer(object):
