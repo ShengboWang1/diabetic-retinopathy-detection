@@ -13,9 +13,9 @@ Trainer.log_interval = 5e3
 Trainer.ckpt_interval = 1e4
 
 # Input pipeline
-load.name = 'eyepacs'
+load.name = 'mnist'
 load.data_dir = '/home/data/public/tensorflow_datasets'
-preprocess.img_height = 300
-preprocess.img_width = 300
+preprocess.img_height = 28
+preprocess.img_width = 28
 prepare.batch_size = 32
 prepare.caching = False
