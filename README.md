@@ -1,4 +1,4 @@
-# TeamXX
+# Team06
 - Shengbo Wang (st169852)
 - Junmao Liao (st165800)
 
