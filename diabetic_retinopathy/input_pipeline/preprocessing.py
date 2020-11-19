@@ -20,7 +20,7 @@ def augment(image, label, operation):
     # the possibility of 90 190 270 0 degrees are the same
     def rotation(image, label):
         image = tf.image.rot90(image, k=tf.random.uniform([1], minval=0, maxval=4, dtype=tf.int32)[0])
-        return  image, label
+        return image, label
 
     # likely tp flipp the image from left to right
     def flipping(image, label):
