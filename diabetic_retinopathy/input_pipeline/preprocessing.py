@@ -51,17 +51,16 @@ def augment(image, label, operation):
         return image, label
 
     if operation == "cropping":
-        #image, label = scaling(image, label)
         image, label = cropping(image, label)
 
     elif operation == "flipping":
         image, label = flipping(image, label)
 
     elif operation == "rotation":
-        image, label == rotation(image, label)
+        image, label = rotation(image, label)
 
     elif operation == "shearing":
-        image, label == shearing(image. label)
+        image, label = shearing(image, label)
 
     else:
         raise ValueError
