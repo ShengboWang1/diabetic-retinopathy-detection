@@ -13,9 +13,9 @@ def preprocess(image, label, img_height, img_width):
 
     return image, label
 
+# all the possible methods here, need to separate them afterwards
 def augment(image, label):
     """Data augmentation"""
-    # all the possible methods here, need to separate them afterwards
 
     def flipping(image, label):
         # up to down
