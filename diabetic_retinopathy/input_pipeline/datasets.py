@@ -10,6 +10,13 @@ def load(name, data_dir):
     if name == "idrid":
         logging.info(f"Preparing dataset {name}...")
         # ...
+        (ds_train, ds_val, ds_test), ds_info = tfds.load(
+            'diabetic_retinopathy_detection/btgraham-300',
+            split=['train', 'validation', 'test'],
+            shuffle_files=True,
+            with_info=True,
+            data_dir=data_dir
+        )
 
         return
 
@@ -20,7 +27,7 @@ def load(name, data_dir):
             split=['train', 'validation', 'test'],
             shuffle_files=True,
             with_info=True,
-            data_dir=data_dir
+            data_dir=data_dir-
         )
 
         def _preprocess(img_label_dict):
