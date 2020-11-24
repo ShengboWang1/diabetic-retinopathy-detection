@@ -16,7 +16,7 @@ def preprocess(image, label, img_height, img_width):
     return image, label
 
 # all the possible operations here, need to separate them afterwards
-
+print("3")
 
 def augment(image, label, operation):
     """Data augmentation"""

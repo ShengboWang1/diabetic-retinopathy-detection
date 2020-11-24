@@ -5,6 +5,7 @@ import tensorflow_datasets as tfds
 
 from input_pipeline.preprocessing import preprocess, augment
 
+
 @gin.configurable
 def load(name, data_dir):
     if name == "idrid":
@@ -53,6 +54,7 @@ def load(name, data_dir):
 
     else:
         raise ValueError
+
 
 @gin.configurable
 def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
