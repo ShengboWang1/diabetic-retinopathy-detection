@@ -8,9 +8,9 @@ class Trainer(object):
         # Summary Writer
         # ....
         self.train_loss_summary_writer = tf.summary.create_file_writer("./train_loss")
-        self.train_accuracy_summary_writer = tf.summary.create_file_writer("./train_loss")
+        self.train_accuracy_summary_writer = tf.summary.create_file_writer("./train_accuracy")
         self.test_loss_summary_writer = tf.summary.create_file_writer("./test_loss")
-        self.test_accuracy_summary_writer = tf.summary.create_file_writer("./test_loss")
+        self.test_accuracy_summary_writer = tf.summary.create_file_writer("./test_accuracy")
 
         # Checkpoint Manager
         # ...
