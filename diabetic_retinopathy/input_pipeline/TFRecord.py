@@ -57,16 +57,16 @@ def write(record_file, image_labels, path):
     writer.close()
 
 # Convert the csv files to a train dictionary and a test dictionary(key-value pairs each row)
-train_image_labels = row_csv2dict('/Users/shengbo/Documents/Github/dl-lab-2020-team06/IDRID_dataset/labels/train.csv')
-test_image_labels = row_csv2dict('/Users/shengbo/Documents/Github/dl-lab-2020-team06/IDRID_dataset/labels/test.csv')
+train_image_labels = row_csv2dict('C:\Users\SuperEiskalt\Desktop\IDRID_dataset\labels\train.csv')
+test_image_labels = row_csv2dict('C:\Users\SuperEiskalt\Desktop\IDRID_dataset\labels\test.csv')
 print(train_image_labels)
 print(test_image_labels)
 
 # Write TFRecords files for train and test dataset
 train_file = 'images.train.tfrecords'
 test_file = 'images.test.tfrecords'
-train_path = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/IDRID_dataset/images/train/'
-test_path = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/IDRID_dataset/images/test/'
+train_path = 'C:\Users\SuperEiskalt\Desktop\IDRID_dataset\images\train'
+test_path = 'C:\Users\SuperEiskalt\Desktop\IDRID_dataset\images\test'
 write(train_file, train_image_labels, train_path)
 write(test_file, test_image_labels, test_path)
 

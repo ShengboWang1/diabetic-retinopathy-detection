@@ -6,10 +6,10 @@ import logging
 class Trainer(object):
     def __init__(self, model, ds_train, ds_val, ds_info, run_paths, total_steps, log_interval, ckpt_interval):
         # Summary Writer
-        # ....
+        self.summary = tf.summary.SummaryWriter()
 
         # Checkpoint Manager
-        # ...
+        self.manager = tf.train.CheckpointManager(ckpt, '.tf_ckpts', max_to_keep=3)
 
         # Loss objective
         self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
