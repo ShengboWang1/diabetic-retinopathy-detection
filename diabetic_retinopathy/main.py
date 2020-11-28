@@ -1,7 +1,6 @@
 import gin
 import logging
 from absl import app, flags
-
 from train import Trainer
 from evaluation.eval import evaluate
 from input_pipeline import datasets
@@ -10,6 +9,7 @@ from models.architectures import vgg_like
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
+
 
 def main(argv):
 
@@ -39,6 +39,7 @@ def main(argv):
                  ds_test,
                  ds_info,
                  run_paths)
+
 
 if __name__ == "__main__":
     app.run(main)

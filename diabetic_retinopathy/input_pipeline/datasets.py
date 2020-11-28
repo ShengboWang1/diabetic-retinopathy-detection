@@ -11,8 +11,8 @@ def load(name, data_dir):
     if name == "idrid":
         logging.info(f"Preparing dataset {name}...")
         (ds_train, ds_val, ds_test), ds_info = tfds.load(
-            'diabetic_retinopathy_detection/TFRecord_IDRID/',
-            split=['train[:90%]', 'train[90%:]', 'test'],
+            'diabetic_retinopathy_detection/original',
+            split=['train[:90%]', 'train[10%:]', 'test'],
             shuffle_files=True,
             with_info=True,
             data_dir=data_dir
