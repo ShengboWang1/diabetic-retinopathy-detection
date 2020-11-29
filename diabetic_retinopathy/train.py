@@ -13,12 +13,6 @@ class Trainer(object):
         self.test_loss_summary_writer = tf.summary.create_file_writer("./test_loss")
         self.test_accuracy_summary_writer = tf.summary.create_file_writer("./test_accuracy")
 
-        # Checkpoint Manager
-        # ...
-        self.checkpoint_path = './checkpoint/train'
-        self.ckpt = tf.train.Checkpoint(optimizer=self.optimizer, model=self.model)
-        self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=5)
-
         # Loss objective
         self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         self.optimizer = tf.keras.optimizers.Adam()
@@ -39,6 +33,12 @@ class Trainer(object):
         self.log_interval = log_interval
         self.ckpt_interval = ckpt_interval
 
+        # Checkpoint Manager
+        # ...
+        self.checkpoint_path = './checkpoint/train'
+        self.ckpt = tf.train.Checkpoint(optimizer=self.optimizer, model=self.model)
+        self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=5)
+
     @tf.function
     def train_step(self, images, labels):
         with tf.GradientTape() as tape:
@@ -48,7 +48,6 @@ class Trainer(object):
             loss = self.loss_object(labels, predictions)
         gradients = tape.gradient(loss, self.model.trainable_variables)
         self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
-
         self.train_loss(loss)
         self.train_accuracy(labels, predictions)
 
