@@ -18,6 +18,7 @@ def preprocess(image, label, img_height, img_width):
 # all the possible operations here, need to separate them afterwards
 print("3")
 
+@gin.configurable
 def augment(image, label, operation):
     """Data augmentation"""
 

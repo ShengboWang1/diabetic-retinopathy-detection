@@ -18,7 +18,7 @@ def row_csv2dict(csv_file, set):
     elif set == 'val':
         return dictcut(dict_club, l, -1)
 
-
+# Cut train dictionary to train and validation dictionary
 def dictcut(dict, start, end):
     temp = list(dict.keys())
     result = {}
@@ -48,11 +48,10 @@ def _int64_feature(value):
 def image_example(image_string, label):
   image_shape = tf.image.decode_jpeg(image_string).shape
   feature = {
-      'height': _int64_feature(image_shape[0]),
-      'width': _int64_feature(image_shape[1]),
-      'depth': _int64_feature(image_shape[2]),
+      'image': _bytes_feature(image_string),
       'label': _int64_feature(label),
-      'image_raw': _bytes_feature(image_string),
+      'img_height': _int64_feature(image_shape[0]),
+      'img_width': _int64_feature(image_shape[1]),
   }
 
   return tf.train.Example(features=tf.train.Features(feature=feature))
@@ -108,11 +107,10 @@ def read():
 
     # Create a dictionary describing the features.
     image_feature_description = {
-        'height': tf.io.FixedLenFeature([], tf.int64),
-        'width': tf.io.FixedLenFeature([], tf.int64),
-        'depth': tf.io.FixedLenFeature([], tf.int64),
+        'image': tf.io.FixedLenFeature([], tf.string),
         'label': tf.io.FixedLenFeature([], tf.int64),
-        'image_raw': tf.io.FixedLenFeature([], tf.string),
+        'img_height': tf.io.FixedLenFeature([], tf.int64),
+        'img_width': tf.io.FixedLenFeature([], tf.int64),
     }
     parsed_image_dataset = raw_image_dataset.map(_parse_image_function)
     parsed_image_dataset

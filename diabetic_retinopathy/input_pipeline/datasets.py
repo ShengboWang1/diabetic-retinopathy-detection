@@ -2,21 +2,35 @@ import gin
 import logging
 import tensorflow as tf
 import tensorflow_datasets as tfds
-
-from input_pipeline.preprocessing import preprocess, augment
+from preprocessing import preprocess, augment
 
 
 @gin.configurable
 def load(name, data_dir):
     if name == "idrid":
         logging.info(f"Preparing dataset {name}...")
-        (ds_train, ds_val, ds_test), ds_info = tfds.load(
-            'diabetic_retinopathy_detection/original',
-            split=['train[:90%]', 'train[10%:]', 'test'],
-            shuffle_files=True,
-            with_info=True,
-            data_dir=data_dir
-        )
+        train_filename = ["idrid-train.tfrecord-00000-of-00001"]
+        val_filename = ["idrid-val.tfrecord-00000-of-00001"]
+        test_filename = ["idrid-test.tfrecord-00000-of-00001"]
+        ds_train = tf.data.TFRecordDataset(train_filename)
+        ds_val = tf.data.TFRecordDataset(val_filename)
+        ds_test = tf.data.TFRecordDataset(test_filename)
+        ds_info = "idrid"
+        feature_description = {
+            'image': tf.io.FixedLenFeature([], tf.string),
+            'label': tf.io.FixedLenFeature([], tf.int64, default_value=-1),
+            'img_height': tf.io.FixedLenFeature([], tf.int64, default_value=-1),
+            'img_width': tf.io.FixedLenFeature([], tf.int64, default_value=-1)
+        }
+        def _parse_function(exam_proto):
+            temp = tf.io.parse_single_example(exam_proto, feature_description)
+            img = tf.io.decode_raw(temp['image'], tf.uint8)
+            label = temp['label']
+            return (img, label)
+
+        ds_train = ds_train.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        ds_val = ds_val.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        ds_test = ds_test.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
         return prepare(ds_train, ds_val, ds_test, ds_info)
 
@@ -65,7 +79,8 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
         ds_train = ds_train.cache()
     ds_train = ds_train.map(
         augment, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-    ds_train = ds_train.shuffle(ds_info.splits['train'].num_examples // 10)
+    ds_train = ds_train.shuffle(35)
+    #ds_train = ds_train.shuffle(ds_info.splits['train'].num_examples // 10)
     ds_train = ds_train.batch(batch_size)
     ds_train = ds_train.repeat(-1)
     ds_train = ds_train.prefetch(tf.data.experimental.AUTOTUNE)
