@@ -19,20 +19,3 @@ def vgg_block(inputs, filters, kernel_size):
     out = tf.keras.layers.MaxPool2D((2, 2))(out)
 
     return out
-
-import tensorflow as tf
-from tesnsorflow import keras
-from tensorflow.keras import layers
-
-def call(self, inputs, training=False):
-    # Call layers appropriately to implement a forward pass
-    output = self.conv0
-    output = self.conv1
-    output = self.max_pool_2d
-    output = self.dropout
-    output = self.flatten
-    output = self.dense0
-    output = self.dropout
-    output = self.dense1
-
-    return output
