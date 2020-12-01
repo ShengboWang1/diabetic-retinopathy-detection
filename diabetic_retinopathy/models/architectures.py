@@ -1,5 +1,5 @@
 import gin
-import tensorflow-gpu as tf
+import tensorflow as tf
 
 from models.layers import vgg_block
 
