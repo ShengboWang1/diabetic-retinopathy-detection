@@ -23,13 +23,14 @@ class MyResnetModel(tf.keras.Model):
         output = self._block0(output, training=training)
         output = self._block1(output, training=training)
         output = self._block2(output, training=training)
-        feature_map = output
+        # feature_map = output
         output = self.flatten(output)
         output = self.dropout(output, training=training)
         output = self.dense0(output)
         output = self.dense1(output)
         output = tf.nn.softmax(output)
-        return output, feature_map
+        # return output, feature_map
+        return output
 
     class MyBlock(tf.keras.layers.Layer):
         def __init__(self, n_out):
@@ -40,8 +41,8 @@ class MyResnetModel(tf.keras.Model):
             self.batch_norm1 = k.layers.BatchNormalization()
             self.n_out = n_out
 
-        def call(self, input, training=False):
-            n_in = input.get_shape()[-1]
+        def call(self, inputs, training=False):
+            n_in = inputs.get_shape()[-1]
             h = self.conv0(input)
             h = self.batch_norm0(h, training=training)
             h = self.conv1(h)
