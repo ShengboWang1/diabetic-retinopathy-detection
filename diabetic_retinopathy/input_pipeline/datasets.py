@@ -1,6 +1,6 @@
 import gin
 import logging
-import tensorflow as tf
+import tensorflow-gpu as tf
 import tensorflow_datasets as tfds
 from input_pipeline.preprocessing import preprocess, augment
 

@@ -1,5 +1,5 @@
 import gin
-import tensorflow as tf
+import tensorflow-gpu as tf
 import numpy as np
 
 

@@ -1,5 +1,5 @@
 import gin
-import tensorflow as tf
+import tensorflow-gpu as tf
 
 @gin.configurable
 def vgg_block(inputs, filters, kernel_size):
