@@ -20,3 +20,5 @@ def vgg_block(inputs, filters, kernel_size):
 
     return out
 
+@gin.configurable
+def
