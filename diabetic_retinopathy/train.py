@@ -66,9 +66,9 @@ class Trainer(object):
 
             step = idx + 1
             self.train_step(images, labels)
-            print(step)
 
             if step % self.log_interval == 0:
+                print(step)
 
                 # Reset test metrics
                 self.test_loss.reset_states()
@@ -76,7 +76,6 @@ class Trainer(object):
 
                 for test_images, test_labels in self.ds_val:
                     self.test_step(test_images, test_labels)
-
 
                 template = 'Step {}, Loss: {}, Accuracy: {}, Test Loss: {}, Test Accuracy: {}'
                 logging.info(template.format(step,
@@ -92,10 +91,13 @@ class Trainer(object):
                 # Write summary to tensorboard
                 # ...train test loss accuracy
                 with self.train_loss_summary_writer.as_default():
-                    tf.summary.scalar('train_loss', self.train_loss.result(), step=self.optimizer.iterations)
+                    tf.summary.scalar('train_loss', self.train_loss.result(), step=step)
+                    # tf.summary.scalar('train_loss', self.train_loss.result(), step=self.optimizer.iterations)
 
                 with self.train_accuracy_summary_writer.as_default():
-                    tf.summary.scalar('train_accuracy', self.train_accuracy.result() * 100, step=self.optimizer.iterations)
+                    tf.summary.scalar('train_accuracy', self.train_accuracy.result() * 100, step=step)
+                    # tf.summary.scalar('train_accuracy', self.train_accuracy.result() * 100,
+                    #                  step=self.optimizer.iterations)
 
                 with self.test_loss_summary_writer.as_default():
                     tf.summary.scalar('test_loss', self.test_loss.result(), step=step)
