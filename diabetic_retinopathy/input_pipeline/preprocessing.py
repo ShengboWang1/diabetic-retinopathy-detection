@@ -1,5 +1,7 @@
 import gin
 import tensorflow as tf
+import numpy as np
+
 
 @gin.configurable
 def preprocess(image, label, img_height, img_width):
@@ -14,6 +16,9 @@ def preprocess(image, label, img_height, img_width):
     return image, label
 
 # all the possible operations here, need to separate them afterwards
+print("3")
+
+@gin.configurable
 def augment(image, label, operation):
     """Data augmentation"""
 
@@ -25,7 +30,7 @@ def augment(image, label, operation):
     # likely tp flipp the image from left to right
     def flipping(image, label):
         # 50% possibility up to down
-        #image = tf.image.random_flip_up_down(image)
+        # image = tf.image.random_flip_up_down(image)
         # 50% possibility left to right
         image = tf.image.random_flip_left_right(image)
         return image, label
@@ -37,7 +42,7 @@ def augment(image, label, operation):
         scaling = tf.random.uniform([2], 0.75, 1)
         x_scaling = scaling[0]
         y_scaling = scaling[1]
-        out_h = tf.cast(in_h * y_scaling, dtype=tf.int32)
+        out_h = tf.cast(in_h * x_scaling, dtype=tf.int32)
         out_w = tf.cast(in_w * y_scaling, dtype=tf.int32)
         seed = np.random.randint(1234)
         image = tf.image.random_crop(image, size=[out_h, out_w, channel], seed=seed)
@@ -46,7 +51,7 @@ def augment(image, label, operation):
 
     # shearing with random intensity from 0 to 60
     def shearing(image, label):
-        intensity =tf.random.uniform([1], minval=0, maxval=60, dtype=tf.int32)[0]
+        intensity = tf.random.uniform([1], minval=0, maxval=60, dtype=tf.int32)[0]
         image = tf.keras.preprocessing.image.random_shear(image, intensity, row_axis=0, col_axis=1, channel_axis=2)
         return image, label
 
