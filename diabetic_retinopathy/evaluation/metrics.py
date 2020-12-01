@@ -4,7 +4,7 @@ import numpy as np
 from tensorflow.python.keras import backend as K
 import sys
 
-class ConfusionMatrix(tf.keras.metrics.Metric):
+class ConfusionMatrix1(tf.keras.metrics.Metric):
     def __init(self, name="confusion_matrix", **kwargs):
         super(ConfusionMatrix, self).__init__(name=name, **kwargs)
         # ...
@@ -49,7 +49,7 @@ class ConfusionMatrix(tf.keras.metrics.Metric):
         self.accuracy.assign(self.fp+self.fn)
         return self.loss, self.accuracy
 
-class ConfusionMatrix1(tf.keras.metrics.Metric):
+class ConfusionMatrix(tf.keras.metrics.Metric):
 
     def __init(self, name="confusion_matrix", **kwargs):
         super(ConfusionMatrix, self).__init__(name=name, **kwargs)
