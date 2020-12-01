@@ -25,7 +25,7 @@ def load(name, data_dir):
 
         def _parse_function(exam_proto):
             temp = tf.io.parse_single_example(exam_proto, feature_description)
-            img = tf.io.decode_raw(temp['image'], tf.uint8)
+            img = tf.io.decode_jpeg(temp['image'], channels=3)
             img = tf.reshape(img, [4288, 2848, 3])
             label = temp['label']
             return (img, label)

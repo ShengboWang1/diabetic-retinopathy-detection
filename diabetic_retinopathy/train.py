@@ -66,6 +66,7 @@ class Trainer(object):
 
             step = idx + 1
             self.train_step(images, labels)
+            print(step)
 
             if step % self.log_interval == 0:
 
@@ -75,6 +76,7 @@ class Trainer(object):
 
                 for test_images, test_labels in self.ds_val:
                     self.test_step(test_images, test_labels)
+
 
                 template = 'Step {}, Loss: {}, Accuracy: {}, Test Loss: {}, Test Accuracy: {}'
                 logging.info(template.format(step,
