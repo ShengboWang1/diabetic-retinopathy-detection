@@ -19,4 +19,4 @@ preprocess.img_height = 256
 preprocess.img_width = 256
 prepare.batch_size = 16
 prepare.caching = True
-augment.operation = 'cropping'
+# augment.operation = 'cropping'
