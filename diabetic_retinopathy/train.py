@@ -15,7 +15,6 @@ class Trainer(object):
 
         # Loss objective
         self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        #self.loss_object = tf.keras.losses.CategoricalCrossentropy(from_logits=True)
         self.optimizer = tf.keras.optimizers.Adam()
 
         # Metrics
@@ -41,7 +40,7 @@ class Trainer(object):
         self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=3)
 
     @tf.function
-    def train_step(self, images, labels):
+    def train_step(self, images, labels, step):
         with tf.GradientTape() as tape:
             # training=True is only needed if there are layers with different
             # behavior during training versus inference (e.g. Dropout).
@@ -66,7 +65,7 @@ class Trainer(object):
         for idx, (images, labels) in enumerate(self.ds_train):
 
             step = idx + 1
-            self.train_step(images, labels)
+            self.train_step(images, labels, step)
 
             if step % self.log_interval == 0:
                 print(step)
