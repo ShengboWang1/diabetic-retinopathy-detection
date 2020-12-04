@@ -90,7 +90,8 @@ class ResNet(k.Model):
         self.layer4 = self.build_resblock(512, layer_dims[3], stride=2)
 
         self.avgpool = layers.GlobalAveragePooling2D()
-        self.fc = layers.Dense(num_classes)
+        self.dropout = tf.keras.layers.Dropout(0.2)
+        self.out = layers.Dense(num_classes)
 
     def call(self,inputs, training=None):
         # __init__中准备工作完毕；下面完成前向运算过程。
@@ -104,8 +105,9 @@ class ResNet(k.Model):
         # 做一个global average pooling，得到之后只会得到一个channel，不需要做reshape操作了。
         # shape为 [batchsize, channel]
         x = self.avgpool(x)
+        x = self.dropout(x)
         # [b, 100]
-        x = self.fc(x)
+        x = self.out(x)
         return x
 
     # 实现 Res Block； 创建一个Res Block
