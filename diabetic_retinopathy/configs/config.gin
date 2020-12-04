@@ -8,7 +8,7 @@
 # vgg_block.kernel_size = (3, 3)
 
 # Training
-Trainer.total_steps = 4000
+Trainer.total_steps = 20000
 Trainer.log_interval = 100
 Trainer.ckpt_interval = 100
 
