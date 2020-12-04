@@ -9,9 +9,9 @@ from input_pipeline.preprocessing import preprocess, augment
 def load(name, data_dir):
     if name == "idrid":
         logging.info(f"Preparing dataset {name}...")
-        train_filename = ["idrid-train.tfrecord-00000-of-00001"]
-        val_filename = ["idrid-val.tfrecord-00000-of-00001"]
-        test_filename = ["idrid-test.tfrecord-00000-of-00001"]
+        train_filename = ["idrid-2train.tfrecord-00000-of-00001"]
+        val_filename = ["idrid-2val.tfrecord-00000-of-00001"]
+        test_filename = ["idrid-2test.tfrecord-00000-of-00001"]
         # train_filename = [data_dir + "/idrid-train.tfrecord-00000-of-00001"]
         # val_filename = [data_dir + "/idrid-val.tfrecord-00000-of-00001"]
         # test_filename = [data_dir + "/idrid-test.tfrecord-00000-of-00001"]

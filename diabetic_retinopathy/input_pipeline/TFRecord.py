@@ -77,6 +77,29 @@ test_file = 'idrid-test.tfrecord-00000-of-00001'
 train_path = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/IDRID_dataset/images/train/'
 test_path = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/IDRID_dataset/images/test/'
 
+
+# for 2 classes classification
+def row_csv2dict_2classes(csv_file, set):
+    dict_club = {}
+    with open(csv_file)as f:
+        reader = csv.reader(f, delimiter=',')
+        for row in reader:
+            if row[1] == 'Retinopathy grade':
+                dict_club[row[0]] = "0"
+            elif int(row[1]) == 0 or int(row[1]) == 1:
+                dict_club[row[0]] = "0"
+            else:
+                dict_club[row[0]] = "1"
+    l = int(len(dict_club) * 0.7)
+    if set == 'test':
+        return dict_club
+    elif set == 'train':
+        return dictcut(dict_club, 0, l)
+    elif set == 'val':
+        return dictcut(dict_club, l, -1)
+train2_file = 'idrid-2train.tfrecord-00000-of-00001'
+val2_file = 'idrid-2val.tfrecord-00000-of-00001'
+test2_file = 'idrid-2test.tfrecord-00000-of-00001'
 # Write TFRecords files for train and test dataset
 def create_train_record():
     train_image_labels = row_csv2dict(
@@ -96,9 +119,26 @@ def create_test_record():
     print(test_image_labels)
     write(test_file, test_image_labels, test_path)
 
-create_train_record()
-create_val_record()
-create_test_record()
+def create_train2_record():
+    train_image_labels = row_csv2dict_2classes(
+        '/Users/shengbo/Documents/Github/dl-lab-2020-team06/IDRID_dataset/labels/train.csv', set='train')
+    print(train_image_labels)
+    write(train2_file, train_image_labels, train_path)
+
+def create_val2_record():
+    train_image_labels = row_csv2dict_2classes(
+        '/Users/shengbo/Documents/Github/dl-lab-2020-team06/IDRID_dataset/labels/train.csv', set='val')
+    print(train_image_labels)
+    write(val2_file, train_image_labels, train_path)
+
+def create_test2_record():
+    test_image_labels = row_csv2dict_2classes(
+        '/Users/shengbo/Documents/Github/dl-lab-2020-team06/IDRID_dataset/labels/test.csv', set='test')
+    print(test_image_labels)
+    write(test2_file, test_image_labels, test_path)
+create_train2_record()
+create_val2_record()
+create_test2_record()
 
 
 # Read the TFRecordDataset
