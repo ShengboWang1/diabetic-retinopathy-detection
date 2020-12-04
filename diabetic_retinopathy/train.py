@@ -15,6 +15,7 @@ class Trainer(object):
 
         # Loss objective
         self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+        #self.loss_object = tf.keras.losses.CategoricalCrossentropy(from_logits=True)
         self.optimizer = tf.keras.optimizers.Adam()
 
         # Metrics
@@ -65,6 +66,7 @@ class Trainer(object):
         for idx, (images, labels) in enumerate(self.ds_train):
 
             step = idx + 1
+            print(step)
             self.train_step(images, labels)
 
             if step % self.log_interval == 0:

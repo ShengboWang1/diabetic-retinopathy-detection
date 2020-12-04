@@ -5,7 +5,9 @@ from train import Trainer
 from evaluation.eval import evaluate
 from input_pipeline import datasets
 from utils import utils_params, utils_misc
-from models.architectures import vgg_like
+from models.resnet import resnet18
+# from models.architectures import vgg_like
+from tensorflow.keras.applications.resnet import ResNet50
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
@@ -26,9 +28,15 @@ def main(argv):
     # setup pipeline
     ds_train, ds_val, ds_test, ds_info = datasets.load()
 
-    # model
+    # model vgg
     #model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
-    model = vgg_like(input_shape=[256, 256, 3], n_classes=5)
+    #model = vgg_like(input_shape=[256, 256, 3], n_classes=5)
+
+    # model resnet
+
+    #model = ResNet50(weights=None, input_shape=[256, 256, 3], classes=5)
+    model = resnet18()
+    model.build(input_shape=(32,256,256,3))
     model.summary()
 
     if FLAGS.train:
