@@ -19,7 +19,7 @@ def preprocess(image, label, img_height, img_width):
 print("3")
 
 @gin.configurable
-def augment(image, label, operation):
+def augment(image, label):
     """Data augmentation"""
 
     # the possibility of 90 190 270 0 degrees are the same
@@ -55,19 +55,22 @@ def augment(image, label, operation):
         image = tf.keras.preprocessing.image.random_shear(image, intensity, row_axis=0, col_axis=1, channel_axis=2)
         return image, label
 
-    if operation == "cropping":
-        image, label = cropping(image, label)
-
-    elif operation == "flipping":
-        image, label = flipping(image, label)
-
-    elif operation == "rotation":
-        image, label = rotation(image, label)
-
-    elif operation == "shearing":
-        image, label = shearing(image, label)
-
-    else:
-        raise ValueError
+    image, label = cropping(image, label)
+    image, label = flipping(image, label)
+    image, label = rotation(image, label)
+    # if operation == "cropping":
+    #     image, label = cropping(image, label)
+    #
+    # elif operation == "flipping":
+    #     image, label = flipping(image, label)
+    #
+    # elif operation == "rotation":
+    #     image, label = rotation(image, label)
+    #
+    # elif operation == "shearing":
+    #     image, label = shearing(image, label)
+    #
+    # else:
+    #     raise ValueError
 
     return image, label
