@@ -40,7 +40,7 @@ class Trainer(object):
         self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=3)
 
     @tf.function
-    def train_step(self, images, labels, step):
+    def train_step(self, images, labels):
         with tf.GradientTape() as tape:
             # training=True is only needed if there are layers with different
             # behavior during training versus inference (e.g. Dropout).
@@ -48,6 +48,7 @@ class Trainer(object):
             loss = self.loss_object(labels, predictions)
         gradients = tape.gradient(loss, self.model.trainable_variables)
         self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
+
         self.train_loss(loss)
         self.train_accuracy(labels, predictions)
 
@@ -65,7 +66,7 @@ class Trainer(object):
         for idx, (images, labels) in enumerate(self.ds_train):
 
             step = idx + 1
-            self.train_step(images, labels, step)
+            self.train_step(images, labels)
 
             if step % self.log_interval == 0:
                 print(step)

@@ -35,7 +35,7 @@ def main(argv):
 
     # model resnet
     #model = ResNet50(weights=None, input_shape=[256, 256, 3], classes=5)
-    model = resnet18()
+    model = resnet34()
     model.build(input_shape=(32, 256, 256, 3))
     model.summary()
 
