@@ -8,7 +8,7 @@ from utils import utils_params, utils_misc
 from models.resnet import resnet18
 from models.resnet import resnet34
 # from models.architectures import vgg_like
-from tensorflow.keras.applications.resnet import ResNet50
+# from tensorflow.keras.applications.resnet import ResNet50
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
@@ -34,7 +34,6 @@ def main(argv):
     #model = vgg_like(input_shape=[256, 256, 3], n_classes=5)
 
     # model resnet
-
     #model = ResNet50(weights=None, input_shape=[256, 256, 3], classes=5)
     model = resnet34()
     model.build(input_shape=(32, 256, 256, 3))
