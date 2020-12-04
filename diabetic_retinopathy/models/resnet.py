@@ -1,61 +1,6 @@
-import gin
 import tensorflow as tf
 import tensorflow.keras as k
 from tensorflow.keras import layers, Sequential
-
-
-@gin.configurable
-class MyModel(tf.keras.Model):
-    def __init__(self):
-        super(MyModel, self).__init__()
-        self.conv0 = k.layers.Conv2D(4, 3, strides=1, activation='relu')
-        self.Maxpool = k.layers.MaxPool2D(pool_size=(2, 2), strides=2)
-        self._block0 = self.MyBlock(8)
-        self._block1 = self.MyBlock(16)
-        self._block2 = self.MyBlock(32)
-        self.flatten = k.layers.Flatten()
-        self.dropout = k.layers.Dropout(0.2)
-        self.dense0 = k.layers.Dense(8, activation='relu')
-        self.dense1 = k.layers.Dense(2)
-
-    def call(self, inputs, training=False):
-        output = self.conv0(inputs)
-        output = self.Maxpool(output)
-        output = self._block0(output, training=training)
-        output = self._block1(output, training=training)
-        output = self._block2(output, training=training)
-        # feature_map = output
-        output = self.flatten(output)
-        output = self.dropout(output, training=training)
-        output = self.dense0(output)
-        output = self.dense1(output)
-        output = tf.nn.softmax(output)
-        # return output, feature_map
-        return output
-
-    class MyBlock(k.layers.Layer):
-        def __init__(self, input_dim):
-            super(MyBlock, self).__init__()
-            self.conv0 = k.layers.Conv2D(input_dim, 1, strides=1, activation='relu')
-            self.batch_norm0 = k.layers.BatchNormalization()
-            self.conv1 = k.layers.Conv2D(input_dim, 1, strides=1, activation='relu')
-            self.batch_norm1 = k.layers.BatchNormalization()
-            self.input_dim = input_dim
-
-        def call(self, input, training=False):
-            n_in = input.get_shape()[-1]
-            h = self.conv0(input)
-            h = self.batch_norm0(h, training=training)
-            h = self.conv1(h)
-            h = self.batch_norm0(h, training=training)
-            n_out = self.n_out
-            if n_in != n_out:
-                shortcut = self.conv0(input)
-                shortcut = self.batch_norm0(shortcut, training=training)
-
-            else:
-                shortcut = input
-            return tf.nn.relu(shortcut + h)
 
 # Basic Block 模块。
 class BasicBlock(layers.Layer):
@@ -91,6 +36,37 @@ class BasicBlock(layers.Layer):
         output = layers.add([out, identity])  #layers下面有一个add，把这2个层添加进来相加。
         output = tf.nn.relu(output)
         return output
+
+
+class Bottleneck(tf.keras.Model):
+    expansion = 4
+
+    def __init__(self, in_channels, out_channels, strides=1):
+        super(Bottleneck, self).__init__()
+
+        self.conv1 = layers.Conv2D(out_channels, 1, 1, use_bias=False)
+        self.bn1 = layers.BatchNormalization()
+
+        self.conv2 = layers.Conv2D(out_channels, 3, strides, padding="same", use_bias=False)
+        self.bn2 = layers.BatchNormalization()
+        self.conv3 = layers.Conv2D(out_channels*self.expansion, 1, 1, use_bias=False)
+        self.bn3 = layers.BatchNormalization()
+
+        if strides != 1 or in_channels != self.expansion * out_channels:
+            self.shortcut = Sequential([layers.Conv2D(self.expansion * out_channels, kernel_size=1, strides=strides, use_bias=False),
+                                        layers.BatchNormalization()])
+        else:
+            self.shortcut = lambda x,_: x
+
+    def call(self, x, training=False):
+        out = tf.nn.relu(self.bn1(self.conv1(x), training))
+        out = tf.nn.relu(self.bn2(self.conv2(out), training))
+        out = self.bn3(self.conv3(out), training)
+
+        out = out + self.shortcut(x, training)
+        out = tf.nn.relu(out)
+
+        return out
 
 # Res Block 模块。继承keras.Model或者keras.Layer都可以
 class ResNet(k.Model):
@@ -151,3 +127,12 @@ def resnet18():
 # 如果我们要使用 ResNet-34 的话，那34是怎样的配置呢？只需要改一下这里就可以了。对于56，152去查一下配置
 def resnet34():
     return ResNet([3, 4, 6, 3]) #4个Res Block，第1个包含3个Basic Block,第2为4，第3为6，第4为3
+
+def ResNet50():
+    return ResNet(Bottleneck, [3, 4, 6, 3])
+
+def ResNet101():
+    return ResNet(Bottleneck, [3, 4, 23, 3])
+
+def ResNet152():
+    return ResNet(Bottleneck, [3, 8, 36, 3])

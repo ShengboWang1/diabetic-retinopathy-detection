@@ -6,6 +6,7 @@ from evaluation.eval import evaluate
 from input_pipeline import datasets
 from utils import utils_params, utils_misc
 from models.resnet import resnet18
+from models.resnet import resnet34
 # from models.architectures import vgg_like
 from tensorflow.keras.applications.resnet import ResNet50
 
@@ -35,8 +36,8 @@ def main(argv):
     # model resnet
 
     #model = ResNet50(weights=None, input_shape=[256, 256, 3], classes=5)
-    model = resnet18()
-    model.build(input_shape=(32,256,256,3))
+    model = resnet34()
+    model.build(input_shape=(32, 256, 256, 3))
     model.summary()
 
     if FLAGS.train:

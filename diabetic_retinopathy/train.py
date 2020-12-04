@@ -38,7 +38,7 @@ class Trainer(object):
         # ...
         self.checkpoint_path = './checkpoint/train'
         self.ckpt = tf.train.Checkpoint(optimizer=self.optimizer, model=self.model)
-        self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=5)
+        self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=3)
 
     @tf.function
     def train_step(self, images, labels):
@@ -66,7 +66,6 @@ class Trainer(object):
         for idx, (images, labels) in enumerate(self.ds_train):
 
             step = idx + 1
-            print(step)
             self.train_step(images, labels)
 
             if step % self.log_interval == 0:
