@@ -18,7 +18,7 @@ class BasicBlock(layers.Layer):
         if stride != 1:
             self.downsample = Sequential()
             self.downsample.add(layers.Conv2D(filter_num, (1, 1), strides=stride))
-            self.downsample.add(layers.BatchNormalization())
+            # self.downsample.add(layers.BatchNormalization())
         else:
             self.downsample = lambda x:x
 
