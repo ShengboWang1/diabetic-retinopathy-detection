@@ -92,7 +92,6 @@ class ResNet(k.Model):
         self.avgpool = layers.GlobalAveragePooling2D()
         # self.dropout = tf.keras.layers.Dropout(0.2)
         self.out1 = layers.Dense(num_classes)
-        self.out2 = layers.Dense(1, activation='sigmoid')
 
     def call(self,inputs, training=None):
         # __init__中准备工作完毕；下面完成前向运算过程。
@@ -109,7 +108,6 @@ class ResNet(k.Model):
         # x = self.dropout(x)
         # [b, 100]
         x = self.out1(x)
-        x = self.out2(x)
         return x
 
     # 实现 Res Block； 创建一个Res Block
