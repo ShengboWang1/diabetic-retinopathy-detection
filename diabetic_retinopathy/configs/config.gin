@@ -8,9 +8,9 @@
 # vgg_block.kernel_size = (3, 3)
 
 # Training
-Trainer.total_steps = 40000
+Trainer.total_steps = 100000
 Trainer.log_interval = 100
-Trainer.ckpt_interval = 300
+Trainer.ckpt_interval = 3000
 
 # Input pipeline
 load.name = 'idrid'
