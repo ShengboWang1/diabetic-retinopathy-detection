@@ -114,8 +114,9 @@ class Trainer(object):
                 # ...
                 save_path = self.ckpt_manager.save()
                 print("Saved checkpoint for step {}: {}".format(int(step), save_path))
-                print("loss {:1.2f}".format(self.train_loss.result()))
-                print("accuracy {:1.2f}".format(self.train_accuracy.result()))
+                print("train_loss {:1.2f}".format(self.train_loss.result()))
+                print("train_accuracy {:1.2f}".format(self.train_accuracy.result()))
+
 
             if step % self.total_steps == 0:
                 logging.info(f'Finished training after {step} steps.')
@@ -123,7 +124,7 @@ class Trainer(object):
                 # ...
                 save_path = self.ckpt_manager.save()
                 print("Saved checkpoint for final step: {}".format(save_path))
-                print("loss {:1.2f}".format(self.train_loss.result().numpy()))
-                print("accuracy {:1.2f}".format(self.train_accuracy.result().numpy()))
+                print("loss {:1.2f}".format(self.train_loss.result()))
+                print("accuracy {:1.2f}".format(self.train_accuracy.result()))
 
                 return self.test_accuracy.result().numpy()

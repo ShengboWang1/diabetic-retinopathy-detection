@@ -138,9 +138,10 @@ def resnet50():
     ResNet50.trainable = False
     model = tf.keras.Sequential()
     model.add(ResNet50)
-    model.add(tf.keras.layers.GlobalAveragePooling2D())
-    model.add(tf.keras.layers.Dense(10, activation='relu'))
-    model.add(tf.keras.layers.Dense(2, activation='softmax'))
+    model.add(k.layers.GlobalAveragePooling2D())
+    model.add(k.layers.Dense(10, activation='relu'))
+    model.add(k.layers.BatchNormalization())
+    model.add(k.layers.Dense(2, activation='softmax'))
     return model
 
 def ResNet101():

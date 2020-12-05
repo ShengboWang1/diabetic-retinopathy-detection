@@ -7,6 +7,7 @@ from input_pipeline import datasets
 from utils import utils_params, utils_misc
 from models.resnet import resnet18
 from models.resnet import resnet34
+from models.resnet import resnet50
 # from models.architectures import vgg_like
 # from tensorflow.keras.applications.resnet import ResNet50
 
@@ -34,7 +35,7 @@ def main(argv):
     #model = vgg_like(input_shape=[256, 256, 3], n_classes=5)
 
     # model resnet
-    model = resnet34()
+    model = resnet50()
     model.build(input_shape=(32, 256, 256, 3))
     model.summary()
 
