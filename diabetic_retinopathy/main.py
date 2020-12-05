@@ -34,8 +34,7 @@ def main(argv):
     #model = vgg_like(input_shape=[256, 256, 3], n_classes=5)
 
     # model resnet
-    #model = ResNet50(weights=None, input_shape=[256, 256, 3], classes=5)
-    model = resnet34()
+    model = resnet50()
     model.build(input_shape=(32, 256, 256, 3))
     model.summary()
 
