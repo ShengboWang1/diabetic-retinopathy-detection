@@ -91,7 +91,7 @@ class ResNet(k.Model):
 
         self.avgpool = layers.GlobalAveragePooling2D()
         # self.dropout = tf.keras.layers.Dropout(0.2)
-        self.out1 = layers.Dense(num_classes)
+        self.out1 = layers.Dense(num_classes, activation='softmax')
 
     def call(self,inputs, training=None):
         # __init__中准备工作完毕；下面完成前向运算过程。
@@ -130,8 +130,17 @@ def resnet18():
 def resnet34():
     return ResNet([3, 4, 6, 3]) #4个Res Block，第1个包含3个Basic Block,第2为4，第3为6，第4为3
 
-def ResNet50():
-    return ResNet(Bottleneck, [3, 4, 6, 3])
+def resnet50():
+    ResNet50 = k.applications.ResNet50(include_top=False,
+                                              weights='imagenet',
+                                              input_shape=(256, 256, 3))
+    ResNet50.trainable = False
+    model = tf.keras.Sequential()
+    model.add(ResNet50)
+    model.add(tf.keras.layers.GlobalAveragePooling2D())
+    model.add(tf.keras.layers.Dense(10, activation='relu'))
+    model.add(tf.keras.layers.Dense(2, activation='softmax'))
+    return model
 
 def ResNet101():
     return ResNet(Bottleneck, [3, 4, 23, 3])
