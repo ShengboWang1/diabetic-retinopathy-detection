@@ -140,7 +140,7 @@ def resnet50():
     model.add(ResNet50)
     model.add(k.layers.GlobalAveragePooling2D())
     model.add(k.layers.Dense(10, activation='relu'))
-    model.add(k.layers.BatchNormalization())
+    # model.add(k.layers.BatchNormalization())
     model.add(k.layers.Dense(2, activation='softmax'))
     return model
 
