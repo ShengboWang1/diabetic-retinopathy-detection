@@ -14,7 +14,8 @@ Trainer.ckpt_interval = 3000
 
 # Input pipeline
 load.name = 'eyepacs'
-load.data_dir = 'home/RUS_CIP/st169852/dl-lab-2020-team06/diabetic_retinopathy'
+# load.data_dir = 'home/RUS_CIP/st169852/dl-lab-2020-team06/diabetic_retinopathy'
+load.data_dir = '/content/drive/MyDrive/diabetic_retinopathy'
 preprocess.img_height = 256
 preprocess.img_width = 256
 prepare.batch_size = 16
