@@ -135,7 +135,7 @@ def resnet50():
     ResNet50 = k.applications.ResNet50(include_top=False,
                                               weights='imagenet',
                                               input_shape=(256, 256, 3))
-    # ResNet50.trainable = False
+    ResNet50.trainable = False
     model = tf.keras.Sequential()
     model.add(ResNet50)
     model.add(k.layers.GlobalAveragePooling2D())
