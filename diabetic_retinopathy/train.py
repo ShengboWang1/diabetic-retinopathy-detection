@@ -8,10 +8,8 @@ class Trainer(object):
     def __init__(self, model, ds_train, ds_val, ds_info, run_paths, total_steps, log_interval, ckpt_interval):
         # Summary Writer
         # ....
-        self.train_loss_summary_writer = tf.summary.create_file_writer("./train_loss")
-        self.train_accuracy_summary_writer = tf.summary.create_file_writer("./train_accuracy")
-        self.test_loss_summary_writer = tf.summary.create_file_writer("./test_loss")
-        self.test_accuracy_summary_writer = tf.summary.create_file_writer("./test_accuracy")
+        self.train_summary_writer = tf.summary.create_file_writer("./train_summary")
+        self.val_summary_writer = tf.summary.create_file_writer("./val_summary")
 
         # Loss objective
         self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
@@ -21,8 +19,8 @@ class Trainer(object):
         self.train_loss = tf.keras.metrics.Mean(name='train_loss')
         self.train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
 
-        self.test_loss = tf.keras.metrics.Mean(name='test_loss')
-        self.test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
+        self.val_loss = tf.keras.metrics.Mean(name='test_loss')
+        self.val_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
 
         self.model = model
         self.ds_train = ds_train
@@ -53,14 +51,14 @@ class Trainer(object):
         self.train_accuracy(labels, predictions)
 
     @tf.function
-    def test_step(self, images, labels):
+    def val_step(self, images, labels):
         # training=False is only needed if there are layers with different
         # behavior during training versus inference (e.g. Dropout).
         predictions = self.model(images, training=False)
-        t_loss = self.loss_object(labels, predictions)
+        v_loss = self.loss_object(labels, predictions)
 
-        self.test_loss(t_loss)
-        self.test_accuracy(labels, predictions)
+        self.test_loss(v_loss)
+        self.val_accuracy(labels, predictions)
 
     def train(self):
         for idx, (images, labels) in enumerate(self.ds_train):
@@ -72,18 +70,18 @@ class Trainer(object):
                 print(step)
 
                 # Reset test metrics
-                self.test_loss.reset_states()
-                self.test_accuracy.reset_states()
+                self.val_loss.reset_states()
+                self.val_accuracy.reset_states()
 
-                for test_images, test_labels in self.ds_val:
-                    self.test_step(test_images, test_labels)
+                for val_images, val_labels in self.ds_val:
+                    self.val_step(val_images, val_labels)
 
-                template = 'Step {}, Loss: {}, Accuracy: {}, Test Loss: {}, Test Accuracy: {}'
+                template = 'Step {}, Train Loss: {}, Train Accuracy: {}, Validation Loss: {}, Validation Accuracy: {}'
                 logging.info(template.format(step,
                                              self.train_loss.result(),
                                              self.train_accuracy.result() * 100,
-                                             self.test_loss.result(),
-                                             self.test_accuracy.result() * 100))
+                                             self.val_loss.result(),
+                                             self.val_accuracy.result() * 100))
 
                 # Reset train metrics
                 self.train_loss.reset_states()
@@ -91,22 +89,18 @@ class Trainer(object):
 
                 # Write summary to tensorboard
                 # ...train test loss accuracy
-                with self.train_loss_summary_writer.as_default():
+                with self.train_summary_writer.as_default():
                     tf.summary.scalar('train_loss', self.train_loss.result(), step=step)
                     # tf.summary.scalar('train_loss', self.train_loss.result(), step=self.optimizer.iterations)
-
-                with self.train_accuracy_summary_writer.as_default():
                     tf.summary.scalar('train_accuracy', self.train_accuracy.result() * 100, step=step)
                     # tf.summary.scalar('train_accuracy', self.train_accuracy.result() * 100,
                     #                  step=self.optimizer.iterations)
 
-                with self.test_loss_summary_writer.as_default():
-                    tf.summary.scalar('test_loss', self.test_loss.result(), step=step)
+                with self.val_summary_writer.as_default():
+                    tf.summary.scalar('val_loss', self.val_loss.result(), step=step)
+                    tf.summary.scalar('val_accuracy', self.val_accuracy.result() * 100, step=step)
 
-                with self.test_accuracy_summary_writer.as_default():
-                    tf.summary.scalar('test_accuracy', self.test_accuracy.result() * 100, step=step)
-
-                yield self.test_accuracy.result().numpy()
+                yield self.val_accuracy.result().numpy()
 
             if step % self.ckpt_interval == 0:
                 logging.info(f'Saving checkpoint to {self.run_paths["path_ckpts_train"]}.')
@@ -116,7 +110,6 @@ class Trainer(object):
                 print("Saved checkpoint for step {}: {}".format(int(step), save_path))
                 print("train_loss {:1.2f}".format(self.train_loss.result()))
                 print("train_accuracy {:1.2f}".format(self.train_accuracy.result()))
-
 
             if step % self.total_steps == 0:
                 logging.info(f'Finished training after {step} steps.')
