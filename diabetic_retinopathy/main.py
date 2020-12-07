@@ -2,12 +2,13 @@ import gin
 import logging
 from absl import app, flags
 from train import Trainer
-from evaluation.eval import evaluate
+from evaluation.eval import Evaluator
 from input_pipeline import datasets
 from utils import utils_params, utils_misc
 from models.resnet import resnet18
 from models.resnet import resnet34
 from models.resnet import resnet50
+import tensorflow as tf
 # from models.architectures import vgg_like
 # from tensorflow.keras.applications.resnet import ResNet50
 
@@ -39,6 +40,9 @@ def main(argv):
     model.build(input_shape=(32, 256, 256, 3))
     model.summary()
 
+
+    evaluator = Evaluator(model, ds_test, ds_info, run_paths)
+    evaluator.evaluate()
     if FLAGS.train:
         trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
         for _ in trainer.train():
