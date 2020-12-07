@@ -22,7 +22,6 @@ class Evaluator(object):
     def test_step(self, images, labels):
         predictions = self.model(images, training=False)
         t_loss = self.loss_object(labels, predictions)
-        print(labels, predictions)
         self.test_loss(t_loss)
         self.test_accuracy(labels, predictions)
         # pred_label = tf.math.argmax(predictions, axis=1)

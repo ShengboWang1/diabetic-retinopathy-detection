@@ -13,7 +13,7 @@ import tensorflow as tf
 # from tensorflow.keras.applications.resnet import ResNet50
 
 FLAGS = flags.FLAGS
-flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')
+flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
 
 
 def main(argv):
@@ -40,13 +40,16 @@ def main(argv):
     model.build(input_shape=(32, 256, 256, 3))
     model.summary()
 
-
     evaluator = Evaluator(model, ds_test, ds_info, run_paths)
     evaluator.evaluate()
     if FLAGS.train:
         trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
         for _ in trainer.train():
             continue
+        evaluator = Evaluator(model, ds_test, ds_info, run_paths)
+        evaluator.evaluate()
+
+
     else:
         evaluator = Evaluator(model, ds_test, ds_info, run_paths)
         evaluator.evaluate()
