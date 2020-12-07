@@ -57,7 +57,7 @@ class Trainer(object):
         predictions = self.model(images, training=False)
         v_loss = self.loss_object(labels, predictions)
 
-        self.test_loss(v_loss)
+        self.val_loss(v_loss)
         self.val_accuracy(labels, predictions)
 
     def train(self):
