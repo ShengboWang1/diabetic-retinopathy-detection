@@ -13,7 +13,7 @@ import tensorflow as tf
 # from tensorflow.keras.applications.resnet import ResNet50
 
 FLAGS = flags.FLAGS
-flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
+flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')
 
 
 def main(argv):
@@ -32,8 +32,8 @@ def main(argv):
     ds_train, ds_val, ds_test, ds_info = datasets.load()
 
     # model vgg
-    #model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
-    #model = vgg_like(input_shape=[256, 256, 3], n_classes=5)
+    # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
+    # model = vgg_like(input_shape=[256, 256, 3], n_classes=5)
 
     # model resnet
     model = resnet50()
@@ -48,11 +48,8 @@ def main(argv):
         for _ in trainer.train():
             continue
     else:
-        evaluate(model,
-                 checkpoint,
-                 ds_test,
-                 ds_info,
-                 run_paths)
+        evaluator = Evaluator(model, ds_test, ds_info, run_paths)
+        evaluator.evaluate()
 
 
 if __name__ == "__main__":
