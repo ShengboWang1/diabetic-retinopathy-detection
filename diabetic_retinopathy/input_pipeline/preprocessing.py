@@ -16,7 +16,6 @@ def preprocess(image, label, img_height, img_width):
     return image, label
 
 # all the possible operations here, need to separate them afterwards
-print("3")
 
 @gin.configurable
 def augment(image, label):
@@ -24,13 +23,13 @@ def augment(image, label):
 
     # the possibility of 90 190 270 0 degrees are the same
     def rotation(image, label):
-        image = tf.image.rot90(image, k=tf.random.uniform([1], minval=0, maxval=4, dtype=tf.int32)[0])
+        # image = tf.image.rot90(image, k=tf.random.uniform([1], minval=0, maxval=4, dtype=tf.int32)[0])
         return image, label
 
     # likely tp flipp the image from left to right
     def flipping(image, label):
         # 50% possibility up to down
-        # image = tf.image.random_flip_up_down(image)
+        image = tf.image.random_flip_up_down(image)
         # 50% possibility left to right
         image = tf.image.random_flip_left_right(image)
         return image, label
@@ -47,6 +46,7 @@ def augment(image, label):
         seed = np.random.randint(1234)
         image = tf.image.random_crop(image, size=[out_h, out_w, channel], seed=seed)
         image = tf.image.resize(image, size=(in_h, in_w))
+        print("cropped again")
         return image, label
 
     # shearing with random intensity from 0 to 60
@@ -74,3 +74,4 @@ def augment(image, label):
     #     raise ValueError
 
     return image, label
+
