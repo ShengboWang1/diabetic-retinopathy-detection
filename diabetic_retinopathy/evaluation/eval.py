@@ -11,20 +11,18 @@ class Evaluator(object):
         self.ds_test = ds_test
         self.ds_info = ds_info
         self.run_paths = run_paths
-        self.checkpoint = tf.train.Checkpoint(MyAwesomeModel=self.model)
+        self.checkpoint = tf.train.Checkpoint(myModel=self.model)
         self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         self.test_loss = tf.keras.metrics.Mean(name='test_loss')
         self.test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
         self.test_summary_writer = tf.summary.create_file_writer('./test_summary')
-        self.test_loss.reset_states()
-        self.test_accuracy.reset_states()
+
 
     @tf.function
     def test_step(self, images, labels):
-
         predictions = self.model(images, training=False)
         t_loss = self.loss_object(labels, predictions)
-
+        print(labels, predictions)
         self.test_loss(t_loss)
         self.test_accuracy(labels, predictions)
         # pred_label = tf.math.argmax(predictions, axis=1)
@@ -32,6 +30,8 @@ class Evaluator(object):
 
     def evaluate(self):
         self.checkpoint.restore(tf.train.latest_checkpoint('./checkpoint/train'))
+        self.test_loss.reset_states()
+        self.test_accuracy.reset_states()
         for images, labels in self.ds_test:
             self.test_step(images, labels)
 
