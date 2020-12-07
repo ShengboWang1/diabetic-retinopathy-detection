@@ -2,10 +2,15 @@ import gin
 import logging
 from absl import app, flags
 from train import Trainer
-from evaluation.eval import evaluate
+from evaluation.eval import Evaluator
 from input_pipeline import datasets
 from utils import utils_params, utils_misc
-from models.architectures import vgg_like
+from models.resnet import resnet18
+from models.resnet import resnet34
+from models.resnet import resnet50
+import tensorflow as tf
+# from models.architectures import vgg_like
+# from tensorflow.keras.applications.resnet import ResNet50
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
@@ -26,11 +31,18 @@ def main(argv):
     # setup pipeline
     ds_train, ds_val, ds_test, ds_info = datasets.load()
 
-    # model
+    # model vgg
     #model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
-    model = vgg_like(input_shape=[256, 256, 3], n_classes=5)
+    #model = vgg_like(input_shape=[256, 256, 3], n_classes=5)
+
+    # model resnet
+    model = resnet50()
+    model.build(input_shape=(32, 256, 256, 3))
     model.summary()
 
+
+    evaluator = Evaluator(model, ds_test, ds_info, run_paths)
+    evaluator.evaluate()
     if FLAGS.train:
         trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
         for _ in trainer.train():
