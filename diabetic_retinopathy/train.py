@@ -1,6 +1,7 @@
 import gin
 import tensorflow as tf
 import logging
+import datetime
 
 
 @gin.configurable
@@ -33,9 +34,11 @@ class Trainer(object):
 
         # Checkpoint Manager
         # ...
-        self.checkpoint_path = './checkpoint/train'
+        self.time = datetime.datetime.now()
+        #############
+        self.checkpoint_path = './checkpoint/train/'
         self.ckpt = tf.train.Checkpoint(optimizer=self.optimizer, model=self.model)
-        self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=3)
+        self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=5)
 
     @tf.function
     def train_step(self, images, labels):

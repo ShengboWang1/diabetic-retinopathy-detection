@@ -2,7 +2,7 @@ import gin
 import logging
 from absl import app, flags
 from train import Trainer
-from evaluation.eval import Evaluator
+from evaluation.eval import evaluate
 from input_pipeline import datasets
 from utils import utils_params, utils_misc
 from models.resnet import resnet18
@@ -39,18 +39,18 @@ def main(argv):
     model = resnet34()
     model.build(input_shape=(32, 256, 256, 3))
     model.summary()
+    checkpoint = tf.train.Checkpoint(myModel=model)
 
     if FLAGS.train:
         trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
         for _ in trainer.train():
             continue
-        evaluator = Evaluator(model, ds_test, ds_info, run_paths)
-        evaluator.evaluate()
-
-
     else:
-        evaluator = Evaluator(model, ds_test, ds_info, run_paths)
-        evaluator.evaluate()
+        evaluate(model,
+                 checkpoint,
+                 ds_test,
+                 ds_info,
+                 run_paths)
 
 
 if __name__ == "__main__":
