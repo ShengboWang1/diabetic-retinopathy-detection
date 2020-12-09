@@ -9,7 +9,7 @@ from models.resnet import resnet18
 from models.resnet import resnet34
 from models.resnet import resnet50
 import tensorflow as tf
-# from models.architectures import vgg_like
+from models.architectures import vgg_like
 # from tensorflow.keras.applications.resnet import ResNet50
 
 FLAGS = flags.FLAGS
