@@ -13,7 +13,7 @@ from models.architectures import vgg_like
 # from tensorflow.keras.applications.resnet import ResNet50
 
 FLAGS = flags.FLAGS
-flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')
+flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
 
 
 def main(argv):
