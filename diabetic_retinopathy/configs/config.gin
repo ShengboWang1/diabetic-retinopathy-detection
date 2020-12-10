@@ -13,8 +13,8 @@ Trainer.log_interval = 100
 Trainer.ckpt_interval = 3000
 
 # Input pipeline
-load.name = 'idrid'
-load.data_dir = 'home/RUS_CIP/st169852/dl-lab-2020-team06/diabetic_retinopathy'
+load.name = 'eyepacs'
+load.data_dir = '/home/data/tensorflow_datasets/diabetic_retinopathy_detection/btgraham-300/3.0.0'
 # load.data_dir = '/content/drive/MyDrive/diabetic_retinopathy'
 # load.data_dir = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/downloads/manual'
 preprocess.img_height = 256

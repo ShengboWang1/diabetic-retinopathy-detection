@@ -43,7 +43,7 @@ def load(name, data_dir):
     elif name == "eyepacs":
         logging.info(f"Preparing dataset {name}...")
         (ds_train, ds_val, ds_test), ds_info = tfds.load(
-            'diabetic_retinopathy_detection/btgraham-300',
+            '/home/data/tensorflow_datasets',
             split=['train', 'validation', 'test'],
             shuffle_files=True,
             with_info=True,
