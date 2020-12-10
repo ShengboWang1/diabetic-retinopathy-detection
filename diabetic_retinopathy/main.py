@@ -25,7 +25,7 @@ def main(argv):
     utils_misc.set_loggers(run_paths['path_logs_train'], logging.INFO)
 
     # gin-config
-    gin.parse_config_files_and_bindings(['configs/config.gin'], [])
+    gin.parse_config_files_and_bindings(['diabetic_retinopathy/configs/config.gin'], [])
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
