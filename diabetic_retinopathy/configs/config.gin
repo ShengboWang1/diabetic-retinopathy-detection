@@ -9,7 +9,7 @@ vgg_block.kernel_size = (3, 3)
 
 # Training
 Trainer.total_steps = 50000
-Trainer.log_interval = 100
+Trainer.log_interval = 5
 Trainer.ckpt_interval = 3000
 
 # Input pipeline
