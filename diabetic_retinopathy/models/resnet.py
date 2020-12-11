@@ -69,6 +69,19 @@ class Bottleneck(tf.keras.Model):
         return out
 
 # Res Block 模块。继承keras.Model或者keras.Layer都可以
+def resnet_like():
+    inputs = tf.keras.Input(input_shape)
+    out = tf.keras.layers.layers.Conv2D(64, (3, 3), strides=(1, 1))(out)
+    out = tf.keras.layers.BatchNormalization()(out)
+    out = tf.keras.layers.layers.Activation(out)
+    out = tf.keras.layers.layers.MaxPool2D(pool_size=(2, 2), strides=(1, 1), padding='same')(out)
+    out = vgg_block(inputs, base_filters)
+    for i in range(2, n_blocks):
+        out = vgg_block(out, base_filters * 2 ** (i))
+    out = tf.keras.layers.GlobalAveragePooling2D()(out)
+    outputs = tf.keras.layers.Dense(n_classes)(out)
+    return tf.keras.Model(inputs=inputs, outputs=outputs, name='resnet50')
+
 class ResNet(k.Model):
 
     # 第一个参数layer_dims：[2, 2, 2, 2] 4个Res Block，每个包含2个Basic Block
@@ -123,6 +136,22 @@ class ResNet(k.Model):
 
         return res_blocks
 
+    def build_resblock1(self, filter_num, blocks, stride=1):
+        inputs = tf.keras.Input(input_shape)
+        out = BasicBlock(filter_num, stride)
+        for _ in range(1, blocks):
+            out = BasicBlock(filter_num, stride=1)
+        out = tf.keras.layers.layers.Conv2D(64, (3, 3), strides=(1, 1))(out)
+        out = tf.keras.layers.BatchNormalization()(out)
+        out = tf.keras.layers.layers.Activation(out)
+        out = tf.keras.layers.layers.MaxPool2D(pool_size=(2, 2), strides=(1, 1), padding='same')(out)
+        out = vgg_block(inputs, base_filters)
+        for i in range(2, n_blocks):
+            out = vgg_block(out, base_filters * 2 ** (i))
+        out = tf.keras.layers.GlobalAveragePooling2D()(out)
+        outputs = tf.keras.layers.Dense(n_classes)(out)
+        return tf.keras.Model(inputs=inputs, outputs=outputs, name='resnet50')
+
 def resnet18():
     return ResNet([2, 2, 2, 2])
 
@@ -130,17 +159,34 @@ def resnet18():
 def resnet34():
     return ResNet([3, 4, 6, 3]) #4个Res Block，第1个包含3个Basic Block,第2为4，第3为6，第4为3
 
-def resnet50():
+def resnet500():
     ResNet50 = k.applications.ResNet50(include_top=False,
                                               weights='imagenet',
                                               input_shape=(256, 256, 3))
     ResNet50.trainable = False
     model = tf.keras.Sequential()
     model.add(ResNet50)
+    model.summary()
     model.add(k.layers.GlobalAveragePooling2D())
     model.add(k.layers.Dense(10, activation='relu'))
     # model.add(k.layers.BatchNormalization())
     model.add(k.layers.Dense(2, activation='softmax'))
+    return model
+
+def resnet50(num_classes):
+    base_model = k.applications.ResNet50(include_top=False,
+                                              weights='imagenet',
+                                              input_shape=(256, 256, 3))
+    base_model.trainable = False
+    out = base_model.output
+    out = layers.GlobalAveragePooling2D()(out)
+    out = layers.Flatten(name='flatten')(out)
+    out = layers.Dense(2048, activation='relu', kernel_regularizer=k.regularizers.l2(0.0001), )(out)
+    out = layers.BatchNormalization()(out)
+    out = layers.Dense(1024, activation='relu', kernel_regularizer=k.regularizers.l2(0.0001))(out)
+    out = layers.BatchNormalization(name='bn_fc_01')(out)
+    predictions = layers.Dense(num_classes, activation='softmax')(out)
+    model = k.Model(inputs=base_model.input, outputs=predictions)
     return model
 
 def ResNet101():
