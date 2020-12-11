@@ -4,8 +4,8 @@ import cv2
 from matplotlib import pyplot as plt
 from models.resnet import resnet50
 
-
-image = get_img_array("./IDRID_dataset/images/test/IDRiD_001.jpg", (256, 256))
+image_path = "./IDRID_dataset/images/test/IDRiD_001.jpg"
+image = get_img_array(image_path, (256, 256))
 model = resnet50(2)
 model.build(input_shape=(16, 256, 256, 3))
 # #
@@ -21,7 +21,7 @@ cam3 = gradcam.compute_heatmap(image=image, classIdx=1, upsample_size=(4288, 284
 plt.matshow(cam3)
 plt.title("cam3")
 plt.show()
-original_image = cv2.imread("./IDRID_dataset/images/test/IDRiD_001.jpg")
+original_image = cv2.imread(image_path)
 cam3 = overlay_gradCAM(original_image, cam3)
 gradcam = cv2.cvtColor(cam3, cv2.COLOR_BGR2RGB)
 plt.matshow(gradcam)
