@@ -49,10 +49,10 @@ class ConfusionMatrix(tf.keras.metrics.Metric):
 
         return self.tp, self.tn, self.fp, self.fn
 
-# class ConfusionMatrix(tf.keras.metrics.Metric):
+# #class CM(tf.keras.metrics.Metric):
 #
 #     def __init(self, name="confusion_matrix", **kwargs):
-#         super(ConfusionMatrix, self).__init__(name=name, **kwargs)
+#         super(CM, self).__init__(name=name, **kwargs)
 #         # confusion matrix
 #         self.noc = noc
 #         self.confusion_matrix = self.add_weight(
@@ -72,4 +72,21 @@ class ConfusionMatrix(tf.keras.metrics.Metric):
 #         result = tf.math.reduce_mean(diag / rowsums, axis=0)
 #
 #         return result
+
+
+class CM(tf.keras.metrics.Metric):
+    def __init(self, name="confusion_matrix", **kwargs):
+        super(CM, self).__init__(name=name, **kwargs)
+        self.conf_matrix = tf.Variable(tf.zeros(shape=[self.num_class, self.num_class], dtype=tf.int32), trainable=False)
+        self.num_class = 2
+
+    def update_state(self, labels, label_pred):
+        self.conf_matrix.assign_add(tf.math.confusion_matrix(labels, label_pred))
+
+    def result(self):
+        return self.conf_matrix
+
+    def reset_states(self):
+        self.conf_matrix = tf.Variable(tf.zeros(shape=[self.num_class, self.num_class], dtype=tf.int32),
+                                       trainable=False)
 
