@@ -7,10 +7,10 @@ import datetime
 @gin.configurable
 class Trainer(object):
     def __init__(self, model, ds_train, ds_val, ds_info, run_paths, total_steps, log_interval, ckpt_interval):
+        self.current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         # Summary Writer
         # ....
-        self.train_summary_writer = tf.summary.create_file_writer("./train_summary")
-        self.val_summary_writer = tf.summary.create_file_writer("./val_summary")
+        self.summary_writer = tf.summary.create_file_writer("./summary/" + self.current_time)
 
         # Loss objective
         self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
@@ -34,9 +34,8 @@ class Trainer(object):
 
         # Checkpoint Manager
         # ...
-        self.time = datetime.datetime.now()
         #############
-        self.checkpoint_path = './checkpoint/train/'
+        self.checkpoint_path = './checkpoint/train/' + self.current_time
         self.ckpt = tf.train.Checkpoint(optimizer=self.optimizer, model=self.model)
         self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=5)
 
@@ -72,10 +71,6 @@ class Trainer(object):
             if step % self.log_interval == 0:
                 print(step)
 
-                # Reset test metrics
-                self.val_loss.reset_states()
-                self.val_accuracy.reset_states()
-
                 for val_images, val_labels in self.ds_val:
                     self.val_step(val_images, val_labels)
 
@@ -86,22 +81,24 @@ class Trainer(object):
                                              self.val_loss.result(),
                                              self.val_accuracy.result() * 100))
 
-                # Reset train metrics
-                self.train_loss.reset_states()
-                self.train_accuracy.reset_states()
-
                 # Write summary to tensorboard
                 # ...train test loss accuracy
-                with self.train_summary_writer.as_default():
+                with self.summary_writer.as_default():
                     tf.summary.scalar('train_loss', self.train_loss.result(), step=step)
                     # tf.summary.scalar('train_loss', self.train_loss.result(), step=self.optimizer.iterations)
                     tf.summary.scalar('train_accuracy', self.train_accuracy.result() * 100, step=step)
                     # tf.summary.scalar('train_accuracy', self.train_accuracy.result() * 100,
                     #                  step=self.optimizer.iterations)
-
-                with self.val_summary_writer.as_default():
                     tf.summary.scalar('val_loss', self.val_loss.result(), step=step)
                     tf.summary.scalar('val_accuracy', self.val_accuracy.result() * 100, step=step)
+
+                # Reset train metrics
+                self.train_loss.reset_states()
+                self.train_accuracy.reset_states()
+
+                # Reset validation metrics
+                self.val_loss.reset_states()
+                self.val_accuracy.reset_states()
 
                 yield self.val_accuracy.result().numpy()
 
@@ -111,8 +108,6 @@ class Trainer(object):
                 # ...
                 save_path = self.ckpt_manager.save()
                 print("Saved checkpoint for step {}: {}".format(int(step), save_path))
-                print("train_loss {:1.2f}".format(self.train_loss.result()))
-                print("train_accuracy {:1.2f}".format(self.train_accuracy.result()))
 
             if step % self.total_steps == 0:
                 logging.info(f'Finished training after {step} steps.')
