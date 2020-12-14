@@ -1,8 +1,7 @@
 import gin
 import tensorflow as tf
 import numpy as np
-import tensorflow_addons as tfa
-
+# import tensorflow_addons as tfa
 
 
 @gin.configurable
@@ -15,17 +14,18 @@ def preprocess(image, label, img_height, img_width):
     # Resize image
     image = tf.image.resize(image, size=(img_height, img_width))
     image = tf.keras.applications.resnet.preprocess_input(image)
+    # image = tf.keras.applications.inception_resnet_v2.resnet.preprocess_input(image)
     return image, label
 
-# all the possible operations here, need to separate them afterwards
 
+# all the possible operations here, need to separate them afterwards
 @gin.configurable
 def augment(image, label):
     """Data augmentation"""
 
     # the possibility of 90 190 270 0 degrees are the same
     def rotation(image, label):
-        image =tfa.image.rotate
+        # image =tfa.image.rotate
         # image = tf.image.rot90(image, k=tf.random.uniform([1], minval=0, maxval=4, dtype=tf.int32)[0])
         return image, label
 

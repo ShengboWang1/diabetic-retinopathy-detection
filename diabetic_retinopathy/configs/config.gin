@@ -1,24 +1,24 @@
 # Architectures
-vgg_like.base_filters = 8
-vgg_like.n_blocks = 3
-vgg_like.dense_units = 32
-vgg_like.dropout_rate = 0.2
+# vgg_like.base_filters = 8
+# vgg_like.n_blocks = 3
+# vgg_like.dense_units = 32
+# vgg_like.dropout_rate = 0.2
 
 # Layers
-vgg_block.kernel_size = (3, 3)
+# vgg_block.kernel_size = (3, 3)
 
 # Training
-#Trainer.total_steps = 150000
-#Trainer.log_interval = 100
-#Trainer.ckpt_interval = 3000
+Trainer.total_steps = 150000
+Trainer.log_interval = 30
+Trainer.ckpt_interval = 300
 
 # Input pipeline
-#load.name = 'eyepacs'
-#load.data_dir = '/home/data/tensorflow_datasets/'
+load.name = 'idrid'
+# load.data_dir = '/home/data/tensorflow_datasets/'
 # load.data_dir = '/content/drive/MyDrive/diabetic_retinopathy'
-# load.data_dir = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/downloads/manual'
-#preprocess.img_height = 256
-#preprocess.img_width = 256
-#prepare.batch_size = 16
-#prepare.caching = True
+load.data_dir = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/downloads/manual'
+preprocess.img_height = 256
+preprocess.img_width = 256
+prepare.batch_size = 16
+prepare.caching = True
 # augment.operation = 'cropping'
