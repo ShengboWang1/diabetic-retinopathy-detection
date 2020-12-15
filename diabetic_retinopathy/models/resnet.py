@@ -146,12 +146,13 @@ def resnet50_original():
 
 
 def resnet50(num_classes):
-    Inp = k.layers.Input((256, 256, 3))
+    #Inp = k.layers.Input((256, 256, 3))
     base_model = k.applications.ResNet50(include_top=False,
                                               weights='imagenet',
                                               input_shape=(256, 256, 3))
     base_model.trainable = False
-    out = base_model(Inp)
+    # out = base_model(Inp)
+    out = base_model.output
     out = layers.GlobalAveragePooling2D()(out)
     out = layers.Flatten(name='flatten')(out)
     out = layers.Dense(2048, activation='relu', kernel_regularizer=k.regularizers.l2(0.0001))(out)
@@ -159,7 +160,8 @@ def resnet50(num_classes):
     out = layers.Dense(1024, activation='relu', kernel_regularizer=k.regularizers.l2(0.0001))(out)
     out = layers.BatchNormalization(name='bn_fc_01')(out)
     predictions = layers.Dense(num_classes, activation='softmax')(out)
-    model = k.Model(inputs=Inp, outputs=predictions)
+    # model = k.Model(inputs=Inp, outputs=predictions)
+    model = k.Model(inputs=base_model.input, outputs=predictions)
     return model
 
 def ResNet101():

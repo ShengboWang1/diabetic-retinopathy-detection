@@ -7,18 +7,18 @@ import tensorflow as tf
 
 image_path = "./IDRID_dataset/images/test/IDRiD_001.jpg"
 image = get_img_array(image_path, (256, 256))
-model = resnet50(5)
+model = resnet50(2)
 model.build(input_shape=(16, 256, 256, 3))
 # #
-checkpoint = tf.train.Checkpoint(myModel=model)
-checkpoint.restore(tf.train.latest_checkpoint('./checkpoint/train/20201214-161759'))
+# checkpoint = tf.train.Checkpoint(myModel=model)
+# checkpoint.restore(tf.train.latest_checkpoint('checkpoint/train'))
 model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics='SparseCategoricalAccuracy')
 model.summary()
 
 
 # GradCAM
+gradcam = GradCAM(model=model, layerName="conv5_block3_out")
 # gradcam = GradCAM(model=model, layerName="conv5_block3_out")
-gradcam = GradCAM(model=model, layerName="resnet50")
 cam3 = gradcam.compute_heatmap(image=image, classIdx=1, upsample_size=(4288, 2848))
 plt.matshow(cam3)
 plt.title("cam3")
@@ -31,8 +31,8 @@ plt.title("GradCAM")
 plt.show()
 
 # Guided Backpropagation
-# GuidedBP = GuidedBackprop(model=model, layerName="conv5_block3_out")
-GuidedBP = GuidedBackprop(model=model, layerName="resnet50")
+GuidedBP = GuidedBackprop(model=model, layerName="conv5_block3_out")
+# GuidedBP = GuidedBackprop(model=model, layerName="resnet50")
 gb = GuidedBP.guided_backprop(image, upsample_size=(4288, 2848))
 gb_im = deprocess_image(gb)
 gb_im = cv2.cvtColor(gb_im, cv2.COLOR_BGR2RGB)
