@@ -130,7 +130,7 @@ def resnet18():
 def resnet34():
     return ResNet([3, 4, 6, 3]) #4个Res Block，第1个包含3个Basic Block,第2为4，第3为6，第4为3
 
-def resnet50_original():
+def resnet50_original(num_classes):
     ResNet50 = k.applications.ResNet50(include_top=False,
                                               weights='imagenet',
                                               input_shape=(256, 256, 3))
@@ -141,7 +141,7 @@ def resnet50_original():
     model.add(k.layers.GlobalAveragePooling2D())
     model.add(k.layers.Dense(10, activation='relu'))
     # model.add(k.layers.BatchNormalization())
-    model.add(k.layers.Dense(2, activation='softmax'))
+    model.add(k.layers.Dense(num_classes, activation='softmax'))
     return model
 
 
