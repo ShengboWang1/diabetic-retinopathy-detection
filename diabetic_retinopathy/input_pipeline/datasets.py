@@ -43,7 +43,7 @@ def load(name, data_dir):
     elif name == "eyepacs":
         logging.info(f"Preparing dataset {name}...")
         (ds_train, ds_val, ds_test), ds_info = tfds.load(
-            'diabetic_retinopathy_detection/btgraham-300',
+            'diabetic_retinopathy_detection/btgraham-300:3.0.0',
             split=['train', 'validation', 'test'],
             shuffle_files=True,
             with_info=True,
@@ -102,7 +102,7 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
     # Prepare test dataset
     ds_test = ds_test.map(
         preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-    ds_test = ds_test.batch(batch_size)
+    ds_test = ds_test.batch(103)
     if caching:
         ds_test = ds_test.cache()
     ds_test = ds_test.prefetch(tf.data.experimental.AUTOTUNE)
