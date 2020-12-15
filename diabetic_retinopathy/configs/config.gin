@@ -19,6 +19,6 @@ load.data_dir = '/home/data/tensorflow_datasets/'
 # load.data_dir = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/downloads/manual'
 preprocess.img_height = 256
 preprocess.img_width = 256
-prepare.batch_size = 8
+prepare.batch_size = 16
 prepare.caching = True
 # augment.operation = 'cropping'
