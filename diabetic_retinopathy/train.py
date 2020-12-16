@@ -34,7 +34,8 @@ class Trainer(object):
         self.max_acc = 0
         # Checkpoint Manager
         # ...
-        #############
+        print("current_time")
+        print(self.current_time)
         self.checkpoint_path = './checkpoint/train/' + self.current_time
         self.ckpt = tf.train.Checkpoint(optimizer=self.optimizer, model=self.model)
         self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=5)
@@ -96,7 +97,7 @@ class Trainer(object):
                 # Reset train metrics
                 self.train_loss.reset_states()
                 self.train_accuracy.reset_states()
-
+                # Compare it with max_acc
                 acc = self.val_accuracy.result().numpy()
                 # Reset validation metrics
                 self.val_loss.reset_states()
@@ -105,9 +106,8 @@ class Trainer(object):
                 yield self.val_accuracy.result().numpy()
 
             if step % self.ckpt_interval == 0:
-                #if tf.less(max_acc, self.val_accuracy.result()):
 
-                test = self.max_acc < acc
+                # Check if val_accuracy increase or not
                 if self.max_acc < acc:
                     self.max_acc = acc
                     logging.info(f'Saving better checkpoint to {self.run_paths["path_ckpts_train"]}.')
@@ -115,6 +115,8 @@ class Trainer(object):
                     # ...
                     save_path = self.ckpt_manager.save()
                     print("Saved checkpoint for step {}: {}".format(int(step), save_path))
+
+                # Nothing happens if val_accuracy isn't better
                 else:
                     print("Validation loss is not better, no new checkpoint")
 
