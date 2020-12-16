@@ -67,6 +67,10 @@ class Trainer(object):
 
             step = idx + 1
             self.train_step(images, labels)
+            if step == self.log_interval:
+                min_loss = self.val_loss
+                print("min_loss")
+                tf.print(min_loss)
 
             if step % self.log_interval == 0:
                 print(step)
@@ -80,6 +84,7 @@ class Trainer(object):
                                              self.train_accuracy.result() * 100,
                                              self.val_loss.result(),
                                              self.val_accuracy.result() * 100))
+
 
                 # Write summary to tensorboard
                 # ...train test loss accuracy
@@ -103,11 +108,14 @@ class Trainer(object):
                 yield self.val_accuracy.result().numpy()
 
             if step % self.ckpt_interval == 0:
-                logging.info(f'Saving checkpoint to {self.run_paths["path_ckpts_train"]}.')
-                # Save checkpoint
-                # ...
-                save_path = self.ckpt_manager.save()
-                print("Saved checkpoint for step {}: {}".format(int(step), save_path))
+                if self.val_loss < min_loss:
+                    min_loss = self.val_loss
+                    logging.info(f'Saving better checkpoint to {self.run_paths["path_ckpts_train"]}.')
+                    # Save checkpoint
+                    # ...
+                    save_path = self.ckpt_manager.save()
+                    print("Saved checkpoint for step {}: {}".format(int(step), save_path))
+
 
             if step % self.total_steps == 0:
                 logging.info(f'Finished training after {step} steps.')
