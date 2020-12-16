@@ -49,7 +49,6 @@ def augment(image, label):
         seed = np.random.randint(1234)
         image = tf.image.random_crop(image, size=[out_h, out_w, channel], seed=seed)
         image = tf.image.resize(image, size=(in_h, in_w))
-        print("cropped again")
         return image, label
 
     # shearing with random intensity from 0 to 60

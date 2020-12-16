@@ -14,14 +14,14 @@ class Trainer(object):
 
         # Loss objective
         self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.005)
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.0005)
 
         # Metrics
-        self.train_loss = tf.keras.metrics.Mean(name='train_loss')
+        self.train_loss = tf.keras.metrics.Mean(name='train_loss', dtype=tf.float32)
         self.train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
 
-        self.val_loss = tf.keras.metrics.Mean(name='test_loss')
-        self.val_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
+        self.val_loss = tf.keras.metrics.Mean(name='val_loss', dtype=tf.float32)
+        self.val_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='val_accuracy')
 
         self.model = model
         self.ds_train = ds_train
@@ -31,7 +31,7 @@ class Trainer(object):
         self.total_steps = total_steps
         self.log_interval = log_interval
         self.ckpt_interval = ckpt_interval
-
+        self.max_acc = 0
         # Checkpoint Manager
         # ...
         #############
@@ -65,12 +65,9 @@ class Trainer(object):
     def train(self):
         for idx, (images, labels) in enumerate(self.ds_train):
 
+
             step = idx + 1
             self.train_step(images, labels)
-            if step == self.log_interval:
-                min_loss = self.val_loss
-                print("min_loss")
-                tf.print(min_loss)
 
             if step % self.log_interval == 0:
                 print(step)
@@ -84,7 +81,6 @@ class Trainer(object):
                                              self.train_accuracy.result() * 100,
                                              self.val_loss.result(),
                                              self.val_accuracy.result() * 100))
-
 
                 # Write summary to tensorboard
                 # ...train test loss accuracy
@@ -101,6 +97,7 @@ class Trainer(object):
                 self.train_loss.reset_states()
                 self.train_accuracy.reset_states()
 
+                acc = self.val_accuracy.result().numpy()
                 # Reset validation metrics
                 self.val_loss.reset_states()
                 self.val_accuracy.reset_states()
@@ -108,14 +105,18 @@ class Trainer(object):
                 yield self.val_accuracy.result().numpy()
 
             if step % self.ckpt_interval == 0:
-                if self.val_loss < min_loss:
-                    min_loss = self.val_loss
+                #if tf.less(max_acc, self.val_accuracy.result()):
+
+                test = self.max_acc < acc
+                if self.max_acc < acc:
+                    self.max_acc = acc
                     logging.info(f'Saving better checkpoint to {self.run_paths["path_ckpts_train"]}.')
                     # Save checkpoint
                     # ...
                     save_path = self.ckpt_manager.save()
                     print("Saved checkpoint for step {}: {}".format(int(step), save_path))
-
+                else:
+                    print("Validation loss is not better, no new checkpoint")
 
             if step % self.total_steps == 0:
                 logging.info(f'Finished training after {step} steps.')
