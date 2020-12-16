@@ -41,9 +41,9 @@ def load(name, data_dir):
         ds_test = ds_test.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
         # resamping imbalanced data
-        # nonref_ds = ds_train.filter(lambda features, label: label == 0)
-        # ref_ds = ds_train.filter(lambda features, label: label == 1)
-        # ds_train = tf.data.experimental.sample_from_datasets([nonref_ds, ref_ds], [0.5, 0.5])
+        nonref_ds = ds_train.filter(lambda features, label: label == 0)
+        ref_ds = ds_train.filter(lambda features, label: label == 1)
+        ds_train = tf.data.experimental.sample_from_datasets([nonref_ds, ref_ds], [0.5, 0.5])
 
         # #def count(counts, batch):
         #     features, labels = batch
