@@ -14,7 +14,7 @@ class Trainer(object):
 
         # Loss objective
         self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.0005)
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
 
         # Metrics
         self.train_loss = tf.keras.metrics.Mean(name='train_loss', dtype=tf.float32)
@@ -32,6 +32,7 @@ class Trainer(object):
         self.log_interval = log_interval
         self.ckpt_interval = ckpt_interval
         self.max_acc = 0
+        self.min_loss = 100
         # Checkpoint Manager
         # ...
         print("current_time")
@@ -99,6 +100,7 @@ class Trainer(object):
                 self.train_accuracy.reset_states()
                 # Compare it with max_acc
                 acc = self.val_accuracy.result().numpy()
+                loss = self.val_loss.result().numpy()
                 # Reset validation metrics
                 self.val_loss.reset_states()
                 self.val_accuracy.reset_states()
@@ -107,8 +109,9 @@ class Trainer(object):
 
             if step % self.ckpt_interval == 0:
 
-                # Check if val_accuracy increase or not
-                if self.max_acc < acc:
+                # Check if val_loss decrease or not
+                if self.min_loss > loss:
+                    self.min_loss = loss
                     self.max_acc = acc
                     logging.info(f'Saving better checkpoint to {self.run_paths["path_ckpts_train"]}.')
                     print("loss {:1.2f}".format(self.val_loss.result()))
@@ -117,7 +120,7 @@ class Trainer(object):
                     save_path = self.ckpt_manager.save()
                     print("Saved checkpoint for step {}: {}".format(int(step), save_path))
 
-                # Nothing happens if val_accuracy isn't better
+                # Nothing happens
                 else:
                     print("Validation loss is not better, no new checkpoint")
 
@@ -127,6 +130,7 @@ class Trainer(object):
                 # ...
                 save_path = self.ckpt_manager.save()
                 print("Saved checkpoint for final step: {}".format(save_path))
-                print("best validation accuracy {:1.2f}".format(acc))
+                print("best validation loss {:1.2f}".format(loss))
+                print("the accuracy {:1.2f}".format(acc))
 
                 return self.val_accuracy.result().numpy()
