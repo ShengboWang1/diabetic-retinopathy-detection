@@ -35,7 +35,7 @@ def main(argv):
 
     # model resnet
     # model = resnet50(2)
-    model = inception_resnet_v2(2)
+    model = resnet18()
     model.build(input_shape=(16, 256, 256, 3))
     model.summary()
 

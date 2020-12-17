@@ -127,7 +127,6 @@ class Trainer(object):
                 # ...
                 save_path = self.ckpt_manager.save()
                 print("Saved checkpoint for final step: {}".format(save_path))
-                print("loss {:1.2f}".format(self.train_loss.result()))
-                print("accuracy {:1.2f}".format(self.train_accuracy.result()))
+                print("best validation accuracy {:1.2f}".format(acc))
 
                 return self.val_accuracy.result().numpy()
