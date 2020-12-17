@@ -5,9 +5,8 @@ from train import Trainer
 from evaluation.eval import evaluate
 from input_pipeline import datasets
 from utils import utils_params, utils_misc
-from models.resnet import resnet18
-from models.resnet import resnet34
-from models.resnet import resnet50, resnet50_original
+from models.resnet import resnet18, resnet34, resnet50, resnet50_original
+from models.inception_resnet_v2 import inception_resnet_v2
 import tensorflow as tf
 from models.architectures import vgg_like
 
@@ -35,7 +34,8 @@ def main(argv):
     # model = vgg_like(input_shape=[256, 256, 3], n_classes=2)
 
     # model resnet
-    model = resnet50(2)
+    # model = resnet50(2)
+    model = inception_resnet_v2(2)
     model.build(input_shape=(16, 256, 256, 3))
     model.summary()
 

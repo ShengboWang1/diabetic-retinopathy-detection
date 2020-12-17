@@ -111,6 +111,7 @@ class Trainer(object):
                 if self.max_acc < acc:
                     self.max_acc = acc
                     logging.info(f'Saving better checkpoint to {self.run_paths["path_ckpts_train"]}.')
+                    print("loss {:1.2f}".format(self.val_loss.result()))
                     # Save checkpoint
                     # ...
                     save_path = self.ckpt_manager.save()
@@ -129,4 +130,4 @@ class Trainer(object):
                 print("loss {:1.2f}".format(self.train_loss.result()))
                 print("accuracy {:1.2f}".format(self.train_accuracy.result()))
 
-                return self.test_accuracy.result().numpy()
+                return self.val_accuracy.result().numpy()

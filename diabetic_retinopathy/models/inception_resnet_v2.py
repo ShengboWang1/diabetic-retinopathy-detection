@@ -1,7 +1,7 @@
 import tensorflow.keras as k
 
 
-def inception_resnet_v2(num_class):
+def inception_resnet_v2(num_classes):
     base_model = k.applications.InceptionV3(weights='imagenet', include_top=False)
     base_model.trainable = False
     out = base_model.output
