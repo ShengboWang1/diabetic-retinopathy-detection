@@ -49,44 +49,53 @@ class ConfusionMatrix(tf.keras.metrics.Metric):
 
         return self.tp, self.tn, self.fp, self.fn
 
-# #class CM(tf.keras.metrics.Metric):
-#
-#     def __init(self, name="confusion_matrix", **kwargs):
-#         super(CM, self).__init__(name=name, **kwargs)
-#         # confusion matrix
-#         self.noc = noc
-#         self.confusion_matrix = self.add_weight(
-#             name="confusion_matrix",
-#             shape=(noc, noc)
-#         initializer = "zeros", dtype = tf.int32)
-#
-#     def update_state(self, *args, **kwargs):
-#         # update state
-#         confusion_matrix = tf.math.confusion_matrix(y_true, tf.argmax(y_pred, axis=1), num_classes=self.noc)
-#         return self.confusion_matrix.assign_add(confusion_matrix)
-#
-#     def result(self):
-#         # result
-#         diag = tf.linalg.diag_part(self.confusion_matrix)
-#         rowsums = tf.math.reduce_sum(self.confusion_matrix, axis=1)
-#         result = tf.math.reduce_mean(diag / rowsums, axis=0)
-#
-#         return result
 
+class ConfusionMatrixMetric(tf.keras.metrics.Metric):
+    """
+    A custom Keras metric to compute the running average of the confusion matrix
+    """
 
-class CM(tf.keras.metrics.Metric):
-    def __init(self, name="confusion_matrix", **kwargs):
-        super(CM, self).__init__(name=name, **kwargs)
-        self.conf_matrix = tf.Variable(tf.zeros(shape=[self.num_class, self.num_class], dtype=tf.int32), trainable=False)
-        self.num_class = 2
-
-    def update_state(self, labels, label_pred):
-        self.conf_matrix.assign_add(tf.math.confusion_matrix(labels, label_pred))
-
-    def result(self):
-        return self.conf_matrix
+    def __init__(self, num_classes, **kwargs):
+        super(ConfusionMatrixMetric, self).__init__(name='confusion_matrix_metric',
+                                                    **kwargs)  # handles base args (e.g., dtype)
+        self.num_classes = num_classes
+        self.total_cm = self.add_weight("total", shape=(num_classes, num_classes), initializer="zeros")
 
     def reset_states(self):
-        self.conf_matrix = tf.Variable(tf.zeros(shape=[self.num_class, self.num_class], dtype=tf.int32),
-                                       trainable=False)
+        for s in self.variables:
+            s.assign(tf.zeros(shape=s.shape))
+
+    def update_state(self, y_true, y_pred, sample_weight=None):
+        self.total_cm.assign_add(self.confusion_matrix(y_true, y_pred))
+        return self.total_cm
+
+    def result(self):
+        # return self.process_confusion_matrix()
+        return self.total_cm
+
+
+    def confusion_matrix(self, y_true, y_pred):
+        """
+        Make a confusion matrix
+        """
+        y_pred = tf.argmax(y_pred, 1)
+        cm = tf.math.confusion_matrix(y_true, y_pred, dtype=tf.float32, num_classes=self.num_classes)
+        return cm
+
+    def process_confusion_matrix(self):
+        "returns precision, recall and f1 along with overall accuracy"
+        cm = self.total_cm
+        diag_part = tf.linalg.diag_part(cm)
+        precision = diag_part / (tf.reduce_sum(cm, 0) + tf.constant(1e-15))
+        recall = diag_part / (tf.reduce_sum(cm, 1) + tf.constant(1e-15))
+        f1 = 2 * precision * recall / (precision + recall + tf.constant(1e-15))
+        return precision, recall, f1
+
+    def fill_output(self, output):
+        results = self.result()
+        for i in range(self.num_classes):
+            output['precision_{}'.format(i)] = results[0][i]
+            output['recall_{}'.format(i)] = results[1][i]
+            output['F1_{}'.format(i)] = results[2][i]
+
 
