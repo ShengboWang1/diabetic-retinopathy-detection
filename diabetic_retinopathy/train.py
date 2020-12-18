@@ -114,7 +114,7 @@ class Trainer(object):
                     self.min_loss = loss
                     self.max_acc = acc
                     logging.info(f'Saving better checkpoint to {self.run_paths["path_ckpts_train"]}.')
-                    print("loss {:1.2f}".format(self.val_loss.result()))
+                    print("loss {:1.2f}".format(loss))
                     # Save checkpoint
                     # ...
                     save_path = self.ckpt_manager.save()
