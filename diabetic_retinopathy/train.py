@@ -110,7 +110,7 @@ class Trainer(object):
             if step % self.ckpt_interval == 0:
 
                 # Check if val_loss decrease or not
-                if self.min_loss > loss:
+                if self.val_accuracy < acc:
                     self.min_loss = loss
                     self.max_acc = acc
                     logging.info(f'Saving better checkpoint to {self.run_paths["path_ckpts_train"]}.')
@@ -120,6 +120,19 @@ class Trainer(object):
                     save_path = self.ckpt_manager.save()
                     print("Saved checkpoint for step {}: {}".format(int(step), save_path))
 
+                elif self.val_accuracy == acc:
+                    if self.val_loss < loss:
+                        self.min_loss = loss
+                        logging.info(f'Saving better checkpoint to {self.run_paths["path_ckpts_train"]}.')
+                        print("loss {:1.2f}".format(loss))
+                        # Save checkpoint
+                        # ...
+                        save_path = self.ckpt_manager.save()
+                        print("Saved checkpoint for step {}: {}".format(int(step), save_path))
+                    # Nothing happens
+                    else:
+                        print("Validation loss is not better, no new checkpoint")
+
                 # Nothing happens
                 else:
                     print("Validation loss is not better, no new checkpoint")
@@ -128,8 +141,8 @@ class Trainer(object):
                 logging.info(f'Finished training after {step} steps.')
                 # Save final checkpoint
                 # ...
-                save_path = self.ckpt_manager.save()
-                print("Saved checkpoint for final step: {}".format(save_path))
+                # save_path = self.ckpt_manager.save()
+                # print("Saved checkpoint for final step: {}".format(save_path))
                 print("best validation loss {:1.2f}".format(loss))
                 print("the accuracy {:1.2f}".format(acc))
 

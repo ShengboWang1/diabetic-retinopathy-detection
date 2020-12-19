@@ -13,7 +13,7 @@ def preprocess(image, label, img_height, img_width):
 
     # Resize image
     image = tf.image.resize(image, size=(img_height, img_width))
-    image = tf.keras.applications.resnet.preprocess_input(image)
+    # image = tf.keras.applications.resnet.preprocess_input(image)
     # image = tf.keras.applications.inception_resnet_v2.preprocess_input(image)
     return image, label
 
