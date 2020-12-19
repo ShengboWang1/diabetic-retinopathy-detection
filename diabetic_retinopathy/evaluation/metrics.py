@@ -83,13 +83,14 @@ class ConfusionMatrixMetric(tf.keras.metrics.Metric):
         return cm
 
     def process_confusion_matrix(self):
-        "returns precision, recall and f1 along with overall accuracy"
+        "returns sensitivity and specificity along with overall accuracy"
         cm = self.total_cm
         diag_part = tf.linalg.diag_part(cm)
-        precision = diag_part / (tf.reduce_sum(cm, 0) + tf.constant(1e-15))
-        recall = diag_part / (tf.reduce_sum(cm, 1) + tf.constant(1e-15))
-        f1 = 2 * precision * recall / (precision + recall + tf.constant(1e-15))
-        return precision, recall, f1
+        # precision = diag_part / (tf.reduce_sum(cm, 0) + tf.constant(1e-15))
+        # recall = diag_part / (tf.reduce_sum(cm, 1) + tf.constant(1e-15))
+        # f1 = 2 * precision * recall / (precision + recall + tf.constant(1e-15))
+        sensitivity_specificity = diag_part / (tf.reduce_sum(cm, 0) + tf.constant(1e-15))
+        return sensitivity_specificity
 
     def fill_output(self, output):
         results = self.result()

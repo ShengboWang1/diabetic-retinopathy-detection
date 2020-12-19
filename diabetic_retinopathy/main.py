@@ -31,11 +31,11 @@ def main(argv):
 
     # model vgg
     # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
-    #model = vgg_like(input_shape=[256, 256, 3], n_classes=2)
+    # model = vgg_like(input_shape=[256, 256, 3], n_classes=2)
 
     # model resnet
-    model = resnet18()
     # model = resnet18()
+    model = resnet34()
     # model = inception_resnet_v2(2)
     model.build(input_shape=(16, 256, 256, 3))
 

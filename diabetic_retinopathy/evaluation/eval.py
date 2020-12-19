@@ -10,16 +10,16 @@ def evaluate(model, checkpoint, ds_train, ds_val, ds_test, ds_info, run_paths):
     # checkpoint.restore(tf.train.latest_checkpoint('./checkpoint/checkpoint/train/20201217-033207'))
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
 
-
-    for val_images, val_labels in ds_val:
-        val_loss, val_accuracy = model.evaluate(val_images, val_labels, verbose=1)
-        predictions = model(val_images, training=True)
-        label_pred = np.argmax(predictions, -1)
-        _ = val_CM.update_state(val_labels, predictions)
-    template = 'val Loss: {}, val Accuracy: {}'
-    print(template.format(val_loss, val_accuracy * 100))
-    template = 'Confusion Matrix:\n{}'
-    print(template.format(val_CM.result().numpy()))
+    # #
+    # for val_images, val_labels in ds_val:
+    #     val_loss, val_accuracy = model.evaluate(val_images, val_labels, verbose=1)
+    #     predictions = model(val_images, training=True)
+    #     label_pred = np.argmax(predictions, -1)
+    #     _ = val_CM.update_state(val_labels, predictions)
+    # template = 'val Loss: {}, val Accuracy: {}'
+    # print(template.format(val_loss, val_accuracy * 100))
+    # template = 'Confusion Matrix:\n{}'
+    # print(template.format(val_CM.result().numpy()))
 
 
     for test_images, test_labels in ds_test:
@@ -32,6 +32,14 @@ def evaluate(model, checkpoint, ds_train, ds_val, ds_test, ds_info, run_paths):
     print(template.format(test_loss, test_accuracy * 100))
     template = 'Confusion Matrix:\n{}'
     print(template.format(test_CM.result().numpy()))
+
+    # Compute sensitivity and specificity from the confusion matrix
+    sensitivity_specificity = test_CM.process_confusion_matrix()
+    sensitivity = sensitivity_specificity.numpy()[1]
+    specificity = sensitivity_specificity.numpy()[0]
+    template = 'Sensitivity: {}, Specificity: {}'
+    print(template.format(sensitivity, specificity))
+
     return test_accuracy
 
 
