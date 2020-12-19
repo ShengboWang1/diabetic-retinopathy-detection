@@ -94,7 +94,8 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
         ds_train = ds_train.cache()
     ds_train = ds_train.map(
         augment, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-    ds_train = ds_train.shuffle(1000)
+    # 600 train images from idrid after resolve imbalanced problem
+    ds_train = ds_train.shuffle(60)
     # ds_train = ds_train.shuffle(ds_info.splits['train'].num_examples // 10)
     ds_train = ds_train.batch(batch_size)
     ds_train = ds_train.repeat(-1)
