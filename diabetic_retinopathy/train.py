@@ -110,7 +110,7 @@ class Trainer(object):
             if step % self.ckpt_interval == 0:
 
                 # Check if val_loss decrease or not
-                if self.val_accuracy < acc:
+                if self.max_acc < acc:
                     self.min_loss = loss
                     self.max_acc = acc
                     logging.info(f'Saving better checkpoint to {self.run_paths["path_ckpts_train"]}.')
