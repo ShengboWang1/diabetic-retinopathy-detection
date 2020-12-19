@@ -1,6 +1,6 @@
 import csv 
 import tensorflow as tf
-import IPython.display as display
+# import IPython.display as display
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
