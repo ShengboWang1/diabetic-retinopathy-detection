@@ -1,5 +1,6 @@
 import gin
 import logging
+import tensorflow as tf
 from absl import app, flags
 from train import Trainer
 from evaluation.eval import evaluate
@@ -7,8 +8,9 @@ from input_pipeline import datasets
 from utils import utils_params, utils_misc
 from models.resnet import resnet18, resnet34, resnet50, resnet50_original
 from models.inception_resnet_v2 import inception_resnet_v2
-import tensorflow as tf
 from models.architectures import vgg_like
+from models.densenet import densenet121
+from models.inception_v3 import inception_v3
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
@@ -35,7 +37,8 @@ def main(argv):
 
     # model resnet
     # model = resnet18()
-    model = resnet34()
+    # model = resnet34()
+    model = densenet121(num_classes=5)
     # model = inception_resnet_v2(2)
     model.build(input_shape=(16, 256, 256, 3))
 
