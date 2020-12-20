@@ -14,7 +14,7 @@ class Trainer(object):
 
         # Loss objective
         self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.0005)
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.0003)
 
         # Metrics
         self.train_loss = tf.keras.metrics.Mean(name='train_loss', dtype=tf.float32)
