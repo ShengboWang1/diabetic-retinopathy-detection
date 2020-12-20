@@ -10,12 +10,16 @@ def preprocess(image, label, img_height, img_width):
     """Dataset preprocessing: Normalizing and resizing"""
 
     # Normalize image: `uint8` -> `float32`.
-    tf.cast(image, tf.float32) / 255.
+
+    #tf.cast(image, tf.float32) / 255.
+    image = tf.cast(image, tf.float32)
 
     # Resize image
-    image = tf.image.resize(image, size=(img_height, img_width))
+    #image = tf.image.resize(image, size=(img_height, img_width))
     # image = tf.keras.applications.resnet.preprocess_input(image)
     # image = tf.keras.applications.inception_resnet_v2.preprocess_input(image)
+    image = tf.keras.applications.densenet.preprocess_input(image)
+    #image = tf.keras.applications.inception_v3.preprocess_input(image)
     return image, label
 
 

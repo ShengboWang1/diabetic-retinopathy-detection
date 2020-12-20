@@ -11,3 +11,4 @@ def densenet121(num_classes):
     model.add(densenet)
     model.add(layers.GlobalAveragePooling2D())
     model.add(layers.Dense(num_classes, activation='softmax'))
+    return model
