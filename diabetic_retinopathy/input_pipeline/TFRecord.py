@@ -220,19 +220,19 @@ def create_test_record():
 
 def create_train2_record():
     train_image_labels = row_csv2dict(
-        '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/train.csv')
+        '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/new_train_2classes.csv')
     print(train_image_labels)
     write(train2_file, train_image_labels, train_path)
 
 def create_val2_record():
     train_image_labels = row_csv2dict(
-        '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/train.csv')
+        '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/val_2classes.csv')
     print(train_image_labels)
     write(val2_file, train_image_labels, train_path)
 
 def create_test2_record():
     test_image_labels = row_csv2dict(
-        '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/test.csv')
+        '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/test_2classes.csv')
     print(test_image_labels)
     write(test2_file, test_image_labels, test_path)
 

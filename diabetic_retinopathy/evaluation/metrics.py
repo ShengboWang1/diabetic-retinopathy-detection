@@ -78,7 +78,7 @@ class ConfusionMatrixMetric(tf.keras.metrics.Metric):
         """
         Make a confusion matrix
         """
-        y_pred = tf.argmax(y_pred, 1)
+        ##### y_pred = tf.argmax(y_pred, 1)
         cm = tf.math.confusion_matrix(y_true, y_pred, dtype=tf.float32, num_classes=self.num_classes)
         return cm
 
@@ -90,7 +90,9 @@ class ConfusionMatrixMetric(tf.keras.metrics.Metric):
         # recall = diag_part / (tf.reduce_sum(cm, 1) + tf.constant(1e-15))
         # f1 = 2 * precision * recall / (precision + recall + tf.constant(1e-15))
         sensitivity_specificity = diag_part / (tf.reduce_sum(cm, 0) + tf.constant(1e-15))
-        return sensitivity_specificity
+        sensitivity = sensitivity_specificity.numpy()[1]
+        specificity = sensitivity_specificity.numpy()[0]
+        return sensitivity, specificity
 
     def fill_output(self, output):
         results = self.result()
