@@ -51,7 +51,7 @@ def augment(image, label):
         # x_scaling = tf.random.uniform([1], 0.8, 1)
         # y_scaling = tf.random.uniform([1], 0.9, 1)
         scaling = tf.random.uniform([2], 0.9, 1)
-        x_scaling = 2 * scaling[0] - 1
+        x_scaling = scaling[0]
         y_scaling = scaling[1]
         out_h = tf.cast(in_h * y_scaling, dtype=tf.int32)
         out_w = tf.cast(in_w * x_scaling, dtype=tf.int32)

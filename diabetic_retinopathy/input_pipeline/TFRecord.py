@@ -201,39 +201,39 @@ test2_file = 'idrid-2test.tfrecord-00000-of-00001'
 def create_train_record():
     train_image_labels = row_csv2dict(
         '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/new_train.csv')
-    print(train_image_labels)
+    # print(train_image_labels)
     write(train_file, train_image_labels, train_path)
 
 
 def create_val_record():
     train_image_labels = row_csv2dict(
         '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/val.csv')
-    print(train_image_labels)
+    # print(train_image_labels)
     write(val_file, train_image_labels, train_path)
 
 
 def create_test_record():
     test_image_labels = row_csv2dict(
         '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/test.csv')
-    print(test_image_labels)
+    # print(test_image_labels)
     write(test_file, test_image_labels, test_path)
 
 def create_train2_record():
     train_image_labels = row_csv2dict(
         '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/new_train_2classes.csv')
-    print(train_image_labels)
+    # print(train_image_labels)
     write(train2_file, train_image_labels, train_path)
 
 def create_val2_record():
     train_image_labels = row_csv2dict(
         '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/val_2classes.csv')
-    print(train_image_labels)
+    # print(train_image_labels)
     write(val2_file, train_image_labels, train_path)
 
 def create_test2_record():
     test_image_labels = row_csv2dict(
         '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/test_2classes.csv')
-    print(test_image_labels)
+    #print(test_image_labels)
     write(test2_file, test_image_labels, test_path)
 
 create_5_classes_csv(raw_train_df, valid_df)
