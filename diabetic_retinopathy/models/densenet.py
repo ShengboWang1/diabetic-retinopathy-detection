@@ -8,6 +8,7 @@ def densenet121(num_classes):
         include_top=False,
         input_shape=(256, 256, 3)
     )
+    densenet.trainable = False
     model.add(densenet)
     model.add(layers.GlobalAveragePooling2D())
     model.add(layers.Dense(num_classes, activation='softmax'))
