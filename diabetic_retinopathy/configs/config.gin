@@ -1,11 +1,11 @@
 # Architectures
-vgg_like.base_filters = 8
-vgg_like.n_blocks = 3
-vgg_like.dense_units = 32
-vgg_like.dropout_rate = 0.2
+# vgg_like.base_filters = 8
+# vgg_like.n_blocks = 3
+# vgg_like.dense_units = 32
+# vgg_like.dropout_rate = 0.2
 
 # Layers
-vgg_block.kernel_size = (3, 3)
+# vgg_block.kernel_size = (3, 3)
 
 # Training
 Trainer.total_steps = 200000
