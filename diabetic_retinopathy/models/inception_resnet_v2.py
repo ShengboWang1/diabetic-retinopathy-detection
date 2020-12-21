@@ -1,5 +1,5 @@
 from tensorflow.keras import layers, Model, Input
-from tensorflow.keras.applications.InceptionResNetV2 import InceptionResNetV2
+from tensorflow.keras.applications import InceptionResNetV2
 
 def inception_resnet_v2(num_classes):
     base_model = InceptionResNetV2(
