@@ -53,7 +53,6 @@ def main(argv):
         checkpoint = tf.train.Checkpoint(myModel=model)
         evaluate(model,
                  checkpoint,
-                 ds_train,
                  ds_val,
                  ds_test,
                  ds_info,

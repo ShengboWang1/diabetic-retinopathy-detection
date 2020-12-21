@@ -23,3 +23,6 @@ preprocess.img_width = 256
 prepare.batch_size = 16
 prepare.caching = False
 # augment.operation = 'cropping'
+
+# Evaluation
+# evaluate.num_classes = 2

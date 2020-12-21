@@ -3,12 +3,14 @@ from evaluation.metrics import ConfusionMatrixMetric
 import numpy as np
 import matplotlib.pyplot as plt
 import sklearn
+import gin
 
-def evaluate(model, checkpoint, ds_train, ds_val, ds_test, ds_info, run_paths):
-    test_cm = ConfusionMatrixMetric(2)
-    val_cm = ConfusionMatrixMetric(2)
+@gin.configurable
+def evaluate(model, checkpoint, ds_val, ds_test, ds_info, run_paths):
+    test_cm = ConfusionMatrixMetric(num_classes=2)
+    val_cm = ConfusionMatrixMetric(num_classes=2)
     # Restore the model from the corresponding checkpoint
-    # checkpoint.restore(tf.train.latest_checkpoint('./checkpoint/checkpoint/train/20201217-033207'))
+    checkpoint.restore(tf.train.latest_checkpoint('./checkpoint/checkpoint/train/20201221-030145'))
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
 
     # #
