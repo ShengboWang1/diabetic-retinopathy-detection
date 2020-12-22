@@ -112,7 +112,7 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
     # Prepare test dataset
     ds_test = ds_test.map(
         preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-    ds_test = ds_test.batch(batch_size)
+    ds_test = ds_test.batch(batch_size=103)
     if caching:
         ds_test = ds_test.cache()
     ds_test = ds_test.prefetch(tf.data.experimental.AUTOTUNE)
