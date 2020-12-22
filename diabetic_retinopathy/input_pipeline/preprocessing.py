@@ -30,9 +30,9 @@ def augment(image, label):
 
     # random rotate the image by +- 0.25pi
     def rotation(image):
-        random_angles = tf.random.uniform(shape=(), minval=-np.pi / 4, maxval=np.pi / 4)
-        image = tfa.image.rotate(image, random_angles)
-        # image = tf.image.rot90(image, k=tf.random.uniform([1], minval=0, maxval=4, dtype=tf.int32)[0])
+        # random_angles = tf.random.uniform(shape=(), minval=-np.pi / 4, maxval=np.pi / 4)
+        # image = tfa.image.rotate(image, random_angles)
+        image = tf.image.rot90(image, k=tf.random.uniform([1], minval=0, maxval=4, dtype=tf.int32)[0])
         return image
 
     # likely tp flipp the image from left to right
