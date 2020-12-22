@@ -10,7 +10,7 @@
 # Training
 Trainer.total_steps = 200000
 Trainer.log_interval = 100
-Trainer.ckpt_interval = 10
+Trainer.ckpt_interval = 500
 
 # Input pipeline
 load.name = 'idrid'

@@ -55,7 +55,8 @@ def evaluate(model, checkpoint, ds_val, ds_test, ds_info, run_paths):
 
     test_loss, test_accuracy = model.evaluate(ds_test, verbose=2)
     test_predictions = model(ds_test, training=True)
-    _ = test_cm.update_state(test_labels, all_test_predictions[:, 1])
+    for test_images, test_labels in ds_test:
+        _ = test_cm.update_state(test_labels, test_predictions[:, 1])
     template = 'Test Loss: {}, Test Accuracy: {}'
     print(template.format(test_loss, test_accuracy * 100))
 
