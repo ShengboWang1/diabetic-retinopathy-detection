@@ -16,10 +16,10 @@ def preprocess(image, label, img_height, img_width):
 
     # Resize image
     image = tf.image.resize(image, size=(img_height, img_width))
-    # image = tf.keras.applications.resnet.preprocess_input(image)
+    image = tf.keras.applications.resnet.preprocess_input(image)
     # image = tf.keras.applications.inception_resnet_v2.preprocess_input(image)
     # image = tf.keras.applications.densenet.preprocess_input(image)
-    image = tf.keras.applications.inception_v3.preprocess_input(image)
+    # image = tf.keras.applications.inception_v3.preprocess_input(image)
     return image, label
 
 
@@ -30,9 +30,9 @@ def augment(image, label):
 
     # random rotate the image by +- 0.25pi
     def rotation(image):
-        # random_angles = tf.random.uniform(shape=(), minval=-np.pi / 4, maxval=np.pi / 4)
-        # image = tfa.image.rotate(image, random_angles)
-        image = tf.image.rot90(image, k=tf.random.uniform([1], minval=0, maxval=4, dtype=tf.int32)[0])
+        random_angles = tf.random.uniform(shape=(), minval=-np.pi / 4, maxval=np.pi / 4)
+        image = tfa.image.rotate(image, random_angles)
+        # image = tf.image.rot90(image, k=tf.random.uniform([1], minval=0, maxval=4, dtype=tf.int32)[0])
         return image
 
     # likely tp flipp the image from left to right
@@ -46,7 +46,8 @@ def augment(image, label):
     # random crop the image from left and right sides and scale it to the original size
     def cropping(image):
         image = tf.image.convert_image_dtype(image, dtype=tf.float32)
-        in_h, in_w, channel = image.get_shape().as_list()
+        in_h = image.shape[0]
+        in_w = image.shape[1]
         # Get 2 random scaling factors of x and y axis
         # x_scaling = tf.random.uniform([1], 0.8, 1)
         # y_scaling = tf.random.uniform([1], 0.9, 1)
@@ -69,7 +70,9 @@ def augment(image, label):
             # image.numpy(),
             # shear=shear_intensity
         # )
-        image = tfa.image.transform(image, [1.0, 1.0, -250, 0.0, 1.0, 0.0, 0.0, 0.0])
+        x_shear = tf.random.uniform([1], minval=-0.1, maxval=0.1, dtype=tf.float32)[0]
+        y_shear = tf.random.uniform([1], minval=-0.1, maxval=0.1, dtype=tf.float32)[0]
+        image = tfa.image.transform(image, [1.0, x_shear, 0, y_shear, 1.0, 0.0, 0.0, 0.0])
         return image
 
     def random_brightness(image):
@@ -81,7 +84,7 @@ def augment(image, label):
         return image
 
     def random_hue(image):
-        image = tf.image.random_hue(image, max_delta=0.1)
+        image = tf.image.random_hue(image, max_delta=0.01)
         return image
 
     def random_contrast(image):
@@ -91,7 +94,7 @@ def augment(image, label):
     image = cropping(image)
     image = flipping(image)
     image = rotation(image)
-    # image = shearing(image)
+    image = shearing(image)
     image = random_brightness(image)
     image = random_saturation(image)
     image = random_hue(image)

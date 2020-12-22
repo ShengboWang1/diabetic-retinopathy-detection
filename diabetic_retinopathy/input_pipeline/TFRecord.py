@@ -239,13 +239,13 @@ def create_test2_record():
 create_5_classes_csv(raw_train_df, valid_df)
 create_2_classes_csv(raw_train_df, valid_df, test_df)
 
-create_train_record()
-create_val_record()
-create_test_record()
+# create_train_record()
+# create_val_record()
+# create_test_record()
 
-create_train2_record()
-create_val2_record()
-create_test2_record()
+# create_train2_record()
+# create_val2_record()
+# create_test2_record()
 
 
 # Read the TFRecordDataset

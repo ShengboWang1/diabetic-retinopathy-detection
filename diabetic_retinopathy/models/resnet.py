@@ -144,24 +144,54 @@ def resnet50_original(num_classes):
     return model
 
 
-def resnet50(num_classes):
-    #Inp = k.layers.Input((256, 256, 3))
-    base_model = k.applications.ResNet50(include_top=False,
+from tensorflow.keras import layers, Model, Input, applications, regularizers
+
+
+
+def resnet50_2(num_classes):
+    inputs = layers.Input((256, 256, 3))
+    base_model = applications.ResNet50(include_top=False,
                                               weights='imagenet',
                                               input_shape=(256, 256, 3))
     base_model.trainable = False
-    # out = base_model(Inp)
-    out = base_model.output
+    out = base_model(inputs, training=False)
+    # out = base_model.output
     out = layers.GlobalAveragePooling2D()(out)
     out = layers.Flatten(name='flatten')(out)
-    out = layers.Dense(2048, activation='relu', kernel_regularizer=k.regularizers.l2(0.0001))(out)
+    out = layers.Dense(2048, activation='relu', kernel_regularizer=regularizers.l2(0.0001))(out)
     out = layers.BatchNormalization()(out)
-    out = layers.Dense(1024, activation='relu', kernel_regularizer=k.regularizers.l2(0.0001))(out)
+    out = layers.Dense(1024, activation='relu', kernel_regularizer=regularizers.l2(0.0001))(out)
     out = layers.BatchNormalization(name='bn_fc_01')(out)
     predictions = layers.Dense(num_classes, activation='softmax')(out)
     # model = k.Model(inputs=Inp, outputs=predictions)
-    model = k.Model(inputs=base_model.input, outputs=predictions)
+    model = Model(inputs, outputs=predictions)
     return model
+
+def resnet50(num_classes):
+    inputs = layers.Input((256, 256, 3))
+    base_model = applications.ResNet50(include_top=False,
+                                              weights='imagenet',
+                                              input_shape=(256, 256, 3))
+    # Make BatchNormalization layers as trainable, , this is needed because when using Frozen model,
+    # if the batch statistics (mean/variance) of frozen layers are used and if the target dataset is different from one
+    # which was used for training, this will result in degrading of accuracy
+    # (https://github.com/keras-team/keras/pull/9965)
+    for layer in base_model.layers:
+        if isinstance(layer, layers.BatchNormalization):
+            layer.trainable = True
+        else:
+            layer.trainable = False
+    out = base_model(inputs, training=False)
+    # out = base_model.output
+    out = layers.GlobalAveragePooling2D()(out)
+    out = layers.Dense(512, activation='relu')(out)
+    out = layers.Dropout(0.25)(out)
+    out = layers.BatchNormalization(name='bn_fc_01')(out)
+    predictions = layers.Dense(num_classes, activation='softmax')(out)
+    # model = k.Model(inputs=Inp, outputs=predictions)
+    model = Model(inputs, outputs=predictions)
+    return model
+
 
 def ResNet101():
     return ResNet(Bottleneck, [3, 4, 23, 3])

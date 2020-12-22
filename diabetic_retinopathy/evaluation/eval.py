@@ -10,28 +10,30 @@ def evaluate(model, checkpoint, ds_val, ds_test, ds_info, run_paths):
     test_cm = ConfusionMatrixMetric(num_classes=2)
     val_cm = ConfusionMatrixMetric(num_classes=2)
     # Restore the model from the corresponding checkpoint
-    checkpoint.restore(tf.train.latest_checkpoint('./checkpoint/checkpoint/train/20201221-030145'))
+    checkpoint.restore(tf.train.latest_checkpoint('./checkpoint/checkpoint/train/20201222-164014'))
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
 
-    # #
-    # for val_images, val_labels in ds_val:
-    #     val_loss, val_accuracy = model.evaluate(val_images, val_labels, verbose=1)
-    #     predictions = model(val_images, training=True)
-    #     label_pred = np.argmax(predictions, -1)
-    #     _ = val_cm.update_state(val_labels, predictions)
-    # template = 'val Loss: {}, val Accuracy: {}'
-    # print(template.format(val_loss, val_accuracy * 100))
-    # template = 'Confusion Matrix:\n{}'
-    # print(template.format(val_cm.result().numpy()))
+    #
+
+    for val_images, val_labels in ds_val:
+        val_loss, val_accuracy = model.evaluate(val_images, val_labels, verbose=1)
+        val_predictions = model(val_images, training=True)
+        label_pred = np.argmax(val_predictions, -1)
+        _ = val_cm.update_state(val_labels, label_pred)
+
+    template = 'val Loss: {}, val Accuracy: {}'
+    print(template.format(val_loss, val_accuracy * 100))
+    template = 'Confusion Matrix:\n{}'
+    print(template.format(val_cm.result().numpy()))
 
     # Compute accuracy and loss for test set and the corresponding confusion matrix
     step = 0
     for test_images, test_labels in ds_test:
         test_loss, test_accuracy = model.evaluate(test_images, test_labels, verbose=2)
-        # test_predictions = model(test_images, training=True)
-        test_predictions = model.predict(test_images, batch_size=16)
-        label_preds = np.argmax(test_predictions, 1)
-        _ = test_cm.update_state(test_labels, label_preds)
+        test_predictions = model(test_images, training=True)
+        # test_predictions = model.predict(test_images, batch_size=16)
+        label_preds = np.argmax(test_predictions, -1)
+        #_ = test_cm.update_state(test_labels, label_preds)
         if step == 0:
             all_test_labels = test_labels
             all_label_preds = label_preds
@@ -41,7 +43,7 @@ def evaluate(model, checkpoint, ds_val, ds_test, ds_info, run_paths):
             all_label_preds = np.concatenate((all_label_preds, label_preds), axis=0)
             all_test_predictions = np.concatenate((all_test_predictions, test_predictions), axis=0)
         step += 1
-
+    _ = test_cm.update_state(all_test_labels, all_test_predictions[:, 1])
     accuracy = np.sum(np.equal(all_label_preds, all_test_labels)) / all_test_labels.shape[0]
     print("new_acc")
     print(accuracy)

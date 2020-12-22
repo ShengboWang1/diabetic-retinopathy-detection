@@ -38,7 +38,8 @@ def main(argv):
     # model resnet
     # model = resnet18()
     # model = resnet34()
-    model = inception_v3(num_classes=2)
+    model = resnet50(2)
+    # model = inception_v3(num_classes=2)
     # model = densenet121(num_classes=2)
     # model = inception_resnet_v2(2)
     model.build(input_shape=(16, 256, 256, 3))
