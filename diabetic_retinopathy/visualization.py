@@ -5,20 +5,21 @@ from matplotlib import pyplot as plt
 from models.resnet import resnet50
 import tensorflow as tf
 
+# set up the model
 image_path = "./IDRID_dataset/images/test/IDRiD_001.jpg"
 image = get_img_array(image_path, (256, 256))
-model = resnet50(5)
+model = resnet50(2)
 model.build(input_shape=(16, 256, 256, 3))
-# #
-checkpoint = tf.train.Checkpoint(myModel=model)
-checkpoint.restore(tf.train.latest_checkpoint('./checkpoint/train/20201214-161759'))
+# Restore checkpoint
+# checkpoint = tf.train.Checkpoint(myModel=model)
+# checkpoint.restore(tf.train.latest_checkpoint('checkpoint/train'))
 model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics='SparseCategoricalAccuracy')
 model.summary()
 
 
-# GradCAM
+# Show the result of GradCAM
+gradcam = GradCAM(model=model, layerName="conv5_block3_out")
 # gradcam = GradCAM(model=model, layerName="conv5_block3_out")
-gradcam = GradCAM(model=model, layerName="resnet50")
 cam3 = gradcam.compute_heatmap(image=image, classIdx=1, upsample_size=(4288, 2848))
 plt.matshow(cam3)
 plt.title("cam3")
@@ -30,9 +31,9 @@ plt.matshow(gradcam)
 plt.title("GradCAM")
 plt.show()
 
-# Guided Backpropagation
-# GuidedBP = GuidedBackprop(model=model, layerName="conv5_block3_out")
-GuidedBP = GuidedBackprop(model=model, layerName="resnet50")
+# Show the result of Guided Backpropagation
+GuidedBP = GuidedBackprop(model=model, layerName="conv5_block3_out")
+# GuidedBP = GuidedBackprop(model=model, layerName="resnet50")
 gb = GuidedBP.guided_backprop(image, upsample_size=(4288, 2848))
 gb_im = deprocess_image(gb)
 gb_im = cv2.cvtColor(gb_im, cv2.COLOR_BGR2RGB)
@@ -40,7 +41,7 @@ plt.matshow(gb_im)
 plt.title("Guided Backpropagation")
 plt.show()
 
-# Guided GradCAM
+# Show the result of Guided GradCAM
 guided_gradcam = deprocess_image(gb * cam3)
 guided_gradcam = cv2.cvtColor(guided_gradcam, cv2.COLOR_BGR2RGB)
 plt.matshow(guided_gradcam)

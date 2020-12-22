@@ -3,23 +3,27 @@ import logging
 import tensorflow as tf
 import tensorflow_datasets as tfds
 from input_pipeline.preprocessing import preprocess, augment
+import numpy as np
 
 
 @gin.configurable
 def load(name, data_dir):
     if name == "idrid":
         logging.info(f"Preparing dataset {name}...")
-        # 2classes
+        # 2 classes
         train_filename = ["idrid-2train.tfrecord-00000-of-00001"]
         val_filename = ["idrid-2val.tfrecord-00000-of-00001"]
         test_filename = ["idrid-2test.tfrecord-00000-of-00001"]
-        # train_filename = [data_dir + "/idrid-train.tfrecord-00000-of-00001"]
-        # val_filename = [data_dir + "/idrid-val.tfrecord-00000-of-00001"]
-        # test_filename = [data_dir + "/idrid-test.tfrecord-00000-of-00001"]
+
+        #train_filename = ["idrid-train.tfrecord-00000-of-00001"]
+        #val_filename = ["idrid-val.tfrecord-00000-of-00001"]
+        #test_filename = ["idrid-test.tfrecord-00000-of-00001"]
+
         ds_train = tf.data.TFRecordDataset(train_filename)
         ds_val = tf.data.TFRecordDataset(val_filename)
         ds_test = tf.data.TFRecordDataset(test_filename)
         ds_info = "idrid"
+
         feature_description = {
             'image': tf.io.FixedLenFeature([], tf.string),
             'label': tf.io.FixedLenFeature([], tf.int64, default_value=-1),
@@ -37,6 +41,11 @@ def load(name, data_dir):
         ds_train = ds_train.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         ds_val = ds_val.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         ds_test = ds_test.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+
+        # resamping imbalanced data
+        # nonref_ds = (ds_train.filter(lambda features, label: label == 0).repeat())
+        # ref_ds = (ds_train.filter(lambda features, label: label == 1).repeat())
+        # ds_train = tf.data.experimental.sample_from_datasets([nonref_ds, ref_ds], [0.5, 0.5])
 
         return prepare(ds_train, ds_val, ds_test, ds_info)
 
@@ -85,6 +94,7 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
         ds_train = ds_train.cache()
     ds_train = ds_train.map(
         augment, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+
     ds_train = ds_train.shuffle(1000)
     # ds_train = ds_train.shuffle(ds_info.splits['train'].num_examples // 10)
     ds_train = ds_train.batch(batch_size)
@@ -102,7 +112,7 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
     # Prepare test dataset
     ds_test = ds_test.map(
         preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-    ds_test = ds_test.batch(103)
+    ds_test = ds_test.batch(batch_size)
     if caching:
         ds_test = ds_test.cache()
     ds_test = ds_test.prefetch(tf.data.experimental.AUTOTUNE)

@@ -1,8 +1,9 @@
+from tensorflow.keras.applications.inception_v3 import InceptionV3
 from tensorflow.keras import layers, Model, Input
-from tensorflow.keras.applications import InceptionResNetV2
 
-def inception_resnet_v2(num_classes):
-    base_model = InceptionResNetV2(
+
+def inception_v3(num_classes):
+    base_model = InceptionV3(
         weights='imagenet',
         include_top=False,
         input_shape=(256, 256, 3)

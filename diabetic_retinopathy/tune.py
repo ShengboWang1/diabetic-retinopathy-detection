@@ -28,7 +28,8 @@ def train_func(config):
     ds_train, ds_val, ds_test, ds_info = load()
 
     # model
-    model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
+    # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
+    model = vgg_like(input_shape=(16, 256, 256, 3), n_classes=2)
 
     trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
     for val_accuracy in trainer.train():

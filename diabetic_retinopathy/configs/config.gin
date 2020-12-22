@@ -8,17 +8,21 @@
 # vgg_block.kernel_size = (3, 3)
 
 # Training
-Trainer.total_steps = 150000
-Trainer.log_interval = 30
-Trainer.ckpt_interval = 300
+Trainer.total_steps = 100000
+Trainer.log_interval = 100
+Trainer.ckpt_interval = 100
 
 # Input pipeline
 load.name = 'idrid'
 # load.data_dir = '/home/data/tensorflow_datasets/'
-# load.data_dir = '/content/drive/MyDrive/diabetic_retinopathy'
-load.data_dir = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/downloads/manual'
+load.data_dir = './diabetic_retinopathy'
+# load.data_dir = '/content/drive/MyDrive/diabetic_retinopathy/'
+# load.data_dir = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/downloads/manual'
 preprocess.img_height = 256
 preprocess.img_width = 256
 prepare.batch_size = 16
-prepare.caching = True
+prepare.caching = False
 # augment.operation = 'cropping'
+
+# Evaluation
+# evaluate.num_classes = 2

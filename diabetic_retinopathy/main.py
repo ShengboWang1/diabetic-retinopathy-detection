@@ -1,15 +1,16 @@
 import gin
 import logging
+import tensorflow as tf
 from absl import app, flags
 from train import Trainer
 from evaluation.eval import evaluate
 from input_pipeline import datasets
 from utils import utils_params, utils_misc
-from models.resnet import resnet18
-from models.resnet import resnet34
-from models.resnet import resnet50
-import tensorflow as tf
+from models.resnet import resnet18, resnet34, resnet50, resnet50_original
+from models.inception_resnet_v2 import inception_resnet_v2
 from models.architectures import vgg_like
+from models.densenet import densenet121
+from models.inception_v3 import inception_v3
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
@@ -35,11 +36,17 @@ def main(argv):
     # model = vgg_like(input_shape=[256, 256, 3], n_classes=2)
 
     # model resnet
-    model = resnet50(5)
+    # model = resnet18()
+    # model = resnet34()
+    model = resnet50(2)
+    # model = inception_v3(num_classes=2)
+    # model = densenet121(num_classes=2)
+    # model = inception_resnet_v2(2)
     model.build(input_shape=(16, 256, 256, 3))
-    model.summary()
+
 
     if FLAGS.train:
+        model.summary()
         trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
         for _ in trainer.train():
             continue
@@ -47,6 +54,7 @@ def main(argv):
         checkpoint = tf.train.Checkpoint(myModel=model)
         evaluate(model,
                  checkpoint,
+                 ds_val,
                  ds_test,
                  ds_info,
                  run_paths)

@@ -73,9 +73,8 @@ class ResNet(k.Model):
 
     # 第一个参数layer_dims：[2, 2, 2, 2] 4个Res Block，每个包含2个Basic Block
     # 第二个参数num_classes：我们的全连接输出，取决于输出有多少类。
-    def __init__(self, layer_dims, num_classes=2):
+    def __init__(self, layer_dims, num_classes=5):
         super(ResNet, self).__init__()
-
         # 预处理层；实现起来比较灵活可以加 MAXPool2D，可以没有。
         self.stem = Sequential([layers.Conv2D(64, (3, 3), strides=(1, 1)),
                                 layers.BatchNormalization(),
@@ -91,7 +90,7 @@ class ResNet(k.Model):
 
         self.avgpool = layers.GlobalAveragePooling2D()
         # self.dropout = tf.keras.layers.Dropout(0.2)
-        self.fc = layers.Dense(num_classes)
+        self.fc = layers.Dense(num_classes, activation='softmax')
 
     def call(self,inputs, training=None):
         # __init__中准备工作完毕；下面完成前向运算过程。
@@ -130,37 +129,69 @@ def resnet18():
 def resnet34():
     return ResNet([3, 4, 6, 3]) #4个Res Block，第1个包含3个Basic Block,第2为4，第3为6，第4为3
 
-def resnet50_original():
+def resnet50_original(num_classes):
     ResNet50 = k.applications.ResNet50(include_top=False,
                                               weights='imagenet',
                                               input_shape=(256, 256, 3))
     ResNet50.trainable = False
-    model = tf.keras.Sequential()
+    model = k.Sequential()
     model.add(ResNet50)
     model.summary()
     model.add(k.layers.GlobalAveragePooling2D())
     model.add(k.layers.Dense(10, activation='relu'))
     # model.add(k.layers.BatchNormalization())
-    model.add(k.layers.Dense(2, activation='softmax'))
+    model.add(k.layers.Dense(num_classes, activation='softmax'))
     return model
 
 
-def resnet50(num_classes):
-    Inp = k.layers.Input((256, 256, 3))
-    base_model = k.applications.ResNet50(include_top=False,
+from tensorflow.keras import layers, Model, Input, applications, regularizers
+
+
+
+def resnet50_2(num_classes):
+    inputs = layers.Input((256, 256, 3))
+    base_model = applications.ResNet50(include_top=False,
                                               weights='imagenet',
                                               input_shape=(256, 256, 3))
     base_model.trainable = False
-    out = base_model(Inp)
+    out = base_model(inputs, training=False)
+    # out = base_model.output
     out = layers.GlobalAveragePooling2D()(out)
     out = layers.Flatten(name='flatten')(out)
-    out = layers.Dense(2048, activation='relu', kernel_regularizer=k.regularizers.l2(0.0001))(out)
+    out = layers.Dense(2048, activation='relu', kernel_regularizer=regularizers.l2(0.0001))(out)
     out = layers.BatchNormalization()(out)
-    out = layers.Dense(1024, activation='relu', kernel_regularizer=k.regularizers.l2(0.0001))(out)
+    out = layers.Dense(1024, activation='relu', kernel_regularizer=regularizers.l2(0.0001))(out)
     out = layers.BatchNormalization(name='bn_fc_01')(out)
     predictions = layers.Dense(num_classes, activation='softmax')(out)
-    model = k.Model(inputs=Inp, outputs=predictions)
+    # model = k.Model(inputs=Inp, outputs=predictions)
+    model = Model(inputs, outputs=predictions)
     return model
+
+def resnet50(num_classes):
+    inputs = layers.Input((256, 256, 3))
+    base_model = applications.ResNet50(include_top=False,
+                                              weights='imagenet',
+                                              input_shape=(256, 256, 3))
+    # Make BatchNormalization layers as trainable, , this is needed because when using Frozen model,
+    # if the batch statistics (mean/variance) of frozen layers are used and if the target dataset is different from one
+    # which was used for training, this will result in degrading of accuracy
+    # (https://github.com/keras-team/keras/pull/9965)
+    for layer in base_model.layers:
+        if isinstance(layer, layers.BatchNormalization):
+            layer.trainable = True
+        else:
+            layer.trainable = False
+    out = base_model(inputs, training=False)
+    # out = base_model.output
+    out = layers.GlobalAveragePooling2D()(out)
+    out = layers.Dense(512, activation='relu')(out)
+    out = layers.Dropout(0.25)(out)
+    out = layers.BatchNormalization(name='bn_fc_01')(out)
+    predictions = layers.Dense(num_classes, activation='softmax')(out)
+    # model = k.Model(inputs=Inp, outputs=predictions)
+    model = Model(inputs, outputs=predictions)
+    return model
+
 
 def ResNet101():
     return ResNet(Bottleneck, [3, 4, 23, 3])

@@ -1,13 +1,13 @@
+from tensorflow.keras.applications.densenet import DenseNet121
 from tensorflow.keras import layers, Model, Input
-from tensorflow.keras.applications import InceptionResNetV2
 
-def inception_resnet_v2(num_classes):
-    base_model = InceptionResNetV2(
+
+def densenet121(num_classes):
+    base_model = DenseNet121(
         weights='imagenet',
         include_top=False,
         input_shape=(256, 256, 3)
     )
-
     # Freeze the base model.
     base_model.trainable = False
     inputs = Input(shape=(256, 256, 3))
@@ -20,7 +20,7 @@ def inception_resnet_v2(num_classes):
     # Convert features of shape `base_model.output_shape[1:]` to vectors
     x = layers.GlobalAveragePooling2D()(x)
     x = layers.Dropout(0.2)(x)
-    outputs = layers.Dense(num_classes)(x)
+    outputs = layers.Dense(num_classes, activation='softmax')(x)
     # outputs = layers.Dense(num_classes, activation='softmax')(x)
     model = Model(inputs, outputs)
 

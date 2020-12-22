@@ -14,14 +14,14 @@ class Trainer(object):
 
         # Loss objective
         self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
+        self.optimizer = tf.keras.optimizers.Adam()
 
         # Metrics
-        self.train_loss = tf.keras.metrics.Mean(name='train_loss')
+        self.train_loss = tf.keras.metrics.Mean(name='train_loss', dtype=tf.float32)
         self.train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
 
-        self.val_loss = tf.keras.metrics.Mean(name='test_loss')
-        self.val_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
+        self.val_loss = tf.keras.metrics.Mean(name='val_loss', dtype=tf.float32)
+        self.val_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='val_accuracy')
 
         self.model = model
         self.ds_train = ds_train
@@ -31,10 +31,12 @@ class Trainer(object):
         self.total_steps = total_steps
         self.log_interval = log_interval
         self.ckpt_interval = ckpt_interval
-
+        self.max_acc = 0
+        self.min_loss = 100
         # Checkpoint Manager
         # ...
-        #############
+        print("current_time")
+        print(self.current_time)
         self.checkpoint_path = './checkpoint/train/' + self.current_time
         self.ckpt = tf.train.Checkpoint(optimizer=self.optimizer, model=self.model)
         self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=5)
@@ -64,6 +66,7 @@ class Trainer(object):
 
     def train(self):
         for idx, (images, labels) in enumerate(self.ds_train):
+
 
             step = idx + 1
             self.train_step(images, labels)
@@ -95,7 +98,9 @@ class Trainer(object):
                 # Reset train metrics
                 self.train_loss.reset_states()
                 self.train_accuracy.reset_states()
-
+                # Compare it with max_acc
+                acc = self.val_accuracy.result().numpy()
+                loss = self.val_loss.result().numpy()
                 # Reset validation metrics
                 self.val_loss.reset_states()
                 self.val_accuracy.reset_states()
@@ -103,19 +108,42 @@ class Trainer(object):
                 yield self.val_accuracy.result().numpy()
 
             if step % self.ckpt_interval == 0:
-                logging.info(f'Saving checkpoint to {self.run_paths["path_ckpts_train"]}.')
-                # Save checkpoint
-                # ...
-                save_path = self.ckpt_manager.save()
-                print("Saved checkpoint for step {}: {}".format(int(step), save_path))
+
+                # Check if val_loss decrease or not
+                if self.max_acc < acc:
+                    self.min_loss = loss
+                    self.max_acc = acc
+                    logging.info(f'Saving better checkpoint to {self.run_paths["path_ckpts_train"]}.')
+                    print("loss {:1.2f}".format(loss))
+                    # Save checkpoint
+                    # ...
+                    save_path = self.ckpt_manager.save()
+                    print("Saved checkpoint for step {}: {}".format(int(step), save_path))
+
+                elif self.val_accuracy == acc:
+                    if self.val_loss < loss:
+                        self.min_loss = loss
+                        logging.info(f'Saving better checkpoint to {self.run_paths["path_ckpts_train"]}.')
+                        print("loss {:1.2f}".format(loss))
+                        # Save checkpoint
+                        # ...
+                        save_path = self.ckpt_manager.save()
+                        print("Saved checkpoint for step {}: {}".format(int(step), save_path))
+                    # Nothing happens
+                    else:
+                        print("Validation loss is not better, no new checkpoint")
+
+                # Nothing happens
+                else:
+                    print("Validation loss is not better, no new checkpoint")
 
             if step % self.total_steps == 0:
                 logging.info(f'Finished training after {step} steps.')
                 # Save final checkpoint
                 # ...
-                save_path = self.ckpt_manager.save()
-                print("Saved checkpoint for final step: {}".format(save_path))
-                print("loss {:1.2f}".format(self.train_loss.result()))
-                print("accuracy {:1.2f}".format(self.train_accuracy.result()))
+                # save_path = self.ckpt_manager.save()
+                # print("Saved checkpoint for final step: {}".format(save_path))
+                print("best validation loss {:1.2f}".format(loss))
+                print("the accuracy {:1.2f}".format(acc))
 
-                return self.test_accuracy.result().numpy()
+                return self.val_accuracy.result().numpy()
