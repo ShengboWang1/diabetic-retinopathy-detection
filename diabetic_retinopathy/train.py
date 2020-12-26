@@ -37,7 +37,8 @@ class Trainer(object):
         # ...
         print("current_time")
         print(self.current_time)
-        self.checkpoint_path = './checkpoint/train/' + self.current_time
+        # self.checkpoint_path = './checkpoint/train/' + self.current_time
+        self.checkpoint_path = self.run_paths["path_ckpts_train"]
         self.ckpt = tf.train.Checkpoint(optimizer=self.optimizer, model=self.model)
         self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=5)
 
@@ -124,11 +125,11 @@ class Trainer(object):
                     if self.val_loss < loss:
                         self.min_loss = loss
                         logging.info(f'Saving better checkpoint to {self.run_paths["path_ckpts_train"]}.')
-                        print("loss {:1.2f}".format(loss))
+                        print("validation loss {:1.2f}".format(loss))
                         # Save checkpoint
                         # ...
-                        save_path = self.ckpt_manager.save()
-                        print("Saved checkpoint for step {}: {}".format(int(step), save_path))
+                        self.ckpt_manager.save()
+
                     # Nothing happens
                     else:
                         print("Validation loss is not better, no new checkpoint")

@@ -144,7 +144,7 @@ def resnet50_original(num_classes):
     return model
 
 
-from tensorflow.keras import layers, Model, Input, applications, regularizers
+from tensorflow.keras import layers, Model, applications, regularizers, activations
 
 
 
@@ -181,12 +181,14 @@ def resnet50(num_classes):
             layer.trainable = True
         else:
             layer.trainable = False
+
     out = base_model(inputs, training=False)
     # out = base_model.output
     out = layers.GlobalAveragePooling2D()(out)
-    out = layers.Dense(512, activation='relu')(out)
+    out = layers.Dense(128)(out)
+    out = layers.BatchNormalization()(out)
+    out = activations.relu(out)
     out = layers.Dropout(0.25)(out)
-    out = layers.BatchNormalization(name='bn_fc_01')(out)
     predictions = layers.Dense(num_classes, activation='softmax')(out)
     # model = k.Model(inputs=Inp, outputs=predictions)
     model = Model(inputs, outputs=predictions)
