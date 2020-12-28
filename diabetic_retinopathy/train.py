@@ -2,15 +2,31 @@ import gin
 import tensorflow as tf
 import logging
 import datetime
+from evaluation.eval import evaluate
 
 
 @gin.configurable
 class Trainer(object):
-    def __init__(self, model, ds_train, ds_val, ds_info, run_paths, total_steps, log_interval, ckpt_interval):
+    def __init__(self, model, ds_train, ds_val, ds_test, ds_info, run_paths, total_steps, log_interval, ckpt_interval):
+
+        self.model = model
+        self.ds_train = ds_train
+        self.ds_val = ds_val
+        self.ds_test = ds_test
+        self.ds_info = ds_info
+        self.run_paths = run_paths
+        self.total_steps = total_steps
+        self.log_interval = log_interval
+        self.ckpt_interval = ckpt_interval
+        self.max_acc = 0
+        self.min_loss = 100
+
         self.current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         # Summary Writer
         # ....
-        self.summary_writer = tf.summary.create_file_writer("./summary/" + self.current_time)
+        self.summary_path = self.run_paths['path_summary']
+        self.train_summary_writer = tf.summary.create_file_writer(self.summary_path + self.current_time + 'train')
+        self.test_summary_writer = tf.summary.create_file_writer(self.summary_path + self.current_time + 'train')
 
         # Loss objective
         self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
@@ -23,16 +39,7 @@ class Trainer(object):
         self.val_loss = tf.keras.metrics.Mean(name='val_loss', dtype=tf.float32)
         self.val_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='val_accuracy')
 
-        self.model = model
-        self.ds_train = ds_train
-        self.ds_val = ds_val
-        self.ds_info = ds_info
-        self.run_paths = run_paths
-        self.total_steps = total_steps
-        self.log_interval = log_interval
-        self.ckpt_interval = ckpt_interval
-        self.max_acc = 0
-        self.min_loss = 100
+
         # Checkpoint Manager
         # ...
         print("current_time")
@@ -68,12 +75,15 @@ class Trainer(object):
     def train(self):
         for idx, (images, labels) in enumerate(self.ds_train):
 
-
             step = idx + 1
             self.train_step(images, labels)
 
             if step % self.log_interval == 0:
                 print(step)
+
+                # Reset validation metrics
+                self.val_loss.reset_states()
+                self.val_accuracy.reset_states()
 
                 for val_images, val_labels in self.ds_val:
                     self.val_step(val_images, val_labels)
@@ -87,24 +97,23 @@ class Trainer(object):
 
                 # Write summary to tensorboard
                 # ...train test loss accuracy
-                with self.summary_writer.as_default():
+                with self.train_summary_writer.as_default():
                     tf.summary.scalar('train_loss', self.train_loss.result(), step=step)
                     # tf.summary.scalar('train_loss', self.train_loss.result(), step=self.optimizer.iterations)
                     tf.summary.scalar('train_accuracy', self.train_accuracy.result() * 100, step=step)
                     # tf.summary.scalar('train_accuracy', self.train_accuracy.result() * 100,
                     #                  step=self.optimizer.iterations)
+                with self.test_summary_writer.as_default():
                     tf.summary.scalar('val_loss', self.val_loss.result(), step=step)
                     tf.summary.scalar('val_accuracy', self.val_accuracy.result() * 100, step=step)
 
                 # Reset train metrics
                 self.train_loss.reset_states()
                 self.train_accuracy.reset_states()
+
                 # Compare it with max_acc
                 acc = self.val_accuracy.result().numpy()
                 loss = self.val_loss.result().numpy()
-                # Reset validation metrics
-                self.val_loss.reset_states()
-                self.val_accuracy.reset_states()
 
                 yield self.val_accuracy.result().numpy()
 
@@ -124,6 +133,7 @@ class Trainer(object):
                 elif self.val_accuracy == acc:
                     if self.val_loss < loss:
                         self.min_loss = loss
+                        self.max_acc = acc
                         logging.info(f'Saving better checkpoint to {self.run_paths["path_ckpts_train"]}.')
                         print("validation loss {:1.2f}".format(loss))
                         # Save checkpoint
@@ -144,7 +154,7 @@ class Trainer(object):
                 # ...
                 # save_path = self.ckpt_manager.save()
                 # print("Saved checkpoint for final step: {}".format(save_path))
-                print("best validation loss {:1.2f}".format(loss))
-                print("the accuracy {:1.2f}".format(acc))
+                logging.info("best validation loss {:1.2f}".format(self.min_loss))
+                logging.info("the accuracy {:1.2f}".format(self.max_acc))
 
                 return self.val_accuracy.result().numpy()

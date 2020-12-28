@@ -8,9 +8,9 @@
 # vgg_block.kernel_size = (3, 3)
 
 # Training
-Trainer.total_steps = 200000
-Trainer.log_interval = 100
-Trainer.ckpt_interval = 500
+Trainer.total_steps = 20
+Trainer.log_interval = 1
+Trainer.ckpt_interval = 1
 
 # Input pipeline
 load.name = 'idrid'
@@ -24,5 +24,3 @@ prepare.batch_size = 16
 prepare.caching = False
 # augment.operation = 'cropping'
 
-# Evaluation
-# evaluate.num_classes = 2

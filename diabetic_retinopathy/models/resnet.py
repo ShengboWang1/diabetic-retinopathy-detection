@@ -1,6 +1,7 @@
 import tensorflow as tf
 import tensorflow.keras as k
 from tensorflow.keras import layers, Sequential
+from tensorflow.keras import layers, Model, applications, regularizers, activations
 
 # Basic Block 模块。
 class BasicBlock(layers.Layer):
@@ -11,7 +12,7 @@ class BasicBlock(layers.Layer):
         self.bn1 = layers.BatchNormalization()
         self.relu = layers.Activation('relu')
 
-        #上一块如果做Stride就会有一个下采样，在这个里面就不做下采样了。这一块始终保持size一致，把stride固定为1
+        # 上一块如果做Stride就会有一个下采样，在这个里面就不做下采样了。这一块始终保持size一致，把stride固定为1
         self.conv2 = layers.Conv2D(filter_num, (3, 3), strides=1, padding='same')
         self.bn2 = layers.BatchNormalization()
 
@@ -19,7 +20,7 @@ class BasicBlock(layers.Layer):
             self.downsample = Sequential()
             self.downsample.add(layers.Conv2D(filter_num, (1, 1), strides=stride))
         else:
-            self.downsample = lambda x:x
+            self.downsample = lambda x: x
 
     def call(self, inputs, training=None):
 
@@ -33,7 +34,7 @@ class BasicBlock(layers.Layer):
 
         identity = self.downsample(inputs)
 
-        output = layers.add([out, identity])  #layers下面有一个add，把这2个层添加进来相加。
+        output = layers.add([out, identity])  # layers下面有一个add，把这2个层添加进来相加。
         output = tf.nn.relu(output)
         return output
 
@@ -56,7 +57,7 @@ class Bottleneck(tf.keras.Model):
             self.shortcut = Sequential([layers.Conv2D(self.expansion * out_channels, kernel_size=1, strides=strides, use_bias=False),
                                         layers.BatchNormalization()])
         else:
-            self.shortcut = lambda x,_: x
+            self.shortcut = lambda x: x
 
     def call(self, x, training=False):
         out = tf.nn.relu(self.bn1(self.conv1(x), training))
@@ -73,7 +74,7 @@ class ResNet(k.Model):
 
     # 第一个参数layer_dims：[2, 2, 2, 2] 4个Res Block，每个包含2个Basic Block
     # 第二个参数num_classes：我们的全连接输出，取决于输出有多少类。
-    def __init__(self, layer_dims, num_classes=5):
+    def __init__(self, layer_dims, num_classes=2):
         super(ResNet, self).__init__()
         # 预处理层；实现起来比较灵活可以加 MAXPool2D，可以没有。
         self.stem = Sequential([layers.Conv2D(64, (3, 3), strides=(1, 1)),
@@ -92,7 +93,7 @@ class ResNet(k.Model):
         # self.dropout = tf.keras.layers.Dropout(0.2)
         self.fc = layers.Dense(num_classes, activation='softmax')
 
-    def call(self,inputs, training=None):
+    def call(self, inputs, training=None):
         # __init__中准备工作完毕；下面完成前向运算过程。
         x = self.stem(inputs)
 
@@ -144,10 +145,6 @@ def resnet50_original(num_classes):
     return model
 
 
-from tensorflow.keras import layers, Model, applications, regularizers, activations
-
-
-
 def resnet50_2(num_classes):
     inputs = layers.Input((256, 256, 3))
     base_model = applications.ResNet50(include_top=False,
@@ -166,6 +163,7 @@ def resnet50_2(num_classes):
     # model = k.Model(inputs=Inp, outputs=predictions)
     model = Model(inputs, outputs=predictions)
     return model
+
 
 def resnet50(num_classes):
     inputs = layers.Input((256, 256, 3))
@@ -197,6 +195,7 @@ def resnet50(num_classes):
 
 def ResNet101():
     return ResNet(Bottleneck, [3, 4, 23, 3])
+
 
 def ResNet152():
     return ResNet(Bottleneck, [3, 8, 36, 3])

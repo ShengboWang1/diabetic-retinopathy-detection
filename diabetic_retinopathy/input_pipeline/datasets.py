@@ -15,9 +15,9 @@ def load(name, data_dir):
         val_filename = ["idrid-2val.tfrecord-00000-of-00001"]
         test_filename = ["idrid-2test.tfrecord-00000-of-00001"]
 
-        #train_filename = ["idrid-train.tfrecord-00000-of-00001"]
-        #val_filename = ["idrid-val.tfrecord-00000-of-00001"]
-        #test_filename = ["idrid-test.tfrecord-00000-of-00001"]
+        # train_filename = ["idrid-train.tfrecord-00000-of-00001"]
+        # val_filename = ["idrid-val.tfrecord-00000-of-00001"]
+        # test_filename = ["idrid-test.tfrecord-00000-of-00001"]
 
         ds_train = tf.data.TFRecordDataset(train_filename)
         ds_val = tf.data.TFRecordDataset(val_filename)
