@@ -10,9 +10,9 @@ def evaluate(model, checkpoint, ds_val, ds_test, ds_info, run_paths):
     test_cm = ConfusionMatrixMetric(num_classes=2)
 
     # Restore the model from the corresponding checkpoint
-    # checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
+    checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
 
-    checkpoint.restore(tf.train.latest_checkpoint('./checkpoint/checkpoint/train/20201218-024936/'))
+    # checkpoint.restore(tf.train.latest_checkpoint('./checkpoint/checkpoint/train/20201218-024936/'))
     # checkpoint.restore(tf.train.latest_checkpoint('Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2020-12-26T13-12-23-950894/ckpts'))
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
     plot_path = os.path.join(run_paths['path_plt'], 'roc.png')
