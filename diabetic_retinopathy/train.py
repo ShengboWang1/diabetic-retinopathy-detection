@@ -7,12 +7,11 @@ from evaluation.eval import evaluate
 
 @gin.configurable
 class Trainer(object):
-    def __init__(self, model, ds_train, ds_val, ds_test, ds_info, run_paths, total_steps, log_interval, ckpt_interval):
+    def __init__(self, model, ds_train, ds_val, ds_info, run_paths, total_steps, log_interval, ckpt_interval):
 
         self.model = model
         self.ds_train = ds_train
         self.ds_val = ds_val
-        self.ds_test = ds_test
         self.ds_info = ds_info
         self.run_paths = run_paths
         self.total_steps = total_steps
