@@ -9,8 +9,9 @@ def preprocess(image, label, img_height, img_width):
     """Dataset preprocessing: Normalizing and resizing"""
 
     # Normalize image: `uint8` -> `float32`.
-
-    tf.cast(image, tf.float32) / 255.
+    image = tf.cast(image, tf.float32)
+    image = image / 127.5
+    image = image - 1.
     # image = tf.cast(image, tf.float32)
 
     # Resize image

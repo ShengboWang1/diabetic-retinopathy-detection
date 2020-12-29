@@ -13,7 +13,7 @@ from models.densenet import densenet121
 from models.inception_v3 import inception_v3
 
 FLAGS = flags.FLAGS
-flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
+flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')
 
 
 def main(argv):
@@ -38,7 +38,7 @@ def main(argv):
     # model resnet
     # model = resnet18()
     # model = resnet34()
-    model = resnet34()
+    model = resnet50(2)
     # model = inception_v3(num_classes=2)
     #model = densenet121(num_classes=2)
     # model = inception_resnet_v2(2)
@@ -47,7 +47,7 @@ def main(argv):
 
     if FLAGS.train:
         model.summary()
-        trainer = Trainer(model, ds_train, ds_val, ds_test, ds_info, run_paths)
+        trainer = Trainer(model, ds_train, ds_test, ds_info, run_paths)
         for _ in trainer.train():
             continue
         model_to_be_restored = resnet34()

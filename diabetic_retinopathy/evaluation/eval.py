@@ -4,16 +4,24 @@ from evaluation.metrics import ConfusionMatrixMetric
 import matplotlib.pyplot as plt
 import sklearn
 import os
+from sklearn.metrics import accuracy_score, classification_report
+import numpy as np
+# #
+# pred_Y = retina_model.predict(test_X, batch_size = 32, verbose = True)
+# pred_Y_cat = np.argmax(pred_Y, -1)
+# test_Y_cat = np.argmax(test_Y, -1)
+# print('Accuracy on Test Data: %2.2f%%' % (accuracy_score(test_Y_cat, pred_Y_cat)))
+# print(classification_report(test_Y_cat, pred_Y_cat))
 
 
-def evaluate(model, checkpoint, ds_val, ds_test, ds_info, run_paths):
+def evaluate(model, checkpoint, ds_test, ds_info, run_paths):
     test_cm = ConfusionMatrixMetric(num_classes=2)
 
     # Restore the model from the corresponding checkpoint
-    checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
+    # checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
 
     # checkpoint.restore(tf.train.latest_checkpoint('./checkpoint/checkpoint/train/20201218-024936/'))
-    # checkpoint.restore(tf.train.latest_checkpoint('Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2020-12-26T13-12-23-950894/ckpts'))
+    checkpoint.restore(tf.train.latest_checkpoint('Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2020-12-26T13-12-23-950894/ckpts'))
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
     plot_path = os.path.join(run_paths['path_plt'], 'roc.png')
     print(plot_path)
@@ -22,9 +30,12 @@ def evaluate(model, checkpoint, ds_val, ds_test, ds_info, run_paths):
     for test_images, test_labels in ds_test:
         test_loss, test_accuracy = model.evaluate(test_images, test_labels, verbose=1)
         test_predictions = model(test_images, training=False)
-        # label_preds = np.argmax(test_predictions, -1)
+        label_preds = np.argmax(test_predictions, -1)
         _ = test_cm.update_state(test_labels, test_predictions[:, 1])
         plot_roc(labels=test_labels, predictions=test_predictions[:, 1], plot_path=plot_path)
+
+    print('Accuracy on Test Data: %2.2f%%' % (accuracy_score(test_labels, label_preds)))
+    print(classification_report(test_labels, label_preds))
 
     template = 'Test Loss: {}, Test Accuracy: {}'
     logging.info(template.format(test_loss, test_accuracy * 100))
