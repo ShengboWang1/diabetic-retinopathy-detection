@@ -10,7 +10,10 @@ def load(name, data_dir):
     if name == "idrid":
         logging.info(f"Preparing dataset {name}...")
         # 2 classes
-        train_filename = ["idrid-2-train.tfrecord-00000-of-00001"]
+        # train_filename = ["/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/idrid-2-train.tfrecord-00000-of-00001"]
+        train_filename = [
+            "/home/RUS_CIP/st169852/final_diabetic/dl-lab-2020-team06/diabetic_retinopathy/idrid-2-train.tfrecord-00000-of-00001"]
+
         test_filename = ["idrid-2-test.tfrecord-00000-of-00001"]
 
         raw_ds_train = tf.data.TFRecordDataset(train_filename)
