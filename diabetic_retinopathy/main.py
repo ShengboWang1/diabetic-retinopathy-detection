@@ -42,7 +42,7 @@ def main(argv):
     # model = inception_v3(num_classes=2)
     #model = densenet121(num_classes=2)
     # model = inception_resnet_v2(2)
-    model.build(input_shape=(16, 256, 256, 3))
+    # model.build(input_shape=(16, 256, 256, 3))
 
 
     if FLAGS.train:

@@ -21,7 +21,8 @@ def train_func(config):
     utils_misc.set_loggers(run_paths['path_logs_train'], logging.INFO)
 
     # gin-config
-    gin.parse_config_files_and_bindings(['/mnt/home/repos/dl-lab-skeleton/diabetic_retinopathy/configs/config.gin'], bindings)
+    # gin.parse_config_files_and_bindings(['/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
+    gin.parse_config_files_and_bindings(['/home/RUS_CIP/st169852/new_diabetic/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
@@ -29,15 +30,15 @@ def train_func(config):
 
     # model
     # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
-    model = vgg_like(input_shape=(16, 256, 256, 3), n_classes=2)
+    model = vgg_like(input_shape=(256, 256, 3), n_classes=2)
 
     trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
     for val_accuracy in trainer.train():
         tune.report(val_accuracy=val_accuracy)
-
+    # hyperort = HyperOptSearch(metric="val_accuracy", mode="max")
 
 analysis = tune.run(
-    train_func, num_samples=2, resources_per_trial={'gpu': 1, 'cpu': 4},
+    train_func, num_samples=2, resources_per_trial={'gpu': 0, 'cpu': 2},
     config={
         "Trainer.total_steps": tune.grid_search([1e4]),
         "vgg_like.base_filters": tune.choice([8, 16]),
