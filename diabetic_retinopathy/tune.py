@@ -22,7 +22,7 @@ def train_func(config):
 
     # gin-config
     # gin.parse_config_files_and_bindings(['/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
-    gin.parse_config_files_and_bindings(['/home/RUS_CIP/st169852/final_diabetic/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
+    # gin.parse_config_files_and_bindings(['/home/RUS_CIP/st169852/final_diabetic/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
@@ -38,7 +38,7 @@ def train_func(config):
     # hyperort = HyperOptSearch(metric="val_accuracy", mode="max")
 
 analysis = tune.run(
-    train_func, num_samples=2, resources_per_trial={'gpu': 0, 'cpu': 2},
+    train_func, num_samples=2, resources_per_trial={'gpu': 1, 'cpu': 4},
     config={
         "Trainer.total_steps": tune.grid_search([1e4]),
         "vgg_like.base_filters": tune.choice([8, 16]),
