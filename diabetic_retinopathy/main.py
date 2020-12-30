@@ -54,7 +54,6 @@ def main(argv):
         checkpoint = tf.train.Checkpoint(myModel=model_to_be_restored)
         evaluate(model,
                  checkpoint,
-                 ds_val,
                  ds_test,
                  ds_info,
                  run_paths)
@@ -63,7 +62,6 @@ def main(argv):
         checkpoint = tf.train.Checkpoint(myModel=model_to_be_restored)
         evaluate(model,
                  checkpoint,
-                 ds_val,
                  ds_test,
                  ds_info,
                  run_paths)
