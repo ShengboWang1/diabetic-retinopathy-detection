@@ -32,7 +32,7 @@ def evaluate(model, checkpoint, ds_test, ds_info, run_paths):
         test_predictions = model(test_images, training=False)
         label_preds = np.argmax(test_predictions, -1)
         _ = test_cm.update_state(test_labels, test_predictions[:, 1])
-        plot_roc(labels=test_labels, predictions=test_predictions[:, 1], plot_path=plot_path)
+        # plot_roc(labels=test_labels, predictions=test_predictions[:, 1], plot_path=plot_path)
 
     print('Accuracy on Test Data: %2.2f%%' % (accuracy_score(test_labels, label_preds)))
     print(classification_report(test_labels, label_preds))
