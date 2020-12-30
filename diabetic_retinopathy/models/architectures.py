@@ -28,7 +28,7 @@ def vgg_like(input_shape, n_classes, base_filters, n_blocks, dense_units, dropou
     out = tf.keras.layers.GlobalAveragePooling2D()(out)
     out = tf.keras.layers.Dense(dense_units, activation=tf.nn.relu)(out)
     out = tf.keras.layers.Dropout(dropout_rate)(out)
-    outputs = tf.keras.layers.Dense(n_classes)(out)
+    outputs = tf.keras.layers.Dense(n_classes, activation='softmax')(out)
 
     return tf.keras.Model(inputs=inputs, outputs=outputs, name='vgg_like')
 

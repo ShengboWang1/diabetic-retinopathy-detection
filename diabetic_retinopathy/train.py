@@ -116,7 +116,7 @@ class Trainer(object):
 
                 yield self.val_accuracy.result().numpy()
 
-            if step % self.ckpt_interval == 0:
+            if step % self.best_ckpt_interval == 0:
 
                 # Check if val_loss decrease or not
                 if self.max_acc < acc:
@@ -146,6 +146,13 @@ class Trainer(object):
                 # Nothing happens
                 else:
                     print("Validation loss is not better, no new checkpoint")
+
+            if step % self.ckpt_interval == 0:
+                logging.info(f'Saving normal checkpoint to {self.run_paths["path_ckpts_train"]}.')
+                print("loss {:1.2f}".format(loss))
+                # Save checkpoint
+                # ...
+                self.ckpt_manager.save()
 
             if step % self.total_steps == 0:
                 logging.info(f'Finished training after {step} steps.')

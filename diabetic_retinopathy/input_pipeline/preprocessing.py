@@ -10,8 +10,7 @@ def preprocess(image, label, img_height, img_width):
 
     # Normalize image: `uint8` -> `float32`.
     image = tf.cast(image, tf.float32)
-    # image = image / 127.5
-    # image = image - 1.
+    # image = image / 255.
     # image = tf.cast(image, tf.float32)
 
     # Resize image
