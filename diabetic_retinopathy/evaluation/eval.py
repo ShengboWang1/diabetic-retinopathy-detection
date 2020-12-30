@@ -15,7 +15,7 @@ import numpy as np
 
 
 def evaluate(model, checkpoint, ds_test, ds_info, run_paths):
-    test_cm = ConfusionMatrixMetric(num_classes=2)
+    test_cm = ConfusionMatrixMetric(num_classes=5)
 
     # Restore the model from the corresponding checkpoint
     # checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
