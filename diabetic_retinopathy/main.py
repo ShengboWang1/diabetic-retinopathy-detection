@@ -13,7 +13,7 @@ from models.densenet import densenet121
 from models.inception_v3 import inception_v3
 
 FLAGS = flags.FLAGS
-flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
+flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')
 
 
 def main(argv):
@@ -52,15 +52,15 @@ def main(argv):
             continue
         model_to_be_restored = densenet121(num_classes=2)
         checkpoint = tf.train.Checkpoint(myModel=model_to_be_restored)
-        evaluate(model,
+        evaluate(model_to_be_restored,
                  checkpoint,
                  ds_test,
                  ds_info,
                  run_paths)
     else:
-        model_to_be_restored = resnet50(2)
+        model_to_be_restored = densenet121(num_classes=2)
         checkpoint = tf.train.Checkpoint(myModel=model_to_be_restored)
-        evaluate(model,
+        evaluate(model_to_be_restored,
                  checkpoint,
                  ds_test,
                  ds_info,

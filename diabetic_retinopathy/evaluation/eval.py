@@ -21,7 +21,7 @@ def evaluate(model, checkpoint, ds_test, ds_info, run_paths):
     # checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
 
     # checkpoint.restore(tf.train.latest_checkpoint('./checkpoint/checkpoint/train/20201218-024936/'))
-    checkpoint.restore(tf.train.latest_checkpoint('Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2020-12-26T13-12-23-950894/ckpts'))
+    # checkpoint.restore(tf.train.latest_checkpoint('Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2020-12-30T04-30-55-717166/ckpts'))
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
     plot_path = os.path.join(run_paths['path_plt'], 'roc.png')
     print(plot_path)
