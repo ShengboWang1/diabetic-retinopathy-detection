@@ -33,7 +33,7 @@ def main(argv):
 
     # model vgg
     # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
-    model = vgg_like(input_shape=[256, 256, 3], n_classes=2)
+    # model = vgg_like(input_shape=[256, 256, 3], n_classes=2)
 
     # model resnet
     # model = resnet18()
@@ -50,7 +50,7 @@ def main(argv):
         trainer = Trainer(model, ds_train, ds_test, ds_info, run_paths)
         for _ in trainer.train():
             continue
-        model_to_be_restored = resnet34()
+        model_to_be_restored = densenet121(num_classes=2)
         checkpoint = tf.train.Checkpoint(myModel=model_to_be_restored)
         evaluate(model,
                  checkpoint,
