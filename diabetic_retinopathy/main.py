@@ -58,7 +58,7 @@ def main(argv):
                  ds_info,
                  run_paths)
     else:
-        model_to_be_restored = densenet121(num_classes=2)
+        model_to_be_restored = densenet121(num_classes=5)
         checkpoint = tf.train.Checkpoint(myModel=model_to_be_restored)
         evaluate(model_to_be_restored,
                  checkpoint,
