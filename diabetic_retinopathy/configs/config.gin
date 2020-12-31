@@ -14,7 +14,7 @@ Trainer.best_ckpt_interval = 100
 Trainer.ckpt_interval = 10000
 
 # Input pipeline
-load.name = 'eyepacs'
+load.name = 'idrid'
 load.data_dir = '/home/data/tensorflow_datasets/'
 # load.data_dir = './diabetic_retinopathy'
 # load.data_dir = '/content/drive/MyDrive/diabetic_retinopathy/'
