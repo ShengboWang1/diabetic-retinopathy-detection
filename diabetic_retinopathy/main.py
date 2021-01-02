@@ -13,7 +13,7 @@ from models.densenet import densenet121,densenet121_bigger
 from models.inception_v3 import inception_v3
 
 FLAGS = flags.FLAGS
-flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')
+flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
 
 
 def main(argv):
@@ -33,24 +33,24 @@ def main(argv):
 
     # model vgg
     # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
-    # model = vgg_like(input_shape=[256, 256, 3], n_classes=2)
+    model = vgg_like(input_shape=[256, 256, 3], n_classes=2)
 
     # model resnet
     # model = resnet18()
     # model = resnet34()
     # model = resnet34()
     # model = inception_v3(num_classes=2)
-    model = densenet121_bigger(num_classes=5)
+    #model = densenet121_bigger(num_classes=5)
     # model = inception_resnet_v2(2)
     # model.build(input_shape=(16, 256, 256, 3))
 
 
     if FLAGS.train:
         model.summary()
-        trainer = Trainer(model, ds_train, ds_test, ds_info, run_paths)
+        trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
         for _ in trainer.train():
             continue
-        model_to_be_restored = densenet121(num_classes=5)
+        model_to_be_restored = vgg_like(input_shape=[256, 256, 3], n_classes=2)
         checkpoint = tf.train.Checkpoint(myModel=model_to_be_restored)
         evaluate(model_to_be_restored,
                  checkpoint,
@@ -58,7 +58,7 @@ def main(argv):
                  ds_info,
                  run_paths)
     else:
-        model_to_be_restored = densenet121(num_classes=5)
+        model_to_be_restored = vgg_like(input_shape=[256, 256, 3], n_classes=2)
         checkpoint = tf.train.Checkpoint(myModel=model_to_be_restored)
         evaluate(model_to_be_restored,
                  checkpoint,

@@ -44,8 +44,8 @@ plt.title('Retinopathy grade of raw test set')
 plt.show()
 
 # Balance the distribution in the new sets
-# train_df = raw_train_df.groupby(['Retinopathy grade']).apply(lambda x: x.sample(150, replace=True)).reset_index(
-        # drop=True)
+train_df = raw_train_df.groupby(['Retinopathy grade']).apply(lambda x: x.sample(150, replace=True)).reset_index(
+    drop=True)
 print(raw_train_df)
 print('New Data Size:', raw_train_df.shape[0], 'Old Size:', raw_train_df.shape[0])
 train_df = five2two(raw_train_df)
@@ -64,10 +64,10 @@ test_df = shuffle(test_df)
 # Write new training set and test set to csv files in the same directory
 #
 train_df.to_csv(
-    '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/new-train-2.csv',
+    '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/balanced-train-2.csv',
     index=0, columns=['Image name', 'Retinopathy grade'])
 test_df.to_csv(
-    '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/new-test-2.csv', index=0,
+    '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/balanced-test-2.csv', index=0,
     columns=['Image name', 'Retinopathy grade'])
 
 
@@ -131,15 +131,15 @@ def write(record_file, image_labels, path):
     writer.close()
 
 
-train2_file = 'idrid-2-train.tfrecord-00000-of-00001'
-test2_file = 'idrid-2-test.tfrecord-00000-of-00001'
+train2_file = 'idrid-2balanced-train.tfrecord-00000-of-00001'
+test2_file = 'idrid-2balanced-test.tfrecord-00000-of-00001'
 
 train_image_labels = row_csv2dict(
-        '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/new-train-2.csv')
+        '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/balanced-train-2.csv')
 print(train_image_labels)
 write(train2_file, train_image_labels, train_path)
 
 test_image_labels = row_csv2dict(
-        '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/new-test-2.csv')
+        '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/balanced-test-2.csv')
 print(test_image_labels)
 write(test2_file, test_image_labels, test_path)
