@@ -33,8 +33,8 @@ def train_func(config):
 
     # model
     # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
-    # model = vgg_like(input_shape=(256, 256, 3), n_classes=2)
-    model = densenet121()
+    model = vgg_like(input_shape=(256, 256, 3), n_classes=2)
+    # model = densenet121()
 
     trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
     for val_accuracy in trainer.train():
@@ -42,13 +42,14 @@ def train_func(config):
 
 config={
         "Trainer.total_steps": tune.grid_search([10000]),
-        "densenet121.layer_index": tune.choice([100, 200, 300, 400]),
-        "densenet121.dense_units": tune.choice([8, 16, 32, 64, 128, 256]),
-        "densenet121.dropout_rate": tune.uniform(0, 0.5),
+        "vgg_like.base_filters": tune.choice([4, 8, 16, 32]),
+        "vgg_like.n_blocks": tune.choice([2, 3, 4, 5, 6, 7]),
+        "vgg_like.dense_units": tune.choice([8, 16, 32, 64, 128]),
+        "vgg_like.dropout_rate": tune.uniform(0, 0.9),
     }
 
 analysis = tune.run(
-    train_func, num_samples=30, resources_per_trial={'gpu': 1, 'cpu': 10},
+    train_func, num_samples=100, resources_per_trial={'gpu': 1, 'cpu': 10},
     config=config
     )
 

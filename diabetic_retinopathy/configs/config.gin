@@ -7,13 +7,13 @@ preprocess.model_name = 'densenet121'
 
 
 # Architectures
-# vgg_like.base_filters = 8
-# vgg_like.n_blocks = 5
-# vgg_like.dense_units = 32
-# vgg_like.dropout_rate = 0.25511877720557424
+vgg_like.base_filters = 8
+vgg_like.n_blocks = 5
+vgg_like.dense_units = 32
+vgg_like.dropout_rate = 0.25511877720557424
 
 # Layers
-# vgg_block.kernel_size = (3, 3)
+vgg_block.kernel_size = (3, 3)
 
 # Training
 Trainer.total_steps = 200000
@@ -32,9 +32,9 @@ prepare.batch_size = 32
 prepare.caching = True
 
 # DenseNet
-densenet121.dropout_rate = 0.2
-densenet121.layer_index = 310
-densenet121.dense_units = 8
+# densenet121.dropout_rate = 0.4457348778532065
+# densenet121.layer_index = 200
+# densenet121.dense_units = 128
 
 # densenet121_bigger.dropout_rate = 0.2
 # densenet121_bigger.layer_index = 300
