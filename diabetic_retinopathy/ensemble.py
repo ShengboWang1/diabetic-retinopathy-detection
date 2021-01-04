@@ -43,14 +43,7 @@ def ensemble_voting(ds_test, models, num_models):
         print("ensembled_labels")
         print(ensembled_labels)
 
-        # divided_number = (num_models+1)/2
-        # ensembled_label = total_pred_label // divided_number
-        # print("ensembled_predictions")
-        # print(ensembled_predictions)
     return accuracy_score(test_labels, ensembled_labels)
-
-
-
 
 # generate folder structures
 run_paths = utils_params.gen_run_folder()
@@ -59,7 +52,7 @@ run_paths = utils_params.gen_run_folder()
 utils_misc.set_loggers(run_paths['path_logs_train'], logging.INFO)
 
 # gin-config
-gin.parse_config_files_and_bindings(['/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], 
+gin.parse_config_files_and_bindings(['/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'],
                                     [])
 utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
@@ -78,7 +71,4 @@ models = [model1, model2, model3]
 acc = ensemble_voting(ds_test, models, num_models=3)
 
 print(acc)
-
-
-
 

@@ -2,12 +2,13 @@ import gin
 import tensorflow as tf
 import logging
 import datetime
-from evaluation.eval import evaluate
+import numpy as np
 
 
 @gin.configurable
 class Trainer(object):
-    def __init__(self, model, ds_train, ds_val, ds_info, run_paths, total_steps, log_interval, best_ckpt_interval, ckpt_interval):
+    def __init__(self, model, ds_train, ds_val, ds_info, run_paths, total_steps, log_interval, best_ckpt_interval,
+                 ckpt_interval):
 
         self.model = model
         self.ds_train = ds_train
@@ -39,7 +40,6 @@ class Trainer(object):
         self.val_loss = tf.keras.metrics.Mean(name='val_loss', dtype=tf.float32)
         self.val_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='val_accuracy')
 
-
         # Checkpoint Manager
         # ...
         print("current_time")
@@ -49,7 +49,7 @@ class Trainer(object):
         self.ckpt = tf.train.Checkpoint(optimizer=self.optimizer, model=self.model)
         self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=5)
 
-    @tf.function
+    # @tf.function
     def train_step(self, images, labels):
         with tf.GradientTape() as tape:
             # training=True is only needed if there are layers with different
@@ -57,17 +57,40 @@ class Trainer(object):
             predictions = self.model(images, training=True)
             loss = self.loss_object(labels, predictions)
         gradients = tape.gradient(loss, self.model.trainable_variables)
+
+        # label_preds = np.argmax(predictions, -1)
+        # label=labels.numpy()
+        # binary_true=np.squeeze(labels)
+        # binary_pred=np.squeeze(label_preds)
+
+        # binary_accuracy = metrics.accuracy_score(binary_true, binary_pred)
+        # binary_confusion_matrix = metrics.confusion_matrix(binary_true, binary_pred)
+
+        # tf.print(binary_accuracy)
+        # tf.print(binary_confusion_matrix)
+
         self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
 
         self.train_loss(loss)
         self.train_accuracy(labels, predictions)
 
-    @tf.function
+    # @tf.function
     def val_step(self, images, labels):
         # training=False is only needed if there are layers with different
         # behavior during training versus inference (e.g. Dropout).
         predictions = self.model(images, training=False)
         v_loss = self.loss_object(labels, predictions)
+
+        label_preds = np.argmax(predictions, -1)
+        labels = labels.numpy()
+        binary_true = np.squeeze(labels)
+        binary_pred = np.squeeze(label_preds)
+
+        binary_accuracy = metrics.accuracy_score(binary_true, binary_pred)
+        binary_confusion_matrix = metrics.confusion_matrix(binary_true, binary_pred)
+
+        tf.print(binary_accuracy)
+        tf.print(binary_confusion_matrix)
 
         self.val_loss(v_loss)
         self.val_accuracy(labels, predictions)
