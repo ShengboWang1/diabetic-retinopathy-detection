@@ -7,7 +7,7 @@ import numpy as np
 
 @gin.configurable
 class Trainer(object):
-    def __init__(self, model, ds_train, ds_val, ds_info, run_paths, total_steps, log_interval, best_ckpt_interval,
+    def __init__(self, model, ds_train, ds_val, ds_info, run_paths, total_steps, log_interval,
                  ckpt_interval):
 
         self.model = model
@@ -18,7 +18,6 @@ class Trainer(object):
         self.total_steps = total_steps
         self.log_interval = log_interval
         self.ckpt_interval = ckpt_interval
-        self.best_ckpt_interval = best_ckpt_interval
         self.max_acc = 0
         self.min_loss = 100
 
