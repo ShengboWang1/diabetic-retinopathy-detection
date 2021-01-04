@@ -85,8 +85,6 @@ class Trainer(object):
         binary_true = np.squeeze(labels)
         binary_pred = np.squeeze(label_preds)
 
-        binary_accuracy = metrics.accuracy_score(binary_true, binary_pred)
-        binary_confusion_matrix = metrics.confusion_matrix(binary_true, binary_pred)
 
         tf.print(binary_accuracy)
         tf.print(binary_confusion_matrix)
