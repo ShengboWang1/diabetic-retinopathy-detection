@@ -29,7 +29,7 @@ load.data_dir = '/home/data/tensorflow_datasets/'
 preprocess.img_height = 256
 preprocess.img_width = 256
 prepare.batch_size = 32
-prepare.caching = False
+prepare.caching = True
 
 # DenseNet
 densenet121.dropout_rate = 0.2

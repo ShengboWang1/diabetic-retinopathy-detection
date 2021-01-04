@@ -49,7 +49,7 @@ class Trainer(object):
         self.ckpt = tf.train.Checkpoint(optimizer=self.optimizer, model=self.model)
         self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=5)
 
-    # @tf.function
+    @tf.function
     def train_step(self, images, labels):
         with tf.GradientTape() as tape:
             # training=True is only needed if there are layers with different
@@ -74,23 +74,23 @@ class Trainer(object):
         self.train_loss(loss)
         self.train_accuracy(labels, predictions)
 
-    # @tf.function
+    @tf.function
     def val_step(self, images, labels):
         # training=False is only needed if there are layers with different
         # behavior during training versus inference (e.g. Dropout).
         predictions = self.model(images, training=False)
         v_loss = self.loss_object(labels, predictions)
 
-        label_preds = np.argmax(predictions, -1)
-        labels = labels.numpy()
-        binary_true = np.squeeze(labels)
-        binary_pred = np.squeeze(label_preds)
-
-        binary_accuracy = metrics.accuracy_score(binary_true, binary_pred)
-        binary_confusion_matrix = metrics.confusion_matrix(binary_true, binary_pred)
-
-        tf.print(binary_accuracy)
-        tf.print(binary_confusion_matrix)
+        # label_preds = np.argmax(predictions, -1)
+        # labels = labels.numpy()
+        # binary_true = np.squeeze(labels)
+        # binary_pred = np.squeeze(label_preds)
+        #
+        # binary_accuracy = metrics.accuracy_score(binary_true, binary_pred)
+        # binary_confusion_matrix = metrics.confusion_matrix(binary_true, binary_pred)
+        #
+        # tf.print(binary_accuracy)
+        # tf.print(binary_confusion_matrix)
 
         self.val_loss(v_loss)
         self.val_accuracy(labels, predictions)
