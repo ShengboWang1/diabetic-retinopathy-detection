@@ -3,24 +3,21 @@ import logging
 import tensorflow as tf
 import tensorflow_datasets as tfds
 from input_pipeline.preprocessing import preprocess, augment
-import numpy as np
-
+import matplotlib.pyplot as plt
 
 @gin.configurable
 def load(name, data_dir):
     if name == "idrid":
         logging.info(f"Preparing dataset {name}...")
         # 2 classes
-        train_filename = ["idrid-2train.tfrecord-00000-of-00001"]
-        val_filename = ["idrid-2val.tfrecord-00000-of-00001"]
-        test_filename = ["idrid-2test.tfrecord-00000-of-00001"]
+        train_filename = "/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/idrid-2balanced-train.tfrecord-00000-of-00001"
+        #
+        # train_filename = [
+            # "/home/RUS_CIP/st169852/final_diabetic/dl-lab-2020-team06/diabetic_retinopathy/idrid-2-train.tfrecord-00000-of-00001"]
 
-        #train_filename = ["idrid-train.tfrecord-00000-of-00001"]
-        #val_filename = ["idrid-val.tfrecord-00000-of-00001"]
-        #test_filename = ["idrid-test.tfrecord-00000-of-00001"]
+        test_filename = "/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/idrid-2balanced-test.tfrecord-00000-of-00001"
 
-        ds_train = tf.data.TFRecordDataset(train_filename)
-        ds_val = tf.data.TFRecordDataset(val_filename)
+        raw_ds_train = tf.data.TFRecordDataset(train_filename)
         ds_test = tf.data.TFRecordDataset(test_filename)
         ds_info = "idrid"
 
@@ -34,13 +31,18 @@ def load(name, data_dir):
         def _parse_function(exam_proto):
             temp = tf.io.parse_single_example(exam_proto, feature_description)
             img = tf.io.decode_jpeg(temp['image'], channels=3)
-            img = tf.reshape(img, [4288, 2848, 3])
+            img = tf.reshape(img, [2848, 4288, 3])
             label = temp['label']
             return (img, label)
 
-        ds_train = ds_train.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-        ds_val = ds_val.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        raw_ds_train = raw_ds_train.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         ds_test = ds_test.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+
+        # Split train dataset into train and validation set
+        total_record_num = 750
+        raw_ds_train = raw_ds_train.shuffle(total_record_num // 10)
+        ds_val = raw_ds_train.take(150)
+        ds_train = raw_ds_train.skip(150)
 
         # resamping imbalanced data
         # nonref_ds = (ds_train.filter(lambda features, label: label == 0).repeat())
@@ -87,15 +89,23 @@ def load(name, data_dir):
 
 @gin.configurable
 def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
+
     # Prepare training dataset
     ds_train = ds_train.map(
         preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+
+    # Visualize the input image
+    image, label = next(iter(ds_train))
+    plt.imshow(tf.cast(image, tf.int64))
+    plt.axis('off')
+    plt.show()
     if caching:
-        ds_train = ds_train.cache()
+        ds_train = ds_train.cache("train_cache")
+
     ds_train = ds_train.map(
         augment, num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
-    ds_train = ds_train.shuffle(1000)
+    ds_train = ds_train.shuffle(300)
     # ds_train = ds_train.shuffle(ds_info.splits['train'].num_examples // 10)
     ds_train = ds_train.batch(batch_size)
     ds_train = ds_train.repeat(-1)
@@ -104,17 +114,19 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
     # Prepare validation dataset
     ds_val = ds_val.map(
         preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-    ds_val = ds_val.batch(batch_size)
     if caching:
-        ds_val = ds_val.cache()
+        ds_val = ds_val.cache("val_cache")
+    ds_val = ds_val.batch(batch_size)
+
     ds_val = ds_val.prefetch(tf.data.experimental.AUTOTUNE)
 
     # Prepare test dataset
     ds_test = ds_test.map(
         preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-    ds_test = ds_test.batch(batch_size)
     if caching:
-        ds_test = ds_test.cache()
+        ds_test = ds_test.cache("test_cache")
+    ds_test = ds_test.batch(batch_size=103)
+
     ds_test = ds_test.prefetch(tf.data.experimental.AUTOTUNE)
 
     return ds_train, ds_val, ds_test, ds_info

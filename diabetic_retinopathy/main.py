@@ -9,15 +9,15 @@ from utils import utils_params, utils_misc
 from models.resnet import resnet18, resnet34, resnet50, resnet50_original
 from models.inception_resnet_v2 import inception_resnet_v2
 from models.architectures import vgg_like
-from models.densenet import densenet121
+from models.densenet import densenet121,densenet121_bigger
 from models.inception_v3 import inception_v3
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
 
 
+@gin.configurable
 def main(argv):
-
     # generate folder structures
     run_paths = utils_params.gen_run_folder()
 
@@ -25,36 +25,57 @@ def main(argv):
     utils_misc.set_loggers(run_paths['path_logs_train'], logging.INFO)
 
     # gin-config
-    gin.parse_config_files_and_bindings(['configs/config.gin'], [])
+    gin.parse_config_files_and_bindings(['/content/drive/MyDrive/dalaomentaishuaile/configs/config.gin'], [])
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
     ds_train, ds_val, ds_test, ds_info = datasets.load()
 
-    # model vgg
-    # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
-    # model = vgg_like(input_shape=[256, 256, 3], n_classes=2)
+    model_name = 'densenet121'
 
-    # model resnet
-    # model = resnet18()
-    # model = resnet34()
-    model = resnet50(2)
-    # model = inception_v3(num_classes=2)
-    # model = densenet121(num_classes=2)
-    # model = inception_resnet_v2(2)
-    model.build(input_shape=(16, 256, 256, 3))
+    if model_name == 'vgg':
+        model = vgg_like(input_shape=(256, 256, 3), n_classes=2)
+        # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
 
+    elif model_name == 'resnet18':
+        model = ResNet18()
+        model.build(input_shape=(256, 256, 3))
+
+    elif model_name == 'resnet34':
+        model = ResNet34()
+        model.build(input_shape=(256, 256, 3))
+
+    elif model_name == 'resnet50':
+        model = ResNet50()
+
+    elif model_name == 'densenet121':
+        model = densenet121()
+
+    elif model_name == 'densenet121_bigger':
+        model = densenet121_bigger()
+
+    elif model_name == 'inception_v3':
+        model = inception_v3()
+
+    elif model_name == 'inception_resnet_v2':
+        model = inception_resnet_v2()
+
+    else:
+        raise ValueError
 
     if FLAGS.train:
         model.summary()
         trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
         for _ in trainer.train():
             continue
-    else:
-        checkpoint = tf.train.Checkpoint(myModel=model)
+
         evaluate(model,
-                 checkpoint,
-                 ds_val,
+                 ds_test,
+                 ds_info,
+                 run_paths)
+    else:
+
+        evaluate(model,
                  ds_test,
                  ds_info,
                  run_paths)

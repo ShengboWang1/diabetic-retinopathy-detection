@@ -19,3 +19,4 @@ def vgg_block(inputs, filters, kernel_size):
     out = tf.keras.layers.MaxPool2D((2, 2))(out)
 
     return out
+

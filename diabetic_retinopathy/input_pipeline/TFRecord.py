@@ -192,9 +192,9 @@ test_file = 'idrid-test.tfrecord-00000-of-00001'
 train_path = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/images/train/'
 test_path = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/images/test/'
 
-train2_file = 'idrid-2train.tfrecord-00000-of-00001'
-val2_file = 'idrid-2val.tfrecord-00000-of-00001'
-test2_file = 'idrid-2test.tfrecord-00000-of-00001'
+train2_file = 'idrid-2_new_train.tfrecord-00000-of-00001'
+val2_file = 'idrid-2_new_val.tfrecord-00000-of-00001'
+test2_file = 'idrid-2_new_test.tfrecord-00000-of-00001'
 
 
 # Write TFRecords files for train and test dataset
@@ -243,9 +243,9 @@ create_2_classes_csv(raw_train_df, valid_df, test_df)
 # create_val_record()
 # create_test_record()
 
-# create_train2_record()
-# create_val2_record()
-# create_test2_record()
+create_train2_record()
+create_val2_record()
+create_test2_record()
 
 
 # Read the TFRecordDataset

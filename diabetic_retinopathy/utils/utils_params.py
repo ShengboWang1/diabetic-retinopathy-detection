@@ -20,10 +20,12 @@ def gen_run_folder(path_model_id=''):
     run_paths['path_ckpts_train'] = os.path.join(run_paths['path_model_id'], 'ckpts')
     #run_paths['path_ckpts_eval'] = os.path.join(run_paths['path_model_id'], 'ckpts', 'eval')
     run_paths['path_gin'] = os.path.join(run_paths['path_model_id'], 'config_operative.gin')
+    run_paths['path_plt'] = os.path.join(run_paths['path_model_id'], 'plts')
+    run_paths['path_summary'] = os.path.join(run_paths['path_model_id'], 'summary')
 
     # Create folders
     for k, v in run_paths.items():
-        if any([x in k for x in ['path_model', 'path_ckpts']]):
+        if any([x in k for x in ['path_model', 'path_ckpts', 'path_plt', 'path_summary']]):
             if not os.path.exists(v):
                 os.makedirs(v, exist_ok=True)
 
