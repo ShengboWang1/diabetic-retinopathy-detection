@@ -1,8 +1,6 @@
 import logging
 import gin
 from ray import tune
-from ray.tune.suggest.hyperopt import HyperOptSearch
-from ray.tune.schedulers import ASHAScheduler
 from input_pipeline.datasets import load
 from models.architectures import vgg_like
 from train import Trainer
@@ -42,9 +40,6 @@ def train_func(config):
     for val_accuracy in trainer.train():
         tune.report(val_accuracy=val_accuracy)
 
-
-hyperopt = HyperOptSearch(metric="val_accuracy", mode="max")
-asha_scheduler = ASHAScheduler(metric="val_accuracy", mode="max", grace_period=5, max_t=100)
 config={
         "Trainer.total_steps": tune.grid_search([10000]),
         "densenet121.layer_index": tune.choice([100, 200, 300, 400]),
