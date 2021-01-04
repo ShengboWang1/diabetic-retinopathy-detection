@@ -93,6 +93,9 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
     # Prepare training dataset
     ds_train = ds_train.map(
         preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+
+    # Visualize the input image
+    image, label = next(iter(train_dataset))
     plt.imshow(tf.cast(image, tf.int64))
     plt.axis('off')
     plt.show()
