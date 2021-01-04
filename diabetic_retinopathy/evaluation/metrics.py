@@ -66,8 +66,14 @@ class ConfusionMatrixMetric(tf.keras.metrics.Metric):
             s.assign(tf.zeros(shape=s.shape))
 
     def update_state(self, y_true, y_pred, sample_weight=None):
-        self.total_cm.assign_add(self.confusion_matrix(y_true, y_pred))
-        return self.total_cm
+        # self.total_cm.assign_add(self.confusion_matrix(y_true, y_pred))
+        # return self.total_cm
+        # convert predictions from probability to boolean
+        y_pred = tf.math.argmax(y_pred, axis=1)
+        # y_true = tf.cast(y_true, tf.bool)
+        # apply confusion matrix
+        cm = tf.math.confusion_matrix(y_true, y_pred, dtype=tf.float32, num_classes=self.num_classes)
+        self.total_cm.assign_add(cm)
 
     def result(self):
         # return self.process_confusion_matrix()
