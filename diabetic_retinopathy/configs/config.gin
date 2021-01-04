@@ -18,7 +18,7 @@ preprocess.model_name = 'densenet121'
 # Training
 Trainer.total_steps = 200000
 Trainer.log_interval = 100
-Trainer.best_ckpt_interval = 100
+Trainer.ckpt_interval = 100
 
 # Input pipeline
 load.name = 'idrid'
