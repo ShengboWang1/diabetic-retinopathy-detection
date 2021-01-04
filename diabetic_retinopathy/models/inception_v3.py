@@ -2,7 +2,7 @@ from tensorflow.keras.applications.inception_v3 import InceptionV3
 from tensorflow.keras import layers, Model, Input
 
 
-def inception_v3(num_classes):
+def inception_v3(num_classes=2):
     base_model = InceptionV3(
         weights='imagenet',
         include_top=False,

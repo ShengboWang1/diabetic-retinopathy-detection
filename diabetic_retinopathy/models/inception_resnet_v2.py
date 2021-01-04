@@ -1,7 +1,7 @@
 from tensorflow.keras import layers, Model, Input
 from tensorflow.keras.applications import InceptionResNetV2
 
-def inception_resnet_v2(num_classes):
+def inception_resnet_v2(num_classes=2):
     base_model = InceptionResNetV2(
         weights='imagenet',
         include_top=False,
