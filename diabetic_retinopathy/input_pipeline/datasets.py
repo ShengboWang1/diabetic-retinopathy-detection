@@ -100,7 +100,7 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
     plt.axis('off')
     plt.show()
     if caching:
-        ds_train = ds_train.cache("/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy//train/cache.tf-data")
+        ds_train = ds_train.cache("train_cache")
 
     ds_train = ds_train.map(
         augment, num_parallel_calls=tf.data.experimental.AUTOTUNE)
@@ -115,7 +115,7 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
     ds_val = ds_val.map(
         preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
     if caching:
-        ds_val = ds_val.cache("/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy//val/cache.tf-data")
+        ds_val = ds_val.cache("val_cache")
     ds_val = ds_val.batch(batch_size)
 
     ds_val = ds_val.prefetch(tf.data.experimental.AUTOTUNE)
@@ -124,7 +124,7 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
     ds_test = ds_test.map(
         preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
     if caching:
-        ds_test = ds_test.cache("/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy//test/cache.tf-data")
+        ds_test = ds_test.cache("test_cache")
     ds_test = ds_test.batch(batch_size=103)
 
     ds_test = ds_test.prefetch(tf.data.experimental.AUTOTUNE)
