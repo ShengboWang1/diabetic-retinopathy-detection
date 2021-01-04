@@ -100,7 +100,7 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
     plt.axis('off')
     plt.show()
     if caching:
-        ds_train = ds_train.cache("./cache.tf-train-data")
+        ds_train = ds_train.cache("./train/cache.tf-data")
 
     ds_train = ds_train.map(
         augment, num_parallel_calls=tf.data.experimental.AUTOTUNE)
@@ -115,7 +115,7 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
     ds_val = ds_val.map(
         preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
     if caching:
-        ds_val = ds_val.cache("'./cache.tf-val-data'")
+        ds_val = ds_val.cache("./val/cache.tf-data")
     ds_val = ds_val.batch(batch_size)
 
     ds_val = ds_val.prefetch(tf.data.experimental.AUTOTUNE)
@@ -124,7 +124,7 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
     ds_test = ds_test.map(
         preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
     if caching:
-        ds_test = ds_test.cache("'./cache.tf-test-data'")
+        ds_test = ds_test.cache("./test/cache.tf-data")
     ds_test = ds_test.batch(batch_size=103)
 
     ds_test = ds_test.prefetch(tf.data.experimental.AUTOTUNE)
