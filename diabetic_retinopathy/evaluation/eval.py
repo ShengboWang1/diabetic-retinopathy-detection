@@ -16,8 +16,8 @@ def evaluate(model, ds_test, ds_info, run_paths):
     # checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
 
     # checkpoint.restore(tf.train.latest_checkpoint('./checkpoint/checkpoint/train/20201218-024936/'))
-    checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
-    checkpoint.restore(
+    #checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
+    #checkpoint.restore(
         tf.train.latest_checkpoint("/content/drive/MyDrive/experiments/run_2021-01-01T15-51-31-698506/ckpts/"))
     # checkpoint_manager = tf.train.CheckpointManager(checkpoint, run_paths['path_ckpts_train'], max_to_keep=10)
     # checkpoint_manager = tf.train.CheckpointManager(checkpoint, "/content/drive/MyDrive/experiments/run_2021-01-01T15-51-31-698506/ckpts/", max_to_keep=10)
