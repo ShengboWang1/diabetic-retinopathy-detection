@@ -41,15 +41,15 @@ def train_func(config):
         tune.report(val_accuracy=val_accuracy)
 
 config={
-        "Trainer.total_steps": tune.grid_search([10000]),
-        "vgg_like.base_filters": tune.choice([4, 8, 16, 32]),
-        "vgg_like.n_blocks": tune.choice([2, 3, 4, 5, 6, 7]),
-        "vgg_like.dense_units": tune.choice([8, 16, 32, 64, 128]),
+        "Trainer.total_steps": tune.grid_search([20000]),
+        "vgg_like.base_filters": tune.choice([8, 16]),
+        "vgg_like.n_blocks": tune.choice([2, 3, 4, 5]),
+        "vgg_like.dense_units": tune.choice([32, 64]),
         "vgg_like.dropout_rate": tune.uniform(0, 0.9),
     }
 
 analysis = tune.run(
-    train_func, num_samples=100, resources_per_trial={'gpu': 1, 'cpu': 10},
+    train_func, num_samples=50, resources_per_trial={'gpu': 1, 'cpu': 10},
     config=config
     )
 
