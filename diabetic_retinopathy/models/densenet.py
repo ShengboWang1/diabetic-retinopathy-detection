@@ -4,7 +4,7 @@ import gin
 
 
 @gin.configurable
-def densenet121(dropout_rate, layer_index, dense_units):
+def densenet121(num_classes,dropout_rate, layer_index, dense_units):
     # Create base model
     base_model = keras.applications.DenseNet121(
         weights='imagenet',
@@ -20,7 +20,7 @@ def densenet121(dropout_rate, layer_index, dense_units):
     x = keras.layers.Dropout(dropout_rate)(x)
     x = keras.layers.Dense(dense_units, activation=None)(x)
     x = keras.layers.LeakyReLU()(x)
-    predictions = keras.layers.Dense(2, activation='softmax')(x)
+    predictions = keras.layers.Dense(num_classes, activation='softmax')(x)
 
     model = keras.Model(base_model.input, predictions, name='DenseNet121')
 

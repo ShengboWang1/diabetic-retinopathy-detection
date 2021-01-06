@@ -31,7 +31,8 @@ def main(argv):
     # setup pipeline
     ds_train, ds_val, ds_test, ds_info = datasets.load()
 
-    model_name = 'densenet121'
+    model_name = 'vgg'
+    num_classes = 2
 
     if model_name == 'vgg':
         model = vgg_like(input_shape=(256, 256, 3), n_classes=2)
@@ -49,7 +50,7 @@ def main(argv):
         model = ResNet50()
 
     elif model_name == 'densenet121':
-        model = densenet121()
+        model = densenet121(num_classes)
 
     elif model_name == 'densenet121_bigger':
         model = densenet121_bigger()
