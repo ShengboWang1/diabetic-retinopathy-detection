@@ -63,8 +63,6 @@ def main(argv):
     else:
         raise ValueError
 
-    checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
-    checkpoint.restore(tf.train.latest_checkpoint('/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/experiments/run_2021-01-06T12-01-24-409828/ckpts'))
 
     if FLAGS.train:
         model.summary()

@@ -13,7 +13,7 @@ def densenet121(dropout_rate, layer_index, dense_units):
 
     # base_model = keras.Model(inputs=base_model.input, outputs=base_model.get_layer(index=layer_index).output)
     # Freeze base model
-    base_model.trainable = True
+    base_model.trainable = False
     x = base_model.output
     x = keras.layers.GlobalAveragePooling2D()(x)
     # x = keras.layers.Flatten()(x)
