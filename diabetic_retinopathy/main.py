@@ -35,7 +35,7 @@ def main(argv):
     num_classes = 2
 
     if model_name == 'vgg':
-        model = vgg_like(input_shape=(256, 256, 3), n_classes=2)
+        model = vgg_like(input_shape=(256, 256, 3), n_classes=num_classes)
         # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
 
     elif model_name == 'resnet18':
