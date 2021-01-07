@@ -14,6 +14,7 @@ from models.inception_v3 import inception_v3
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
+flags.DEFINE_string('model_name', 'densenet121', 'name of the model')
 
 
 @gin.configurable
@@ -31,34 +32,33 @@ def main(argv):
     # setup pipeline
     ds_train, ds_val, ds_test, ds_info = datasets.load()
 
-    model_name = 'vgg'
     num_classes = 2
 
-    if model_name == 'vgg':
+    if FLAGS.model_name == 'vgg':
         model = vgg_like(input_shape=(256, 256, 3), n_classes=num_classes)
         # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
 
-    elif model_name == 'resnet18':
+    elif FLAGS.model_name == 'resnet18':
         model = ResNet18()
         model.build(input_shape=(256, 256, 3))
 
-    elif model_name == 'resnet34':
+    elif FLAGS.model_name == 'resnet34':
         model = ResNet34()
         model.build(input_shape=(256, 256, 3))
 
-    elif model_name == 'resnet50':
+    elif FLAGS.model_name == 'resnet50':
         model = ResNet50()
 
-    elif model_name == 'densenet121':
+    elif FLAGS.model_name == 'densenet121':
         model = densenet121(num_classes)
 
-    elif model_name == 'densenet121_bigger':
+    elif FLAGS.model_name == 'densenet121_bigger':
         model = densenet121_bigger()
 
-    elif model_name == 'inception_v3':
+    elif FLAGS.model_name == 'inception_v3':
         model = inception_v3()
 
-    elif model_name == 'inception_resnet_v2':
+    elif FLAGS.model_name == 'inception_resnet_v2':
         model = inception_resnet_v2()
 
     else:
