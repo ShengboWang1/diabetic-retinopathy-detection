@@ -8,7 +8,7 @@ preprocess.model_name = 'densenet121'
 
 # Architectures
 vgg_like.base_filters = 16
-vgg_like.n_blocks = 4
+vgg_like.n_blocks = 5
 vgg_like.dense_units = 64
 vgg_like.dropout_rate = 0.44263689454130856
 
