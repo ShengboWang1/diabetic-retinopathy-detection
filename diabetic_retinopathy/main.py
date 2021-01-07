@@ -7,6 +7,7 @@ from evaluation.eval import evaluate
 from input_pipeline import datasets
 from utils import utils_params, utils_misc
 from models.resnet import resnet18, resnet34, resnet50, resnet50_original
+from models.resnet_1 import ResNet18, ResNet34, ResNet50
 from models.inception_resnet_v2 import inception_resnet_v2
 from models.architectures import vgg_like
 from models.densenet import densenet121,densenet121_bigger
