@@ -9,7 +9,7 @@
 #rnn.dropout_rate = 0.2
 
 # Models
-# simple_rnn.n_neurons = 50
+simple_rnn.n_neurons = 50
 # simple_rnn.n_batch = 32
 
 # Training

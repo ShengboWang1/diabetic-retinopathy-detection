@@ -34,10 +34,10 @@ class Trainer(object):
 
         # Metrics
         self.train_loss = tf.keras.metrics.Mean(name='train_loss', dtype=tf.float32)
-        self.train_accuracy = tf.keras.metrics.Accuracy(name='train_accuracy')
+        self.train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
 
         self.val_loss = tf.keras.metrics.Mean(name='val_loss', dtype=tf.float32)
-        self.val_accuracy = tf.keras.metrics.Accuracy(name='val_accuracy')
+        self.val_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='val_accuracy')
 
         # Checkpoint Manager
         # ...
