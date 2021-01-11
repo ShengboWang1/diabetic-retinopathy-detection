@@ -14,17 +14,11 @@ def evaluate(model, ds_test, ds_info, run_paths):
 
     # Restore the model from the corresponding checkpoint
 
-    # checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
+    checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
     # checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
 
-    # checkpoint.restore(tf.train.latest_checkpoint('/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/experiments/run_2021-01-06T12-01-24-409828/ckpts'))
-    #checkpoint.restore(
-        # tf.train.latest_checkpoint("/content/drive/MyDrive/experiments/run_2021-01-01T15-51-31-698506/ckpts/"))
+    checkpoint.restore(tf.train.latest_checkpoint('/Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/dense_dropout0.2_layer310_dense8/ckpts'))
 
-
-    # checkpoint_manager = tf.train.CheckpointManager(checkpoint, run_paths['path_ckpts_train'], max_to_keep=10)
-    # checkpoint_manager = tf.train.CheckpointManager(checkpoint, "/content/drive/MyDrive/experiments/run_2021-01-01T15-51-31-698506/ckpts/", max_to_keep=10)
-    # checkpoint.restore(checkpoint_manager.latest_checkpoint)
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
     plot_path = os.path.join(run_paths['path_plt'], 'roc.png')
     print(plot_path)
@@ -36,15 +30,6 @@ def evaluate(model, ds_test, ds_info, run_paths):
         label_preds = np.argmax(test_predictions, -1)
         _ = test_cm.update_state(test_labels, test_predictions)
 
-        # label_preds = np.argmax(predictions, -1)
-        labels = test_labels.numpy()
-        binary_true = np.squeeze(labels)
-        binary_pred = np.squeeze(label_preds)
-
-        binary_accuracy = metrics.accuracy_score(binary_true, binary_pred)
-        binary_confusion_matrix = metrics.confusion_matrix(binary_true, binary_pred)
-        tf.print(binary_accuracy)
-        tf.print(binary_confusion_matrix)
         plot_roc(labels=test_labels, predictions=test_predictions[:, 1], plot_path=plot_path)
 
     print('Accuracy on Test Data: %2.2f%%' % (accuracy_score(test_labels, label_preds)))

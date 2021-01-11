@@ -9,7 +9,7 @@ from sklearn import metrics
 @gin.configurable
 class Trainer(object):
     def __init__(self, model, ds_train, ds_val, ds_info, run_paths, total_steps, log_interval,
-                 ckpt_interval):
+                 ckpt_interval, problem_type):
 
         self.model = model
         self.ds_train = ds_train
@@ -19,6 +19,7 @@ class Trainer(object):
         self.total_steps = total_steps
         self.log_interval = log_interval
         self.ckpt_interval = ckpt_interval
+        self.problem_type = problem_type
         self.max_acc = 0
         self.min_loss = 100
 
@@ -29,9 +30,14 @@ class Trainer(object):
         self.train_summary_writer = tf.summary.create_file_writer(self.summary_path + self.current_time + 'train')
         self.test_summary_writer = tf.summary.create_file_writer(self.summary_path + self.current_time + 'train')
 
-        # Loss objective
-        self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+        # Optimizer
         self.optimizer = tf.keras.optimizers.Adam()
+
+        # Loss objective
+        if self.problem_type == 'classification':
+            self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+        elif self.problem_type == 'regression':
+            self.loss_object = tf.keras.losses.MeanSquaredError()
 
         # Metrics
         self.train_loss = tf.keras.metrics.Mean(name='train_loss', dtype=tf.float32)

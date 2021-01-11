@@ -87,7 +87,7 @@ class ResNet(keras.Model):
 
     # 第一个参数layer_dims：[2, 2, 2, 2] 4个Res Block，每个包含2个Basic Block
     # 第二个参数num_classes：我们的全连接输出，取决于输出有多少类。
-    def __init__(self, blocks, layer_dims, initial_filters=64, num_classes=5):
+    def __init__(self, blocks, layer_dims, problem_type, initial_filters=64, num_classes=5):
         super(ResNet, self).__init__()
         self.in_channels = initial_filters
 
@@ -103,7 +103,12 @@ class ResNet(keras.Model):
         # self.final_bn  = layers.BatchNormalization()
 
         self.avgpool = layers.GlobalAveragePooling2D()
-        self.fc = layers.Dense(num_classes)
+        if problem_type == 'regression':
+            self.fc = layers.Dense(1)
+        elif problem_type == 'classification':
+            self.fc = layers.Dense(num_classes)
+        else:
+            raise ValueError
 
     # 2. 创建ResBlock
     def build_resblock(self, blocks, out_channels, num_blocks, stride):
@@ -138,22 +143,22 @@ class ResNet(keras.Model):
 
 ###########################################################################################################
 """ Resnet18 """
-def ResNet18():
-    return ResNet(BasicBlock, [2, 2, 2, 2])
+def ResNet18(problem_type):
+    return ResNet(BasicBlock, [2, 2, 2, 2], problem_type=problem_type)
 
 """ ResNet-34，那34是怎样的配置呢？只需要改一下这里就可以了。# 4个Res Block，第1个包含3个Basic Block,第2为4，第3为6，第4为3 """
 # 如果我们要使用
-def ResNet34():
+def ResNet34(problem_type):
     return ResNet(BasicBlock, [3, 4, 6, 3])
 
 """ Resnet50 """
-def ResNet50():
+def ResNet50(problem_type):
     return ResNet(Bottleneck, [3, 4, 6, 3])
 
 """ Resnet101 """
-def ResNet101():
+def ResNet101(problem_type):
     return ResNet(Bottleneck, [3, 4, 23, 3])
 
 """ Resnet152 """
-def ResNet152():
+def ResNet152(problem_type):
     return ResNet(Bottleneck, [3, 8, 36, 3])
