@@ -13,11 +13,9 @@ def evaluate(model, ds_test, ds_info, run_paths):
     test_cm = ConfusionMatrixMetric(num_classes=2)
 
     # Restore the model from the corresponding checkpoint
-
     checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
-    # checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
-
-    checkpoint.restore(tf.train.latest_checkpoint('/Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/dense_dropout0.2_layer310_dense8/ckpts'))
+    checkpoint.restore(
+        tf.train.latest_checkpoint("/content/drive/MyDrive/experiments/run_2021-01-01T15-51-31-698506/ckpts/"))
 
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
     plot_path = os.path.join(run_paths['path_plt'], 'roc.png')
@@ -30,6 +28,15 @@ def evaluate(model, ds_test, ds_info, run_paths):
         label_preds = np.argmax(test_predictions, -1)
         _ = test_cm.update_state(test_labels, test_predictions)
 
+        # label_preds = np.argmax(predictions, -1)
+        labels = test_labels.numpy()
+        binary_true = np.squeeze(labels)
+        binary_pred = np.squeeze(label_preds)
+
+        binary_accuracy = metrics.accuracy_score(binary_true, binary_pred)
+        binary_confusion_matrix = metrics.confusion_matrix(binary_true, binary_pred)
+        tf.print(binary_accuracy)
+        tf.print(binary_confusion_matrix)
         plot_roc(labels=test_labels, predictions=test_predictions[:, 1], plot_path=plot_path)
 
     print('Accuracy on Test Data: %2.2f%%' % (accuracy_score(test_labels, label_preds)))
@@ -47,24 +54,3 @@ def evaluate(model, ds_test, ds_info, run_paths):
     logging.info(template.format(sensitivity, specificity))
 
     return
-
-
-def plot_roc(labels, predictions, plot_path, **kwargs):
-    """plot the ROC image of the corresponding checkpoint"""
-    fp, tp, _ = sklearn.metrics.roc_curve(labels, predictions)
-    area = sklearn.metrics.roc_auc_score(labels, predictions)
-    # Plot fp and tp
-    plt.plot(100 * fp, 100 * tp, label='ROC curve (area = %0.2f)' % area, linewidth=2, **kwargs)
-
-    # Settings
-    plt.xlabel('False positives [%]')
-    plt.ylabel('True positives [%]')
-    plt.legend(loc="lower right")
-    plt.grid(True)
-    ax = plt.gca()
-    ax.set_aspect('equal')
-
-    # Save and show
-    plt.savefig(plot_path)
-    plt.show()
-

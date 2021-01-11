@@ -8,18 +8,16 @@ from sklearn import metrics
 
 @gin.configurable
 class Trainer(object):
-    def __init__(self, model, ds_train, ds_val, ds_info, run_paths, total_steps, log_interval,
-                 ckpt_interval, problem_type):
+    def __init__(self, model, ds_train, ds_val, run_paths, total_steps, log_interval,
+                 ckpt_interval):
 
         self.model = model
         self.ds_train = ds_train
         self.ds_val = ds_val
-        self.ds_info = ds_info
         self.run_paths = run_paths
         self.total_steps = total_steps
         self.log_interval = log_interval
         self.ckpt_interval = ckpt_interval
-        self.problem_type = problem_type
         self.max_acc = 0
         self.min_loss = 100
 
@@ -30,21 +28,16 @@ class Trainer(object):
         self.train_summary_writer = tf.summary.create_file_writer(self.summary_path + self.current_time + 'train')
         self.test_summary_writer = tf.summary.create_file_writer(self.summary_path + self.current_time + 'train')
 
-        # Optimizer
-        self.optimizer = tf.keras.optimizers.Adam()
-
         # Loss objective
-        if self.problem_type == 'classification':
-            self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        elif self.problem_type == 'regression':
-            self.loss_object = tf.keras.losses.MeanSquaredError()
+        self.loss_object = tf.keras.losses.MeanSquaredError()
+        self.optimizer = tf.keras.optimizers.Adam()
 
         # Metrics
         self.train_loss = tf.keras.metrics.Mean(name='train_loss', dtype=tf.float32)
-        self.train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
+        self.train_accuracy = tf.keras.metrics.Accuracy(name='train_accuracy')
 
         self.val_loss = tf.keras.metrics.Mean(name='val_loss', dtype=tf.float32)
-        self.val_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='val_accuracy')
+        self.val_accuracy = tf.keras.metrics.Accuracy(name='val_accuracy')
 
         # Checkpoint Manager
         # ...
@@ -81,10 +74,10 @@ class Trainer(object):
         self.train_accuracy(labels, predictions)
 
     @tf.function
-    def val_step(self, images, labels):
+    def val_step(self, features, labels):
         # training=False is only needed if there are layers with different
         # behavior during training versus inference (e.g. Dropout).
-        predictions = self.model(images, training=False)
+        predictions = self.model(features, training=False)
         v_loss = self.loss_object(labels, predictions)
 
         # label_preds = np.argmax(predictions, -1)
@@ -102,20 +95,20 @@ class Trainer(object):
         self.val_accuracy(labels, predictions)
 
     def train(self):
-        for idx, (images, labels) in enumerate(self.ds_train):
+        for idx, (feature, labels) in enumerate(self.ds_train):
 
             step = idx + 1
-            self.train_step(images, labels)
+            self.train_step(feature, labels)
 
             if step % self.log_interval == 0:
-                # print(step)
+                print(step)
 
                 # Reset validation metrics
                 self.val_loss.reset_states()
                 self.val_accuracy.reset_states()
 
-                for val_images, val_labels in self.ds_val:
-                    self.val_step(val_images, val_labels)
+                for val_feature, val_labels in self.ds_val:
+                    self.val_step(val_feature, val_labels)
 
                 template = 'Step {}, Train Loss: {}, Train Accuracy: {}, Validation Loss: {}, Validation Accuracy: {}'
                 logging.info(template.format(step,
@@ -170,12 +163,12 @@ class Trainer(object):
                         self.ckpt_manager.save()
 
                     # Nothing happens
-                    # else:
-                        # print("Validation loss is not better, no new checkpoint")
+                    else:
+                        print("Validation loss is not better, no new checkpoint")
 
                 # Nothing happens
-                # else:
-                    # print("Validation loss is not better, no new checkpoint")
+                else:
+                    print("Validation loss is not better, no new checkpoint")
 
 
             if step % self.total_steps == 0:

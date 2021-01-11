@@ -10,10 +10,6 @@ from models.inception_resnet_v2 import inception_resnet_v2
 from models.architectures import vgg_like
 from models.densenet import densenet121_bigger, densenet121
 from models.inception_v3 import inception_v3
-from absl import app, flags
-
-FLAGS = flags.FLAGS
-flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
 
 def train_func(config):
     # Hyperparameters
@@ -28,19 +24,8 @@ def train_func(config):
     utils_misc.set_loggers(run_paths['path_logs_train'], logging.INFO)
 
     # gin-config
-    if FLAGS.device_name == 'local':
-        gin.parse_config_files_and_bindings(
-            ['/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
-    elif FLAGS.device_name == 'iss GPU':
-        gin.parse_config_files_and_bindings(
-            ['/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
-    elif FLAGS.device_name == 'Colab':
-        gin.parse_config_files_and_bindings(['/content/drive/MyDrive/diabetic_retinopathy/configs/config.gin'], bindings)
-    else:
-        raise ValueError
-
     # gin.parse_config_files_and_bindings(['/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
-    # gin.parse_config_files_and_bindings(['/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
+    gin.parse_config_files_and_bindings(['/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
@@ -56,24 +41,15 @@ def train_func(config):
         tune.report(val_accuracy=val_accuracy)
 
 config={
-        "Trainer.total_steps": tune.grid_search([20000]),
-        "vgg_like.base_filters": tune.choice([8, 16]),
-        "vgg_like.n_blocks": tune.choice([2, 3, 4, 5]),
-        "vgg_like.dense_units": tune.choice([32, 64]),
+        "Trainer.total_steps": tune.grid_search([10000]),
+        "vgg_like.base_filters": tune.choice([4, 8, 16, 32]),
+        "vgg_like.n_blocks": tune.choice([2, 3, 4, 5, 6, 7]),
+        "vgg_like.dense_units": tune.choice([8, 16, 32, 64, 128]),
         "vgg_like.dropout_rate": tune.uniform(0, 0.9),
     }
 
-
-if FLAGS.device_name == 'local':
-    resources_per_trial = {'gpu': 0, 'cpu': 1}
-elif FLAGS.device_name == 'iss GPU':
-    resources_per_trial = {'gpu': 1, 'cpu': 10}
-elif FLAGS.device_name == 'Colab':
-    resources_per_trial = {'gpu': 1, 'cpu': 2}
-else:
-    raise ValueError
 analysis = tune.run(
-    train_func, num_samples=50, resources_per_trial=resources_per_trial,
+    train_func, num_samples=100, resources_per_trial={'gpu': 1, 'cpu': 10},
     config=config
     )
 

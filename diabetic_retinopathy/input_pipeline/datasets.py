@@ -6,16 +6,22 @@ from input_pipeline.preprocessing import preprocess, augment
 import matplotlib.pyplot as plt
 
 @gin.configurable
-def load(name, data_dir):
+def load(device_name, name, data_dir_local, data_dir_GPU, data_dir_Colab):
     if name == "idrid":
         logging.info(f"Preparing dataset {name}...")
         # 2 classes
-        train_filename = "/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/idrid-2balanced-train.tfrecord-00000-of-00001"
-        #
-        # train_filename = [
-            # "/home/RUS_CIP/st169852/final_diabetic/dl-lab-2020-team06/diabetic_retinopathy/idrid-2-train.tfrecord-00000-of-00001"]
-
-        test_filename = "/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/idrid-2balanced-test.tfrecord-00000-of-00001"
+        print(device_name)
+        if device_name == 'local':
+            train_filename = "/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/idrid-2balanced-train.tfrecord-00000-of-00001"
+            test_filename = "/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/idrid-2balanced-test.tfrecord-00000-of-00001"
+        elif device_name == 'iss GPU':
+            train_filename = "/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/idrid-2balanced-train.tfrecord-00000-of-00001"
+            test_filename = "/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/idrid-2balanced-test.tfrecord-00000-of-00001"
+        elif device_name == 'Colab':
+            train_filename = "/content/drive/MyDrive/diabetic_retinopathy/idrid-2balanced-train.tfrecord-00000-of-00001"
+            test_filename = "/content/drive/MyDrive/diabetic_retinopathy/idrid-2balanced-test.tfrecord-00000-of-00001"
+        else:
+            raise ValueError
 
         raw_ds_train = tf.data.TFRecordDataset(train_filename)
         ds_test = tf.data.TFRecordDataset(test_filename)
@@ -53,6 +59,12 @@ def load(name, data_dir):
 
     elif name == "eyepacs":
         logging.info(f"Preparing dataset {name}...")
+        if device_name == 'local':
+            data_dir = data_dir_local
+        if device_name == 'iss GPU':
+            data_dir = data_dir_GPU
+        if device_name == 'Colab':
+            data_dir = data_dir_Colab
         (ds_train, ds_val, ds_test), ds_info = tfds.load(
             'diabetic_retinopathy_detection/btgraham-300:3.0.0',
             split=['train', 'validation', 'test'],
@@ -90,15 +102,17 @@ def load(name, data_dir):
 @gin.configurable
 def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
 
-    # Prepare training dataset
-    ds_train = ds_train.map(
-        preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-
     # Visualize the input image
     image, label = next(iter(ds_train))
     plt.imshow(tf.cast(image, tf.int64))
     plt.axis('off')
     plt.show()
+
+    # Prepare training dataset
+    ds_train = ds_train.map(
+        preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+
+
     if caching:
         ds_train = ds_train.cache("train_cache")
 
