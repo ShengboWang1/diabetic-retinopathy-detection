@@ -8,7 +8,7 @@ from tensorflow.keras import layers, Sequential
 def simple_rnn(n_neurons, dense_units, dropout_rate, window_size, rnn_units=30):
 
     model = Sequential()
-    model.add(layers.LSTM(256, input_shape=(window_size, 6), return_sequences=True))
+    model.add(layers.LSTM(64, input_shape=(window_size, 6), return_sequences=True))
     # model.add(layers.LSTM(128, input_shape=(window_size, 6), return_sequences=True))
     # model.add(layers.LSTM(64, input_shape=(window_size, 6), return_sequences=True))
     # model.add(layers.Bidirectional(layers.LSTM(n_neurons, input_shape=(window_size, 6), return_sequences=True)))
