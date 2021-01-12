@@ -2,10 +2,7 @@ import os
 from glob import glob
 import tensorflow as tf
 import pandas as pd
-from pandas import DataFrame
-import matplotlib.pyplot as plt
 import numpy as np
-import IPython.display as display
 import gin
 
 
