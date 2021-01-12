@@ -24,7 +24,7 @@ def main(argv):
 
     # gin-config
     if FLAGS.device_name == 'local':
-d        gin.parse_config_files_and_bindings(['/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/configs/config.gin'], [])
+        gin.parse_config_files_and_bindings(['/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/configs/config.gin'], [])
     elif FLAGS.device_name == 'iss GPU':
         gin.parse_config_files_and_bindings(['/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/human_activity_recognition/configs/config.gin'], [])
     elif FLAGS.device_name == 'Colab':
