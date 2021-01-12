@@ -184,7 +184,6 @@ def create_tfr(shift_window_size, window_size, device_name):
             tf.string)  # the return type is `tf.string`.
         return tf.reshape(tf_string, ())  # The result is a scalar
 
-    print(tf_window_example(f_acc_gyro, label))
 
     train_map_ds = train_ds.map(tf_window_example)
     val_map_ds = val_ds.map(tf_window_example)
