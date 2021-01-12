@@ -34,10 +34,10 @@ class Trainer(object):
 
         # Metrics
         self.train_loss = tf.keras.metrics.Mean(name='train_loss', dtype=tf.float32)
-        self.train_accuracy = tf.keras.metrics.Accuracy(name='train_accuracy')
+        self.train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
 
         self.val_loss = tf.keras.metrics.Mean(name='val_loss', dtype=tf.float32)
-        self.val_accuracy = tf.keras.metrics.Accuracy(name='val_accuracy')
+        self.val_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='val_accuracy')
 
         # Checkpoint Manager
         # ...
@@ -49,11 +49,11 @@ class Trainer(object):
         self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=5)
 
     @tf.function
-    def train_step(self, images, labels):
+    def train_step(self, features, labels):
         with tf.GradientTape() as tape:
             # training=True is only needed if there are layers with different
             # behavior during training versus inference (e.g. Dropout).
-            predictions = self.model(images, training=True)
+            predictions = self.model(features, training=True)
             loss = self.loss_object(labels, predictions)
         gradients = tape.gradient(loss, self.model.trainable_variables)
 
@@ -101,7 +101,6 @@ class Trainer(object):
             self.train_step(feature, labels)
 
             if step % self.log_interval == 0:
-                print(step)
 
                 # Reset validation metrics
                 self.val_loss.reset_states()

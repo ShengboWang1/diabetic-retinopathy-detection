@@ -1,6 +1,6 @@
 # TFRecord
-# create_tfrecord.shift_window_size = 125
-# create_tfrecord.window_size = 250
+create_tfr.shift_window_size = 125
+create_tfr.window_size = 250
 
 # Architectures
 #rnn.n_recurrent_layers = 1
@@ -9,7 +9,7 @@
 #rnn.dropout_rate = 0.2
 
 # Models
-# simple_rnn.n_neurons = 50
+simple_rnn.n_neurons = 200
 # simple_rnn.n_batch = 32
 
 # Training
@@ -20,8 +20,8 @@ Trainer.ckpt_interval = 100
 # Input pipeline
 load.name = 'hapt'
 load.data_dir_local = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/input_pipeline/'
-load.data_dir_gpu = '/home/data/tensorflow_datasets/'
+load.data_dir_gpu = '/home/RUS_CIP/st169852/dl-lab-2020-team06/human_activity_recognition/input_pipeline/'
 load.data_dir_colab = '/home/data/tensorflow_datasets/'
 
-prepare.batch_size = 32
+prepare.batch_size = 1
 prepare.caching = True
