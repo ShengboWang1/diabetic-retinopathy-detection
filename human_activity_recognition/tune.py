@@ -41,20 +41,19 @@ def train_func(config):
     ds_train, ds_val, ds_test, ds_info = load()
 
     # model
-    # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
-    model = vgg_like(input_shape=(256, 256, 3), n_classes=2)
-    # model = densenet121()
+    model = simple_rnn()
+
 
     trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
     for val_accuracy in trainer.train():
         tune.report(val_accuracy=val_accuracy)
 
 config={
-        "Trainer.total_steps": tune.grid_search([10000]),
-        "vgg_like.base_filters": tune.choice([4, 8, 16, 32]),
-        "vgg_like.n_blocks": tune.choice([2, 3, 4, 5, 6, 7]),
-        "vgg_like.dense_units": tune.choice([8, 16, 32, 64, 128]),
-        "vgg_like.dropout_rate": tune.uniform(0, 0.9),
+        "Trainer.total_steps": tune.grid_search([50000]),
+        "simple_rnn.base_filters": tune.choice([4, 8, 16, 32]),
+        "simple_rnn.n_blocks": tune.choice([2, 3, 4, 5, 6, 7]),
+        "simple_rnn.dense_units": tune.choice([8, 16, 32, 64, 128]),
+        "simple_rnn.dropout_rate": tune.uniform(0.1, 0.8),
     }
 
 analysis = tune.run(
