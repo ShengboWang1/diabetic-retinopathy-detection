@@ -100,47 +100,31 @@ def create_tfr(shift_window_size, window_size, device_name):
     val_x, val_y = create_dataset(start_num=56, end_num=61, ds_x=val_x, ds_y=val_y)
     test_x, test_y = create_dataset(start_num=44, end_num=55, ds_x=test_x, ds_y=test_y)
 
-    train_ds = tf.data.Dataset.from_tensor_slices((train_x, train_y)).window(size=window_size, shift=shift_window_size,
-                                                                             drop_remainder=True)
-    train_ds = train_ds.flat_map(lambda f_acc_gyro, label: tf.data.Dataset.zip((f_acc_gyro, label))).batch(window_size,
-                                                                                                           drop_remainder=True)
 
-    # for i in range(56, 61):
-    #     val_x[i-56] = read_rawdata(file_info['experiment'][i], file_info['user_ID'][i])
-    #     val_y[i-56] = label_rawdata(file_info['experiment'][i], file_info['user_ID'][i])
-    #
-    # for i in range(44, 56):
-    #     test_x[i-44] = read_rawdata(file_info['experiment'][i], file_info['user_ID'][i])
-    #     test_y[i-44] = label_rawdata(file_info['experiment'][i], file_info['user_ID'][i])
+    # input normalization, Z-score normalization
+    # apply the z-score method in Pandas using the .mean() and .std() methods
+    def z_score(df):
+        # copy the dataframe
+        df_std = df.copy()
+        # apply the z-score method
+        for column in df_std.columns:
+            df_std[column] = (df_std[column] - df_std[column].mean()) / df_std[column].std()
 
-    # print(train_x)
-    # print(val_x)
-    # print(test_x)
+        return df_std
 
-    # # input normalization, Z-score normalization
-    # # apply the z-score method in Pandas using the .mean() and .std() methods
-    # def z_score(df):
-    #     # copy the dataframe
-    #     df_std = df.copy()
-    #     # apply the z-score method
-    #     for column in df_std.columns:
-    #         df_std[column] = (df_std[column] - df_std[column].mean()) / df_std[column].std()
-    #
-    #     return df_std
-    #
-    # train_x = z_score(train_x)
-    # val_x = z_score(val_x)
-    # test_x = z_score(test_x)
+    train_x = z_score(train_x)
+    val_x = z_score(val_x)
+    test_x = z_score(test_x)
     #
     # print(train_x, train_y)
     # print(val_x, val_y)
     # print(test_x, test_y)
-    #
 
-    # train_ds = tf.data.Dataset.from_tensor_slices((train_x, train_y)).window(size=window_size, shift=shift_window_size, drop_remainder=True)
-    # train_ds = train_ds.flat_map(lambda f_acc_gyro, label: tf.data.Dataset.zip((f_acc_gyro, label))).batch(window_size, drop_remainder=True)
-    #
-    #
+
+    train_ds = tf.data.Dataset.from_tensor_slices((train_x, train_y)).window(size=window_size, shift=shift_window_size,
+                                                                             drop_remainder=True)
+    train_ds = train_ds.flat_map(lambda f_acc_gyro, label: tf.data.Dataset.zip((f_acc_gyro, label))).batch(window_size,
+                                                                                                           drop_remainder=True)
     val_ds = tf.data.Dataset.from_tensor_slices((val_x, val_y)).window(size=window_size, shift=shift_window_size,
                                                                        drop_remainder=True)
     test_ds = tf.data.Dataset.from_tensor_slices((test_x, test_y)).window(size=window_size, shift=shift_window_size,
@@ -151,13 +135,13 @@ def create_tfr(shift_window_size, window_size, device_name):
     test_ds = test_ds.flat_map(lambda f_acc_gyro, label: tf.data.Dataset.zip((f_acc_gyro, label))).batch(window_size,
                                                                                                          drop_remainder=True)
 
-    print(train_ds)
-    print(val_ds)
-    print(test_ds)
+    # print(train_ds)
+    # print(val_ds)
+    # print(test_ds)
 
-    for f_acc_gyro, label in train_ds.take(1):
-        print(f_acc_gyro)
-        print(f_acc_gyro)
+    # for f_acc_gyro, label in train_ds.take(1):
+    #     print(f_acc_gyro)
+    #     print(f_acc_gyro)
 
     # The following functions can be used to convert a value to a type compatible
     # with tf.Example.
@@ -206,9 +190,9 @@ def create_tfr(shift_window_size, window_size, device_name):
     val_map_ds = val_ds.map(tf_window_example)
     test_map_ds = test_ds.map(tf_window_example)
 
-    print(train_map_ds)
-    print(val_map_ds)
-    print(test_map_ds)
+    # print(train_map_ds)
+    # print(val_map_ds)
+    # print(test_map_ds)
 
     def generator_train():
         for features in train_ds:
