@@ -10,7 +10,7 @@ create_tfr.window_size = 150
 
 # Models
 simple_rnn.n_neurons = 256
-simple_rnn.dense_units = 32
+simple_rnn.dense_units = 64
 # simple_rnn.rnn_units = 128
 simple_rnn.dropout_rate = 0.2
 simple_rnn.window_size = 250
