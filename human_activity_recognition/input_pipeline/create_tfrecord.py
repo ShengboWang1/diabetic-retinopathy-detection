@@ -10,9 +10,9 @@ import gin
 def create_tfr(shift_window_size, window_size, device_name):
     if device_name == 'local':
         base_datadir = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/HAPT_dataset/'
-    elif device_name == 'gpu':
+    elif device_name == 'iss GPU':
         base_datadir = '/home/data/HAPT_dataset/'
-    elif device_name == 'colab':
+    elif device_name == 'Colab':
         base_datadir = '/home/data/HAPT_dataset/'
     else:
         raise ValueError
