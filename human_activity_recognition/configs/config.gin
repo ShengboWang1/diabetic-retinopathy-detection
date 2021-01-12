@@ -19,8 +19,8 @@ Trainer.ckpt_interval = 100
 
 # Input pipeline
 load.name = 'hapt'
-load.data_dir_local = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition'
-load.data_dir_gpu = '/home/RUS_CIP/st169852/dl-lab-2020-team06/human_activity_recognition'
+load.data_dir_local = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/'
+load.data_dir_gpu = '/home/RUS_CIP/st169852/dl-lab-2020-team06/human_activity_recognition/'
 load.data_dir_colab = '/home/data/tensorflow_datasets/'
 
 prepare.batch_size = 1
