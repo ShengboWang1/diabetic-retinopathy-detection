@@ -2,14 +2,14 @@ import logging
 import gin
 from ray import tune
 from input_pipeline.datasets import load
-from models.architectures import vgg_like
 from train import Trainer
 from utils import utils_params, utils_misc
-from models.resnet_1 import ResNet18
-from models.inception_resnet_v2 import inception_resnet_v2
-from models.architectures import vgg_like
-from models.densenet import densenet121_bigger, densenet121
-from models.inception_v3 import inception_v3
+from models.simple_rnn import simple_rnn
+from absl import app, flags
+
+FLAGS = flags.FLAGS
+flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
+
 
 def train_func(config):
     # Hyperparameters
@@ -24,8 +24,17 @@ def train_func(config):
     utils_misc.set_loggers(run_paths['path_logs_train'], logging.INFO)
 
     # gin-config
-    # gin.parse_config_files_and_bindings(['/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
-    gin.parse_config_files_and_bindings(['/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
+    if FLAGS.device_name == 'local':
+        gin.parse_config_files_and_bindings(
+            ['/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/configs/config.gin'], bindings)
+    elif FLAGS.device_name == 'iss GPU':
+        gin.parse_config_files_and_bindings(
+            ['/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/human_activity_recognition/configs/config.gin'], bindings)
+    elif FLAGS.device_name == 'Colab':
+        gin.parse_config_files_and_bindings(['/content/drive/MyDrive/human_activity_recognition/configs/config.gin'], bindings)
+    else:
+        raise ValueError
+
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
