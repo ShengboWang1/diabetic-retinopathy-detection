@@ -1,6 +1,6 @@
 # TFRecord
-create_tfr.shift_window_size = 125
-create_tfr.window_size = 250
+create_tfr.shift_window_size = 75
+create_tfr.window_size = 150
 
 # Architectures
 #rnn.n_recurrent_layers = 1
