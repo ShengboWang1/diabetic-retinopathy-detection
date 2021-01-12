@@ -56,8 +56,8 @@ def load(device_name, name, data_dir_local, data_dir_gpu, data_dir_colab):
         ds_val = raw_ds_val.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         ds_test = raw_ds_test.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
-        for data in ds_train.take(2):
-            print(data)
+        # for data in ds_train.take(2):
+        #     print(data)
         return prepare(ds_train, ds_val, ds_test)
 
 
