@@ -161,13 +161,13 @@ class Trainer(object):
                         # ...
                         self.ckpt_manager.save()
 
-                    # Nothing happens
-                    else:
-                        print("Validation loss is not better, no new checkpoint")
-
-                # Nothing happens
-                else:
-                    print("Validation loss is not better, no new checkpoint")
+                #     # Nothing happens
+                #     else:
+                #         print("Validation loss is not better, no new checkpoint")
+                #
+                # # Nothing happens
+                # else:
+                #     print("Validation loss is not better, no new checkpoint")
 
 
             if step % self.total_steps == 0:

@@ -13,7 +13,7 @@ def create_tfr(shift_window_size, window_size, device_name):
     elif device_name == 'iss GPU':
         base_datadir = '/home/data/HAPT_dataset/'
     elif device_name == 'Colab':
-        base_datadir = '/home/data/HAPT_dataset/'
+        base_datadir = '/content/drive/MyDrive/HAPT_dataset/'
     else:
         raise ValueError
     # load file to transfer txt file into pandas dataframe
@@ -83,14 +83,14 @@ def create_tfr(shift_window_size, window_size, device_name):
         for i in range(start_num, end_num):
             x[i] = read_rawdata(file_info['experiment'][i], file_info['user_ID'][i])
             a = len(x[i])
-            print("a")
-            print(a)
+            # print("a")
+            # print(a)
             delete_length = (a - window_size) % shift_window_size
-            print(delete_length)
+            # print(delete_length)
             x[i] = x[i][:-delete_length]
-            print(len(x[i]))
+            # print(len(x[i]))
             y[i] = label_rawdata(file_info['experiment'][i], file_info['user_ID'][i])[:-delete_length]
-            print(len(y[i]))
+            # print(len(y[i]))
             ds_x = ds_x.append(x[i], ignore_index=True)
             ds_y = ds_y.append(y[i], ignore_index=True)
 
