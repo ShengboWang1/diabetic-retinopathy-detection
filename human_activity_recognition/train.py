@@ -29,7 +29,7 @@ class Trainer(object):
         self.test_summary_writer = tf.summary.create_file_writer(self.summary_path + self.current_time + 'train')
 
         # Loss objective
-        self.loss_object = tf.keras.losses.MeanSquaredError()
+        self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
         self.optimizer = tf.keras.optimizers.Adam()
 
         # Metrics
@@ -161,13 +161,13 @@ class Trainer(object):
                         # ...
                         self.ckpt_manager.save()
 
-                    # Nothing happens
-                    else:
-                        print("Validation loss is not better, no new checkpoint")
-
-                # Nothing happens
-                else:
-                    print("Validation loss is not better, no new checkpoint")
+                #     # Nothing happens
+                #     else:
+                #         print("Validation loss is not better, no new checkpoint")
+                #
+                # # Nothing happens
+                # else:
+                #     print("Validation loss is not better, no new checkpoint")
 
 
             if step % self.total_steps == 0:

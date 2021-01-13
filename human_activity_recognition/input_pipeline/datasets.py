@@ -4,7 +4,7 @@ import tensorflow as tf
 import numpy as np
 import tensorflow_datasets as tfds
 from input_pipeline.preprocessing import preprocess
-
+from input_pipeline.create_tfrecord import create_tfr
 
 @gin.configurable
 def load(device_name, name, data_dir_local, data_dir_gpu, data_dir_colab):
@@ -12,6 +12,7 @@ def load(device_name, name, data_dir_local, data_dir_gpu, data_dir_colab):
         logging.info(f"Preparing dataset {name}...")
         # 2 classes
         print(device_name)
+        create_tfr(device_name=device_name)
 
         if device_name == 'local':
             train_filename = data_dir_local + "train.tfrecord"
@@ -56,8 +57,8 @@ def load(device_name, name, data_dir_local, data_dir_gpu, data_dir_colab):
         ds_val = raw_ds_val.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         ds_test = raw_ds_test.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
-        for data in ds_train.take(1):
-            print(data)
+        # for data in ds_train.take(2):
+        #     print(data)
         return prepare(ds_train, ds_val, ds_test)
 
 
@@ -74,7 +75,7 @@ def prepare(ds_train, ds_val, ds_test, batch_size, caching):
     # ds_train = ds_train.map(
     #     augment, num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
-    # ds_train = ds_train.shuffle(300)
+    ds_train = ds_train.shuffle(1000)
     # ds_train = ds_train.shuffle(ds_info.splits['train'].num_examples // 10)
     ds_train = ds_train.batch(batch_size)
     ds_train = ds_train.repeat(-1)

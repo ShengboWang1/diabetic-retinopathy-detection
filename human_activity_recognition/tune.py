@@ -2,14 +2,14 @@ import logging
 import gin
 from ray import tune
 from input_pipeline.datasets import load
-from models.architectures import vgg_like
 from train import Trainer
 from utils import utils_params, utils_misc
-from models.resnet_1 import ResNet18
-from models.inception_resnet_v2 import inception_resnet_v2
-from models.architectures import vgg_like
-from models.densenet import densenet121_bigger, densenet121
-from models.inception_v3 import inception_v3
+from models.simple_rnn import simple_rnn
+from absl import app, flags
+
+FLAGS = flags.FLAGS
+flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
+
 
 def train_func(config):
     # Hyperparameters
@@ -24,28 +24,36 @@ def train_func(config):
     utils_misc.set_loggers(run_paths['path_logs_train'], logging.INFO)
 
     # gin-config
-    # gin.parse_config_files_and_bindings(['/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
-    gin.parse_config_files_and_bindings(['/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/configs/config.gin'], bindings)
+    if FLAGS.device_name == 'local':
+        gin.parse_config_files_and_bindings(
+            ['/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/configs/config.gin'], bindings)
+    elif FLAGS.device_name == 'iss GPU':
+        gin.parse_config_files_and_bindings(
+            ['/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/human_activity_recognition/configs/config.gin'], bindings)
+    elif FLAGS.device_name == 'Colab':
+        gin.parse_config_files_and_bindings(['/content/drive/MyDrive/human_activity_recognition/configs/config.gin'], bindings)
+    else:
+        raise ValueError
+
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
     ds_train, ds_val, ds_test, ds_info = load()
 
     # model
-    # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
-    model = vgg_like(input_shape=(256, 256, 3), n_classes=2)
-    # model = densenet121()
+    model = simple_rnn()
+
 
     trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
     for val_accuracy in trainer.train():
         tune.report(val_accuracy=val_accuracy)
 
 config={
-        "Trainer.total_steps": tune.grid_search([10000]),
-        "vgg_like.base_filters": tune.choice([4, 8, 16, 32]),
-        "vgg_like.n_blocks": tune.choice([2, 3, 4, 5, 6, 7]),
-        "vgg_like.dense_units": tune.choice([8, 16, 32, 64, 128]),
-        "vgg_like.dropout_rate": tune.uniform(0, 0.9),
+        "Trainer.total_steps": tune.grid_search([50000]),
+        "simple_rnn.base_filters": tune.choice([4, 8, 16, 32]),
+        "simple_rnn.n_blocks": tune.choice([2, 3, 4, 5, 6, 7]),
+        "simple_rnn.dense_units": tune.choice([8, 16, 32, 64, 128]),
+        "simple_rnn.dropout_rate": tune.uniform(0.1, 0.8),
     }
 
 analysis = tune.run(
