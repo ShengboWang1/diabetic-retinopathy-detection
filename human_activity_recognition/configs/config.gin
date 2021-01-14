@@ -1,6 +1,6 @@
 # TFRecord
-create_tfr.shift_window_size = 75
-create_tfr.window_size = 150
+create_tfr.shift_window_size = 125
+create_tfr.window_size = 250
 
 # Architectures
 #rnn.n_recurrent_layers = 1
@@ -15,6 +15,22 @@ simple_rnn.dense_units = 64
 simple_rnn.dropout_rate = 0.5
 simple_rnn.window_size = 250
 # simple_rnn.n_batch = 32
+
+# CNN plus LSTM
+cnn_lstm.n_filters = 64
+cnn_lstm.dropout_rate = 0.5
+cnn_lstm.window_size = 250
+cnn_lstm.lstm_units = 64
+cnn_lstm.dense_units = 64
+
+#Multi lstm
+multi_lstm.n_lstm = 2
+multi_lstm.n_dense = 2
+multi_lstm.lstm_units = 256
+multi_lstm.dense_units = 64
+# simple_rnn.rnn_units = 128
+multi_lstm.dropout_rate = 0.5
+multi_lstm.window_size = 250
 
 # Training
 Trainer.total_steps = 200000

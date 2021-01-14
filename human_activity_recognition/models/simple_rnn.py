@@ -1,20 +1,14 @@
-import numpy as np
-import tensorflow as tf
+from tensorflow.keras.models import Sequential
 import gin
-from tensorflow.keras import layers, Sequential
+from tensorflow.keras.layers import Dense, Dropout, LSTM
 
 
 @gin.configurable
-def simple_rnn(n_neurons, dense_units, dropout_rate, window_size, rnn_units=30):
+def simple_rnn(n_neurons, dense_units, dropout_rate, window_size):
 
     model = Sequential()
-    model.add(layers.LSTM(64, input_shape=(window_size, 6), return_sequences=True))
-    # model.add(layers.LSTM(128, input_shape=(window_size, 6), return_sequences=True))
-    # model.add(layers.LSTM(64, input_shape=(window_size, 6), return_sequences=True))
-    # model.add(layers.Bidirectional(layers.LSTM(n_neurons, input_shape=(window_size, 6), return_sequences=True)))
-    # model.add(layers.Bidirectional(layers.LSTM(32, input_shape=(n_neurons, 6), return_sequences=True)))
-    model.add(layers.Dropout(dropout_rate))
-    model.add(layers.Dense(dense_units, activation='relu'))
-    model.add(layers.Dense(13))
-
+    model.add(LSTM(n_neurons, input_shape=(window_size, 6), return_sequences=True))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(dense_units, activation='relu'))
+    model.add(Dense(13, activation='softmax'))
     return model
