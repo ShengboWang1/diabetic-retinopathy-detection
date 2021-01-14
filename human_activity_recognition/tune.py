@@ -4,7 +4,7 @@ from ray import tune
 from input_pipeline.datasets import load
 from train import Trainer
 from utils import utils_params, utils_misc
-from models.simple_rnn import simple_rnn
+from models.multi_lstm import multi_lstm
 from absl import app, flags
 
 FLAGS = flags.FLAGS
@@ -41,7 +41,7 @@ def train_func(config):
     ds_train, ds_val, ds_test, ds_info = load()
 
     # model
-    model = simple_rnn()
+    model = multi_lstm()
 
 
     trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
@@ -50,10 +50,11 @@ def train_func(config):
 
 config={
         "Trainer.total_steps": tune.grid_search([50000]),
-        "simple_rnn.base_filters": tune.choice([4, 8, 16, 32]),
-        "simple_rnn.n_blocks": tune.choice([2, 3, 4, 5, 6, 7]),
-        "simple_rnn.dense_units": tune.choice([8, 16, 32, 64, 128]),
-        "simple_rnn.dropout_rate": tune.uniform(0.1, 0.8),
+        "multi_lstm.dense_units": tune.choice([16, 32, 64, 128, 256]),
+        "multi_lstm.n_lstm": tune.choice([1, 2, 3]),
+        "multi_lstm.n_dense": tune.choice([1, 2, 3]),
+        "multi_lstm.lstm_units": tune.choice([16, 32, 64, 128, 256]),
+        "multi_lstm.dropout_rate": tune.uniform(0.1, 0.8),
     }
 
 analysis = tune.run(

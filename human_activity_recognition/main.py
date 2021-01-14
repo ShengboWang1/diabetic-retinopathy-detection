@@ -7,11 +7,14 @@ from evaluation.eval import evaluate
 from input_pipeline import datasets
 from utils import utils_params, utils_misc
 from models.simple_rnn import simple_rnn
+from models.cnn_lstm import cnn_lstm
+from models.multi_lstm import multi_lstm
 
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
 flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
+flags.DEFINE_string('model_name', 'multi_lstm', 'Prepare different models')
 
 
 @gin.configurable
@@ -37,11 +40,13 @@ def main(argv):
     # setup pipeline
     ds_train, ds_val, ds_test = datasets.load(device_name=FLAGS.device_name)
 
-    model_name = 'lstm'
 
-    if model_name == 'lstm':
+    if FLAGS.model_name == 'simple_rnn':
         model = simple_rnn()
-
+    elif FLAGS.model_name == 'cnn_lstm':
+        model = cnn_lstm()
+    elif FLAGS.model_name == 'multi_lstm':
+        model = multi_lstm()
     else:
         raise ValueError
 

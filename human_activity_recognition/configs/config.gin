@@ -23,6 +23,14 @@ cnn_lstm.window_size = 250
 cnn_lstm.lstm_units = 64
 cnn_lstm.dense_units = 64
 
+#Multi lstm
+multi_lstm.n_lstm = 2
+multi_lstm.n_dense = 2
+multi_lstm.lstm_units = [256, 128]
+multi_lstm.dense_units = 64
+# simple_rnn.rnn_units = 128
+multi_lstm.dropout_rate = 0.5
+multi_lstm.window_size = 250
 
 # Training
 Trainer.total_steps = 200000
