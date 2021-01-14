@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow_datasets as tfds
 from input_pipeline.preprocessing import preprocess
 from input_pipeline.create_tfrecord import create_tfr
-from input_pipeline.plot_data import plot_data
+# from input_pipeline.plot_data import plot_data
 
 
 @gin.configurable
