@@ -56,12 +56,6 @@ class Trainer(object):
 
     @tf.function
     def train_step(self, images, labels):
-        with tf.GradientTape() as tape:
-            # training=True is only needed if there are layers with different
-            # behavior during training versus inference (e.g. Dropout).
-            predictions = self.model(images, training=True)
-            loss = self.loss_object(labels, predictions)
-        gradients = tape.gradient(loss, self.model.trainable_variables)
 
         # label_preds = np.argmax(predictions, -1)
         # label=labels.numpy()
@@ -74,17 +68,25 @@ class Trainer(object):
         # tf.print(binary_accuracy)
         # tf.print(binary_confusion_matrix)
 
-        self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
-
         if self.problem_type == 'regression':
-            predictions = tf.cast(tf.clip_by_value(predictions + 0.5, clip_value_min=0, clip_value_max=4), tf.int32)
-            self.train_loss(loss)
-            self.train_accuracy(labels, predictions)
+            with tf.GradientTape() as tape:
+                # training=True is only needed if there are layers with different
+                # behavior during training versus inference (e.g. Dropout).
+                predictions = self.model(images, training=True)
+                predictions = tf.cast(tf.clip_by_value(predictions + 0.5, clip_value_min=0, clip_value_max=4), tf.int32)
+                loss = self.loss_object(labels, predictions)
+
         elif self.problem_type == 'classification':
-            self.train_loss(loss)
-            self.train_accuracy(labels, predictions)
+            with tf.GradientTape() as tape:
+                predictions = self.model(images, training=True)
+                loss = self.loss_object(labels, predictions)
+
         else:
             raise ValueError
+        gradients = tape.gradient(loss, self.model.trainable_variables)
+        self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
+        self.train_loss(loss)
+        self.train_accuracy(labels, predictions)
 
     @tf.function
     def val_step(self, images, labels):
