@@ -14,6 +14,7 @@ from absl import app, flags
 
 FLAGS = flags.FLAGS
 flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
+flags.DEFINE_string('dataset_name', 'idrid', 'Specify whether to use idrid or eyepacs')
 
 def train_func(config):
     # Hyperparameters
@@ -44,7 +45,7 @@ def train_func(config):
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
-    ds_train, ds_val, ds_test, ds_info = load()
+    ds_train, ds_val, ds_test, ds_info = load(device_name=FLAGS.device_name, dataset_name=FLAGS.dataset_name)
 
     # model
     # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
@@ -55,14 +56,14 @@ def train_func(config):
     for val_accuracy in trainer.train():
         tune.report(val_accuracy=val_accuracy)
 
-config={
+
+config = {
         "Trainer.total_steps": tune.grid_search([20000]),
         "vgg_like.base_filters": tune.choice([8, 16]),
         "vgg_like.n_blocks": tune.choice([2, 3, 4, 5]),
         "vgg_like.dense_units": tune.choice([32, 64]),
         "vgg_like.dropout_rate": tune.uniform(0, 0.9),
     }
-
 
 if FLAGS.device_name == 'local':
     resources_per_trial = {'gpu': 0, 'cpu': 1}
