@@ -2,8 +2,6 @@ import gin
 import tensorflow as tf
 import logging
 import datetime
-import numpy as np
-from sklearn import metrics
 
 
 @gin.configurable
@@ -46,10 +44,6 @@ class Trainer(object):
         # Metrics
         self.train_loss = tf.keras.metrics.Mean(name='train_loss', dtype=tf.float32)
         self.val_loss = tf.keras.metrics.Mean(name='val_loss', dtype=tf.float32)
-        self.train_precision = tf.keras.metrics.Precision(name='train_precision')
-        self.train_recall = tf.keras.metrics.Recall(name='train_recall')
-        self.val_precision = tf.keras.metrics.Precision(name='val_precision')
-        self.val_recall = tf.keras.metrics.Recall(name='val_recall')
 
         # Checkpoint Manager
         # ...
@@ -89,13 +83,8 @@ class Trainer(object):
         elif self.problem_type == 'classification':
             self.train_loss(loss)
             self.train_accuracy(labels, predictions)
-            predictions = tf.cast(tf.reshape(tf.math.argmax(predictions, axis=1), shape=(-1, 1)), dtype=tf.int32)
         else:
             raise ValueError
-
-        self.train_precision(labels, predictions)
-        self.train_recall(labels, predictions)
-
 
     @tf.function
     def val_step(self, images, labels):
@@ -123,12 +112,8 @@ class Trainer(object):
         elif self.problem_type == 'classification':
             self.val_loss(v_loss)
             self.val_accuracy(labels, predictions)
-            predictions = tf.cast(tf.reshape(tf.math.argmax(predictions, axis=1), shape=(-1, 1)), dtype=tf.int32)
         else:
             raise ValueError
-        self.val_accuracy(labels, predictions)
-        self.val_precision(labels, predictions)
-        self.val_recall(labels, predictions)
 
     def train(self):
         for idx, (images, labels) in enumerate(self.ds_train):
@@ -142,25 +127,16 @@ class Trainer(object):
                 # Reset validation metrics
                 self.val_loss.reset_states()
                 self.val_accuracy.reset_states()
-                self.val_precision.reset_states()
-                self.val_recall.reset_states()
 
                 for val_images, val_labels in self.ds_val:
                     self.val_step(val_images, val_labels)
 
-                template = 'Step {}, Train Loss: {}, Train Accuracy: {}, Train Precision: {}, Train Recall:{}, ' \
-                           'Validation Loss: {}, Validation Accuracy: {}, Validation Precision: {}, Validation Recall:{}'
-
-
+                template = 'Step {}, Train Loss: {}, Train Accuracy: {}, Validation Loss: {}, Validation Accuracy: {}'
                 logging.info(template.format(step,
                                              self.train_loss.result(),
                                              self.train_accuracy.result() * 100,
-                                             self.train_precision.result(),
-                                             self.train_loss.result(),
                                              self.val_loss.result(),
-                                             self.val_accuracy.result() * 100),
-                                             self.val_precision.result(),
-                                             self.val_loss.result())
+                                             self.val_accuracy.result() * 100))
 
                 # Write summary to tensorboard
                 # ...train test loss accuracy
@@ -177,8 +153,6 @@ class Trainer(object):
                 # Reset train metrics
                 self.train_loss.reset_states()
                 self.train_accuracy.reset_states()
-                self.train_precision.reset_states()
-                self.train_recall.reset_states()
 
                 # Compare it with max_acc
                 acc = self.val_accuracy.result().numpy()
@@ -216,7 +190,6 @@ class Trainer(object):
                 # Nothing happens
                 # else:
                     # print("Validation loss is not better, no new checkpoint")
-
 
             if step % self.total_steps == 0:
                 logging.info(f'Finished training after {step} steps.')
