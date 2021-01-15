@@ -18,8 +18,7 @@ flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a mode
 flags.DEFINE_string('model_name', 'resnet18', 'Name of the model')
 flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
 flags.DEFINE_string('problem_type', 'classification', 'Specify whether to solve a regression or a classification problem')
-flags.DEFINE_string('dataset_name', 'idrid', 'Specify whether to use idrid or eyepacs')
-flags.DEFINE_integer('num_classes', 5, '5-class or a 2-class problem')
+flags.DEFINE_string('dataset_name', 'eyepacs', 'Specify whether to use idrid or eyepacs')
 
 
 @gin.configurable
