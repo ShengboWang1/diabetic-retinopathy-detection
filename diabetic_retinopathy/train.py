@@ -73,8 +73,8 @@ class Trainer(object):
                 # training=True is only needed if there are layers with different
                 # behavior during training versus inference (e.g. Dropout).
                 predictions = self.model(images, training=True)
-                predictions = tf.cast(tf.clip_by_value(predictions + 0.5, clip_value_min=0, clip_value_max=4), tf.int32)
                 loss = self.loss_object(labels, predictions)
+                predictions = tf.cast(tf.clip_by_value(predictions + 0.5, clip_value_min=0, clip_value_max=4), tf.int32)
 
         elif self.problem_type == 'classification':
             with tf.GradientTape() as tape:
