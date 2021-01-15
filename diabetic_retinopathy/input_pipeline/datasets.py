@@ -58,7 +58,7 @@ def load(device_name, dataset_name, data_dir_local, data_dir_GPU, data_dir_Colab
         return prepare(ds_train, ds_val, ds_test, ds_info)
 
     elif dataset_name == "eyepacs":
-        logging.info(f"Preparing dataset {name}...")
+        logging.info(f"Preparing dataset {dataset_name}...")
         if device_name == 'local':
             data_dir = data_dir_local
         if device_name == 'iss GPU':
@@ -82,8 +82,8 @@ def load(device_name, dataset_name, data_dir_local, data_dir_GPU, data_dir_Colab
 
         return prepare(ds_train, ds_val, ds_test, ds_info)
 
-    elif name == "mnist":
-        logging.info(f"Preparing dataset {name}...")
+    elif dataset_name == "mnist":
+        logging.info(f"Preparing dataset {dataset_name}...")
         (ds_train, ds_val, ds_test), ds_info = tfds.load(
             'mnist',
             split=['train[:90%]', 'train[90%:]', 'test'],
