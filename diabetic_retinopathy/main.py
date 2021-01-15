@@ -46,7 +46,7 @@ def main(argv):
 
     if FLAGS.dataset_name == 'idrid':
         num_classes = 2
-    elif FLAGS.dataset_name = 'eyepacs':
+    elif FLAGS.dataset_name == 'eyepacs':
         num_classes = 5
 
     if FLAGS.model_name == 'vgg':
