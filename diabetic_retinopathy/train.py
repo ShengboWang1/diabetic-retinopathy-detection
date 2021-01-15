@@ -139,6 +139,8 @@ class Trainer(object):
                 # Reset validation metrics
                 self.val_loss.reset_states()
                 self.val_accuracy.reset_states()
+                self.val_precision.reset_states()
+                self.val_recall.reset_states()
 
                 for val_images, val_labels in self.ds_val:
                     self.val_step(val_images, val_labels)
@@ -172,6 +174,8 @@ class Trainer(object):
                 # Reset train metrics
                 self.train_loss.reset_states()
                 self.train_accuracy.reset_states()
+                self.train_precision.reset_states()
+                self.train_recall.reset_states()
 
                 # Compare it with max_acc
                 acc = self.val_accuracy.result().numpy()
