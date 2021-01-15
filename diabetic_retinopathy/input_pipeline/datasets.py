@@ -6,9 +6,9 @@ from input_pipeline.preprocessing import preprocess, augment
 import matplotlib.pyplot as plt
 
 @gin.configurable
-def load(device_name, name, data_dir_local, data_dir_GPU, data_dir_Colab):
-    if name == "idrid":
-        logging.info(f"Preparing dataset {name}...")
+def load(device_name, dataset_name, data_dir_local, data_dir_GPU, data_dir_Colab):
+    if dataset_name == "idrid":
+        logging.info(f"Preparing dataset {dataset_name}...")
         # 2 classes
         print(device_name)
         if device_name == 'local':
@@ -57,7 +57,7 @@ def load(device_name, name, data_dir_local, data_dir_GPU, data_dir_Colab):
 
         return prepare(ds_train, ds_val, ds_test, ds_info)
 
-    elif name == "eyepacs":
+    elif dataset_name == "eyepacs":
         logging.info(f"Preparing dataset {name}...")
         if device_name == 'local':
             data_dir = data_dir_local

@@ -36,15 +36,20 @@ class Trainer(object):
         # Loss objective
         if self.problem_type == 'classification':
             self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+            self.train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
+            self.val_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='val_accuracy')
         elif self.problem_type == 'regression':
             self.loss_object = tf.keras.losses.MeanSquaredError()
+            self.train_accuracy = tf.keras.metrics.Accuracy(name='train_accuracy')
+            self.val_accuracy = tf.keras.metrics.Accuracy(name='val_accuracy')
 
         # Metrics
         self.train_loss = tf.keras.metrics.Mean(name='train_loss', dtype=tf.float32)
-        self.train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
-
         self.val_loss = tf.keras.metrics.Mean(name='val_loss', dtype=tf.float32)
-        self.val_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='val_accuracy')
+        self.train_precision = tf.keras.metrics.Precision(name='train_precision')
+        self.train_recall = tf.keras.metrics.Recall(name='train_recall')
+        self.val_precision = tf.keras.metrics.Precision(name='val_precision')
+        self.val_recall = tf.keras.metrics.Recall(name='val_recall')
 
         # Checkpoint Manager
         # ...
@@ -77,8 +82,18 @@ class Trainer(object):
 
         self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
 
-        self.train_loss(loss)
-        self.train_accuracy(labels, predictions)
+        if self.problem_type == 'regression':
+            predictions = tf.cast(tf.clip_by_value(predictions + 0.5, clip_value_min=0, clip_value_max=4), tf.int32)
+            self.train_loss(loss)
+            self.train_accuracy(labels, predictions)
+        elif self.problem_type == 'classification':
+            self.train_loss(loss)
+            self.train_accuracy(labels, predictions)
+        else:
+            raise ValueError
+        self.train_precision(labels, predictions)
+        self.train_recall(labels, predictions)
+
 
     @tf.function
     def val_step(self, images, labels):
@@ -99,7 +114,18 @@ class Trainer(object):
         # tf.print(binary_confusion_matrix)
 
         self.val_loss(v_loss)
+        if self.problem_type == 'regression':
+            predictions = tf.cast(tf.clip_by_value(predictions + 0.5, clip_value_min=0, clip_value_max=4), tf.int32)
+            self.val_loss(v_loss)
+            self.val_accuracy(labels, predictions)
+        elif self.problem_type == 'classification':
+            self.val_loss(v_loss)
+            self.val_accuracy(labels, predictions)
+        else:
+            raise ValueError
         self.val_accuracy(labels, predictions)
+        self.val_precision(labels, predictions)
+        self.val_recall(labels, predictions)
 
     def train(self):
         for idx, (images, labels) in enumerate(self.ds_train):
@@ -117,12 +143,19 @@ class Trainer(object):
                 for val_images, val_labels in self.ds_val:
                     self.val_step(val_images, val_labels)
 
-                template = 'Step {}, Train Loss: {}, Train Accuracy: {}, Validation Loss: {}, Validation Accuracy: {}'
+                template = 'Step {}, Train Loss: {}, Train Accuracy: {}, Train Precision: {}, Train Recall:{}, ' \
+                           'Validation Loss: {}, Validation Accuracy: {}, Validation Precision: {}, Validation Recall:{}'
+
+
                 logging.info(template.format(step,
                                              self.train_loss.result(),
                                              self.train_accuracy.result() * 100,
+                                             self.train_precision.result(),
+                                             self.train_loss.result(),
                                              self.val_loss.result(),
-                                             self.val_accuracy.result() * 100))
+                                             self.val_accuracy.result() * 100),
+                                             self.val_precision.result(),
+                                             self.val_loss.result())
 
                 # Write summary to tensorboard
                 # ...train test loss accuracy
