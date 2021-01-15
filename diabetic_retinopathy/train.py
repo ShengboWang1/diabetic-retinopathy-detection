@@ -37,7 +37,7 @@ class Trainer(object):
             self.train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
             self.val_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='val_accuracy')
         elif self.problem_type == 'regression':
-            self.loss_object = tf.keras.losses.MeanSquaredError()
+            self.loss_object = tf.keras.losses.Huber(delta=0.3)
             self.train_accuracy = tf.keras.metrics.Accuracy(name='train_accuracy')
             self.val_accuracy = tf.keras.metrics.Accuracy(name='val_accuracy')
 
