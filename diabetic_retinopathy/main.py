@@ -44,7 +44,10 @@ def main(argv):
     # setup pipeline
     ds_train, ds_val, ds_test, ds_info = datasets.load(device_name=FLAGS.device_name, dataset_name=FLAGS.dataset_name)
 
-    num_classes = 2
+    if FLAGS.dataset_name == 'idrid':
+        num_classes = 2
+    elif FLAGS.dataset_name = 'eyepacs':
+        num_classes = 5
 
     if FLAGS.model_name == 'vgg':
         model = vgg_like(input_shape=(256, 256, 3), n_classes=num_classes)

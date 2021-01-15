@@ -89,8 +89,10 @@ class Trainer(object):
         elif self.problem_type == 'classification':
             self.train_loss(loss)
             self.train_accuracy(labels, predictions)
+            predictions = np.argmax(predictions, -1)
         else:
             raise ValueError
+
         self.train_precision(labels, predictions)
         self.train_recall(labels, predictions)
 
@@ -121,6 +123,7 @@ class Trainer(object):
         elif self.problem_type == 'classification':
             self.val_loss(v_loss)
             self.val_accuracy(labels, predictions)
+            predictions = np.argmax(predictions, -1)
         else:
             raise ValueError
         self.val_accuracy(labels, predictions)
