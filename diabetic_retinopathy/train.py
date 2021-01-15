@@ -89,7 +89,7 @@ class Trainer(object):
         elif self.problem_type == 'classification':
             self.train_loss(loss)
             self.train_accuracy(labels, predictions)
-            predictions = tf.math.argmax(predictions, axis=1)
+            predictions = tf.cast(tf.reshape(tf.math.argmax(predictions, axis=1), shape=(-1, 1)), dtype=tf.int32)
         else:
             raise ValueError
 
@@ -123,7 +123,7 @@ class Trainer(object):
         elif self.problem_type == 'classification':
             self.val_loss(v_loss)
             self.val_accuracy(labels, predictions)
-            predictions = tf.math.argmax(predictions, axis=1)
+            predictions = tf.cast(tf.reshape(tf.math.argmax(predictions, axis=1), shape=(-1, 1)), dtype=tf.int32)
         else:
             raise ValueError
         self.val_accuracy(labels, predictions)
