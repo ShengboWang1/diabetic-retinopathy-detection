@@ -14,7 +14,7 @@ from models.multi_lstm import multi_lstm
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
 flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
-flags.DEFINE_string('model_name', 'multi_lstm', 'Prepare different models')
+flags.DEFINE_string('model_name', 'simple_rnn', 'Prepare different models')
 
 
 @gin.configurable

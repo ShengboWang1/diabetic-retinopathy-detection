@@ -17,6 +17,6 @@ def cnn_lstm(n_filters, dropout_rate, window_size, lstm_units, dense_units):
     model.add(LSTM(lstm_units, input_shape=(window_size, 6), return_sequences=True))
     model.add(Dropout(dropout_rate))
     model.add(Dense(dense_units, activation='relu'))
-    model.add(Dense(13, activation='softmax'))
+    model.add(Dense(12, activation='softmax'))
 
     return model

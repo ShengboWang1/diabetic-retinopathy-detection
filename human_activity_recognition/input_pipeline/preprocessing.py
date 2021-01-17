@@ -8,5 +8,5 @@ from tensorflow.keras.utils import to_categorical
 @gin.configurable
 def preprocess(feature, label):
     """Dataset preprocessing: Normalizing and resizing"""
-
+    label -= 1
     return feature, label
