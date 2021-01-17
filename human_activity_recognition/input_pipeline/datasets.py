@@ -17,17 +17,17 @@ def load(device_name, name, data_dir_local, data_dir_gpu, data_dir_colab):
         # create_tfr(device_name=device_name)
 
         if device_name == 'local':
-            train_filename = data_dir_local + "train.tfrecord"
-            val_filename = data_dir_local + "val.tfrecord"
-            test_filename = data_dir_local + "test.tfrecord"
+            train_filename = data_dir_local + "no0_train.tfrecord"
+            val_filename = data_dir_local + "no0_val.tfrecord"
+            test_filename = data_dir_local + "no0_test.tfrecord"
         elif device_name == 'iss GPU':
-            train_filename = data_dir_gpu + "train.tfrecord"
-            val_filename = data_dir_gpu + "val.tfrecord"
-            test_filename = data_dir_gpu + "test.tfrecord"
+            train_filename = data_dir_gpu + "no0_train.tfrecord"
+            val_filename = data_dir_gpu + "no0_val.tfrecord"
+            test_filename = data_dir_gpu + "no0_test.tfrecord"
         elif device_name == 'Colab':
-            train_filename = data_dir_colab + "train.tfrecord"
-            val_filename = data_dir_colab + "val.tfrecord"
-            test_filename = data_dir_colab + "test.tfrecord"
+            train_filename = data_dir_colab + "no0_train.tfrecord"
+            val_filename = data_dir_colab + "no0_val.tfrecord"
+            test_filename = data_dir_colab + "no0_test.tfrecord"
         else:
             raise ValueError
 

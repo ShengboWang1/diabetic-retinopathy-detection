@@ -9,19 +9,19 @@ create_tfr.window_size = 250
 #rnn.dropout_rate = 0.2
 
 # Models
-simple_rnn.n_neurons = 256
-simple_rnn.dense_units = 64
-# simple_rnn.rnn_units = 128
-simple_rnn.dropout_rate = 0.5
-simple_rnn.window_size = 250
-# simple_rnn.n_batch = 32
-
-# CNN plus LSTM
-cnn_lstm.n_filters = 64
-cnn_lstm.dropout_rate = 0.5
-cnn_lstm.window_size = 250
-cnn_lstm.lstm_units = 64
-cnn_lstm.dense_units = 64
+#simple_rnn.n_neurons = 256
+#simple_rnn.dense_units = 64
+## simple_rnn.rnn_units = 128
+#simple_rnn.dropout_rate = 0.5
+#simple_rnn.window_size = 250
+## simple_rnn.n_batch = 32
+#
+## CNN plus LSTM
+#cnn_lstm.n_filters = 64
+#cnn_lstm.dropout_rate = 0.5
+#cnn_lstm.window_size = 250
+#cnn_lstm.lstm_units = 64
+#cnn_lstm.dense_units = 64
 
 #Multi lstm
 multi_lstm.n_lstm = 2

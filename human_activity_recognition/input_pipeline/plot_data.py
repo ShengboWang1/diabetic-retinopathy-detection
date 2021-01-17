@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
 
-val_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/' + "val.tfrecord"
+val_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/' + "no0_val.tfrecord"
 
 raw_ds_test = tf.data.TFRecordDataset(val_filename)
 
