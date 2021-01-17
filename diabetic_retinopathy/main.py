@@ -15,9 +15,10 @@ from models.inception_v3 import inception_v3
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
-flags.DEFINE_string('model_name', 'resnet18', 'Name of the model')
+flags.DEFINE_string('model_name', 'vgg', 'Name of the model')
 flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
-flags.DEFINE_string('problem_type', 'regression', 'Specify whether to solve a regression or a classification problem')
+flags.DEFINE_string('problem_type', 'classification', 'Specify whether to solve a regression or a classification problem')
+flags.DEFINE_string('dataset_name', 'eyepacs', 'Specify whether to use idrid or eyepacs')
 
 
 @gin.configurable
@@ -40,9 +41,12 @@ def main(argv):
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
-    ds_train, ds_val, ds_test, ds_info = datasets.load(device_name=FLAGS.device_name)
+    ds_train, ds_val, ds_test, ds_info = datasets.load(device_name=FLAGS.device_name, dataset_name=FLAGS.dataset_name)
 
-    num_classes = 2
+    if FLAGS.dataset_name == 'idrid':
+        num_classes = 2
+    elif FLAGS.dataset_name == 'eyepacs':
+        num_classes = 5
 
     if FLAGS.model_name == 'vgg':
         model = vgg_like(input_shape=(256, 256, 3), n_classes=num_classes)

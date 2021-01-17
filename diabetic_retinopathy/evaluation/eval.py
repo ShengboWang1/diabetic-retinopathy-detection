@@ -10,7 +10,7 @@ from sklearn import metrics
 
 
 def evaluate(model, ds_test, ds_info, run_paths):
-    test_cm = ConfusionMatrixMetric(num_classes=2)
+    test_cm = ConfusionMatrixMetric(num_classes=5)
 
     # Restore the model from the corresponding checkpoint
 

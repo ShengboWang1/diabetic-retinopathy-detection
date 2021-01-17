@@ -4,12 +4,10 @@ from ray import tune
 from input_pipeline.datasets import load
 from train import Trainer
 from utils import utils_params, utils_misc
-from models.simple_rnn import simple_rnn
+from models.multi_lstm import multi_lstm
 from absl import app, flags
 
-FLAGS = flags.FLAGS
-flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
-
+device_name = 'iss GPU'
 
 def train_func(config):
     # Hyperparameters
@@ -24,40 +22,53 @@ def train_func(config):
     utils_misc.set_loggers(run_paths['path_logs_train'], logging.INFO)
 
     # gin-config
-    if FLAGS.device_name == 'local':
+    if device_name == 'local':
         gin.parse_config_files_and_bindings(
             ['/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/configs/config.gin'], bindings)
-    elif FLAGS.device_name == 'iss GPU':
+    elif device_name == 'iss GPU':
         gin.parse_config_files_and_bindings(
             ['/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/human_activity_recognition/configs/config.gin'], bindings)
-    elif FLAGS.device_name == 'Colab':
+    elif device_name == 'Colab':
         gin.parse_config_files_and_bindings(['/content/drive/MyDrive/human_activity_recognition/configs/config.gin'], bindings)
     else:
         raise ValueError
 
+    #gin.parse_config_files_and_bindings(['/content/drive/MyDrive/human_activity_recognition/configs/config.gin'], bindings)
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
-    ds_train, ds_val, ds_test, ds_info = load()
+    ds_train, ds_val, ds_test = load(device_name=device_name)
 
     # model
-    model = simple_rnn()
+    model = multi_lstm()
 
-
-    trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
+    trainer = Trainer(model, ds_train, ds_val, run_paths)
     for val_accuracy in trainer.train():
         tune.report(val_accuracy=val_accuracy)
 
+
 config={
-        "Trainer.total_steps": tune.grid_search([50000]),
-        "simple_rnn.base_filters": tune.choice([4, 8, 16, 32]),
-        "simple_rnn.n_blocks": tune.choice([2, 3, 4, 5, 6, 7]),
-        "simple_rnn.dense_units": tune.choice([8, 16, 32, 64, 128]),
-        "simple_rnn.dropout_rate": tune.uniform(0.1, 0.8),
+        "Trainer.total_steps": tune.grid_search([3000]),
+        "multi_lstm.dense_units": tune.choice([16, 32, 64, 128, 256]),
+        "multi_lstm.n_lstm": tune.choice([1, 2, 3]),
+        "multi_lstm.n_dense": tune.choice([1, 2, 3]),
+        "multi_lstm.lstm_units": tune.choice([16, 32, 64, 128, 256]),
+        "multi_lstm.dropout_rate": tune.uniform(0.1, 0.8),
     }
 
+if device_name == 'local':
+    resources_per_trial = {'gpu': 0, 'cpu': 1}
+elif device_name == 'iss GPU':
+    resources_per_trial = {'gpu': 1, 'cpu': 10}
+elif device_name == 'Colab':
+    resources_per_trial = {'gpu': 1, 'cpu': 2}
+else:
+    raise ValueError
+
+# resources_per_trial = {'gpu': 1, 'cpu': 2}
+
 analysis = tune.run(
-    train_func, num_samples=100, resources_per_trial={'gpu': 1, 'cpu': 10},
+    train_func, num_samples=300, resources_per_trial=resources_per_trial,
     config=config
     )
 

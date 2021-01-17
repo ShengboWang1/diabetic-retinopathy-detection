@@ -20,10 +20,10 @@ def densenet121(num_classes, problem_type, dropout_rate, layer_index, dense_unit
     x = keras.layers.Dropout(dropout_rate)(x)
     x = keras.layers.Dense(dense_units, activation=None)(x)
     x = keras.layers.LeakyReLU()(x)
-    if problem_type == 'classfication':
+    if problem_type == 'classification':
         predictions = keras.layers.Dense(num_classes, activation='softmax')(x)
     elif problem_type == 'regression':
-        predictions = keras.layers.Dense(2, activation=None)(x)
+        predictions = keras.layers.Dense(1, activation=None)(x)
     else:
         raise ValueError
     model = keras.Model(base_model.input, predictions, name='DenseNet121')
