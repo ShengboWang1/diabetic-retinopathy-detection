@@ -14,7 +14,7 @@ def load(device_name, name, data_dir_local, data_dir_gpu, data_dir_colab):
         logging.info(f"Preparing dataset {name}...")
         # 2 classes
         print(device_name)
-        create_tfr(device_name=device_name)
+        # create_tfr(device_name=device_name)
 
         if device_name == 'local':
             train_filename = data_dir_local + "no0_train.tfrecord"
