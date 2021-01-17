@@ -9,7 +9,6 @@ from absl import app, flags
 
 device_name = 'iss GPU'
 
-
 def train_func(config):
     # Hyperparameters
     bindings = []
@@ -38,7 +37,7 @@ def train_func(config):
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
-    ds_train, ds_val, ds_test = load(device_name='Colab')
+    ds_train, ds_val, ds_test = load(device_name=device_name)
 
     # model
     model = multi_lstm()
