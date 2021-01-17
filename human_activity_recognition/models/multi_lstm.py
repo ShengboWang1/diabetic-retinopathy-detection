@@ -19,4 +19,3 @@ def multi_lstm(n_lstm, n_dense, dropout_rate, window_size, lstm_units, dense_uni
 
     return model
 
-

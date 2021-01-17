@@ -220,9 +220,9 @@ def create_tfr(shift_window_size, window_size, device_name):
     serialized_test_ds = tf.data.Dataset.from_generator(
         generator_test, output_types=tf.string, output_shapes=())
 
-    train_filename = 'no0_train.tfrecord'
-    val_filename = 'no0_val.tfrecord'
-    test_filename = 'no0_test.tfrecord'
+    train_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_train.tfrecord'
+    val_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_val.tfrecord'
+    test_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_test.tfrecord'
 
     writer = tf.data.experimental.TFRecordWriter(train_filename)
     writer.write(serialized_train_ds)
@@ -233,4 +233,4 @@ def create_tfr(shift_window_size, window_size, device_name):
     writer = tf.data.experimental.TFRecordWriter(test_filename)
     writer.write(serialized_test_ds)
 
-
+# create_tfr(device_name='local', shift_window_size=125, window_size=250)

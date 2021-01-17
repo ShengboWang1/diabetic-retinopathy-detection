@@ -14,7 +14,7 @@ from models.densenet import densenet121,densenet121_bigger
 from models.inception_v3 import inception_v3
 
 FLAGS = flags.FLAGS
-flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
+flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')
 flags.DEFINE_string('model_name', 'vgg', 'Name of the model')
 flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
 flags.DEFINE_string('problem_type', 'classification', 'Specify whether to solve a regression or a classification problem')
