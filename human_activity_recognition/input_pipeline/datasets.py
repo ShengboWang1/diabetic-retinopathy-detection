@@ -64,6 +64,32 @@ def load(device_name, name, data_dir_local, data_dir_gpu, data_dir_colab):
         #     print(data)
         return prepare(ds_train, ds_val, ds_test)
 
+                                                                                                                                                                                                                                  
+    elif dataset_name == "HAR":
+        logging.info(f"Preparing dataset {dataset_name}...")
+        if device_name == 'local':
+            data_dir = data_dir_local
+        if device_name == 'iss GPU':
+            data_dir = data_dir_gpu
+        if device_name == 'Colab':
+            data_dir = data_dir_colab
+        (ds_train, ds_val, ds_test), ds_info = tfds.load(
+            'diabetic_retinopathy_detection/btgraham-300:3.0.0',
+            split=['train', 'validation', 'test'],
+            shuffle_files=True,
+            with_info=True,
+            data_dir=data_dir
+        )
+
+        def _preprocess(img_label_dict):
+            return img_label_dict['image'], img_label_dict['label']
+
+        ds_train = ds_train.map(_preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        ds_val = ds_val.map(_preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        ds_test = ds_test.map(_preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+
+        return prepare(ds_train, ds_val, ds_test, ds_info)
+
 
 @gin.configurable
 def prepare(ds_train, ds_val, ds_test, batch_size, caching):

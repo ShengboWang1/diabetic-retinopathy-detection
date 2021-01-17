@@ -40,9 +40,8 @@ def main(argv):
     # setup pipeline
     ds_train, ds_val, ds_test = datasets.load(device_name=FLAGS.device_name)
 
-
     if FLAGS.model_name == 'simple_rnn':
-        model = simple_rnn()
+        model = simple_rnn('GRU')
     elif FLAGS.model_name == 'cnn_lstm':
         model = cnn_lstm()
     elif FLAGS.model_name == 'multi_lstm':
