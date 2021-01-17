@@ -232,5 +232,4 @@ def create_tfr(shift_window_size, window_size, device_name):
     writer = tf.data.experimental.TFRecordWriter(test_filename)
     writer.write(serialized_test_ds)
 
-create_tfr(device_name='local', shift_window_size=125, window_size=250)
 
