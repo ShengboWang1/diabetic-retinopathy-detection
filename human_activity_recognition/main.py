@@ -55,11 +55,7 @@ def main(argv):
         for _ in trainer.train():
             continue
 
-        evaluate(model,
-                 ds_test,
-                 run_paths)
     else:
-
         evaluate(model,
                  ds_test,
                  run_paths)

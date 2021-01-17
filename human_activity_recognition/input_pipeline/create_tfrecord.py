@@ -100,6 +100,7 @@ def create_tfr(shift_window_size, window_size, device_name):
         print(ds_all)
         ds_x = ds_all[['a_x', 'a_y', 'a_z', 'g_x', 'g_y', 'g_z']]
         ds_y = ds_all[['label']]
+
         return ds_x, ds_y
 
     train_x, train_y = create_dataset(start_num=0, end_num=43, ds_x=train_x, ds_y=train_y)
