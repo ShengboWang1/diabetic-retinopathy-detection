@@ -40,7 +40,7 @@ def train_func(config):
     ds_train, ds_val, ds_test = load(device_name=device_name)
 
     # model
-    model = multi_lstm(rnn_type = 'GRU')
+    model = multi_lstm(rnn_type='GRU')
 
     trainer = Trainer(model, ds_train, ds_val, run_paths)
     for val_accuracy in trainer.train():
