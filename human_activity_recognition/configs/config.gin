@@ -9,11 +9,11 @@ create_tfr.window_size = 120
 #rnn.dropout_rate = 0.2
 
 # Models
-simple_rnn.n_neurons = 256
-simple_rnn.dense_units = 64
-# simple_rnn.rnn_units = 128
-simple_rnn.dropout_rate = 0.5
-simple_rnn.window_size = 250
+#simple_rnn.n_neurons = 256
+#simple_rnn.dense_units = 64
+## simple_rnn.rnn_units = 128
+#simple_rnn.dropout_rate = 0.5
+#simple_rnn.window_size = 250
 # simple_rnn.n_batch = 32
 #
 ## CNN plus LSTM
@@ -33,7 +33,7 @@ multi_lstm.dropout_rate = 0.4209
 multi_lstm.window_size = 120
 
 # Training
-Trainer.total_steps = 200000
+Trainer.total_steps = 50000
 Trainer.log_interval = 100
 Trainer.ckpt_interval = 100
 
