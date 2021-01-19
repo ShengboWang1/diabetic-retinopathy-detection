@@ -5,7 +5,7 @@ import numpy as np
 
 test_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/' + "no0_test.tfrecord"
 
-raw_ds_test = tf.data.TFRecordDataset(val_filename)
+raw_ds_test = tf.data.TFRecordDataset(test_filename)
 
 
 feature_description = {
@@ -37,7 +37,7 @@ def plot(dataset, model):
         print(label_preds.shape)
 
 
-model = multi_lstm(rnn_type='GRU',dense_units=256,dropout_rate = 0.4209,window_size = 250)
+model = multi_lstm(rnn_type='GRU',dense_units=256, dropout_rate=0.4209, window_size=250, rnn_units = 256, n_lstm = 3, n_dense = 3)
 plot(ds_test, model)
 
 
