@@ -1,13 +1,21 @@
 import gin
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout, LSTM
+from tensorflow.keras.layers import Dense, Dropout, LSTM, SimpleRNN, GRU
 
 
 @gin.configurable
-def multi_lstm(n_lstm, n_dense, dropout_rate, window_size, lstm_units, dense_units):
+def multi_lstm(n_lstm, n_dense, dropout_rate, window_size, rnn_units, dense_units, rnn_type):
     model = Sequential()
     for i in range(1, n_lstm):
-        model.add(LSTM(lstm_units, input_shape=(window_size, 6), return_sequences=True))
+        if rnn_type == 'LSTM':
+            model.add(LSTM(rnn_units, input_shape=(window_size, 6), return_sequences=True))
+        elif rnn_type == 'simeple_rnn':
+            model.add(SimpleRNN(rnn_units, input_shape=(window_size, 6), return_sequences=True))
+        elif rnn_type == 'GRU':
+            model.add(GRU(rnn_units, input_shape=(window_size, 6), return_sequences=True))
+        else:
+            return ValueError
+
     # model.add(layers.LSTM(128, input_shape=(window_size, 6), return_sequences=True))
     # model.add(LSTM(64, input_shape=(window_size, 6), return_sequences=True))
     # model.add(layers.Bidirectional(layers.LSTM(n_neurons, input_shape=(window_size, 6), return_sequences=True)))

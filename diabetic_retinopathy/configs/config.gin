@@ -28,7 +28,7 @@ load.data_dir_Colab = '/content/drive/MyDrive/diabetic_retinopathy/tensorflow_da
 
 preprocess.img_height = 256
 preprocess.img_width = 256
-prepare.batch_size = 16
+prepare.batch_size = 16 
 prepare.caching = True
 
 # DenseNet

@@ -45,7 +45,7 @@ def main(argv):
     elif FLAGS.model_name == 'cnn_lstm':
         model = cnn_lstm()
     elif FLAGS.model_name == 'multi_lstm':
-        model = multi_lstm()
+        model = multi_lstm('GRU')
     else:
         raise ValueError
 
