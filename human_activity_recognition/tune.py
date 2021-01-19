@@ -54,7 +54,7 @@ config={
         "multi_lstm.dense_units": tune.choice([16, 32, 64, 128, 256]),
         "multi_lstm.n_lstm": tune.choice([1, 2, 3]),
         "multi_lstm.n_dense": tune.choice([1, 2, 3]),
-        "multi_lstm.lstm_units": tune.choice([16, 32, 64, 128, 256]),
+        "multi_lstm.rnn_units": tune.choice([16, 32, 64, 128, 256]),
         "multi_lstm.dropout_rate": tune.uniform(0.1, 0.8),
     }
 
