@@ -2,8 +2,6 @@ import gin
 import tensorflow as tf
 import logging
 import datetime
-import numpy as np
-from sklearn import metrics
 
 
 @gin.configurable

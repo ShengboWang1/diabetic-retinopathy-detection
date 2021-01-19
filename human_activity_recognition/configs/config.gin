@@ -2,12 +2,6 @@
 create_tfr.shift_window_size = 60
 create_tfr.window_size = 120
 
-# Architectures
-#rnn.n_recurrent_layers = 1
-#rnn.n_dense_layers = 1
-#rnn.dense_units = 16
-#rnn.dropout_rate = 0.2
-
 # Models
 #simple_rnn.n_neurons = 256
 #simple_rnn.dense_units = 64
@@ -28,9 +22,8 @@ multi_lstm.n_lstm = 3
 multi_lstm.n_dense = 3
 multi_lstm.rnn_units = 256
 multi_lstm.dense_units = 256
-# simple_rnn.rnn_units = 128
 multi_lstm.dropout_rate = 0.4209
-multi_lstm.window_size = 120
+# multi_lstm.window_size = 120
 
 # Training
 Trainer.total_steps = 50000

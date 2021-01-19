@@ -7,7 +7,9 @@ from utils import utils_params, utils_misc
 from models.multi_lstm import multi_lstm
 from absl import app, flags
 
+
 device_name = 'iss GPU'
+
 
 def train_func(config):
     # Hyperparameters
@@ -33,7 +35,6 @@ def train_func(config):
     else:
         raise ValueError
 
-    #gin.parse_config_files_and_bindings(['/content/drive/MyDrive/human_activity_recognition/configs/config.gin'], bindings)
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
@@ -47,7 +48,7 @@ def train_func(config):
         tune.report(val_accuracy=val_accuracy)
 
 
-config={
+config = {
         "Trainer.total_steps": tune.grid_search([3000]),
         "create_tfr.window_size": tune.choice([250, 200, 150, 100]),
         "create_tfr.shift_window_size": tune.choice([125, 100, 75, 50]),

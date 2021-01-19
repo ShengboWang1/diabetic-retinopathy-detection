@@ -1,6 +1,5 @@
 import gin
 import logging
-import tensorflow as tf
 from absl import app, flags
 from train import Trainer
 from evaluation.eval import evaluate
@@ -38,14 +37,14 @@ def main(argv):
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
-    ds_train, ds_val, ds_test = datasets.load(device_name=FLAGS.device_name)
+    ds_train, ds_val, ds_test, window_size = datasets.load(device_name=FLAGS.device_name)
 
     if FLAGS.model_name == 'simple_rnn':
-        model = simple_rnn('GRU')
+        model = simple_rnn('GRU', window_size=window_size)
     elif FLAGS.model_name == 'cnn_lstm':
-        model = cnn_lstm()
+        model = cnn_lstm(window_size=window_size)
     elif FLAGS.model_name == 'multi_lstm':
-        model = multi_lstm('GRU')
+        model = multi_lstm('GRU', window_size=window_size)
     else:
         raise ValueError
 
