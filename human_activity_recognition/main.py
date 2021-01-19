@@ -40,11 +40,11 @@ def main(argv):
     ds_train, ds_val, ds_test, window_size = datasets.load(device_name=FLAGS.device_name)
 
     if FLAGS.model_name == 'simple_rnn':
-        model = simple_rnn('GRU', window_size=window_size)
+        model = simple_rnn(rnn_type='GRU', window_size=window_size)
     elif FLAGS.model_name == 'cnn_lstm':
         model = cnn_lstm(window_size=window_size)
     elif FLAGS.model_name == 'multi_lstm':
-        model = multi_lstm('GRU', window_size=window_size)
+        model = multi_lstm(rnn_type='GRU', window_size=window_size)
     else:
         raise ValueError
 

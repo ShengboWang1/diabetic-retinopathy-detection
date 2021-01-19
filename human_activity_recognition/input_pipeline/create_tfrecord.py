@@ -220,10 +220,23 @@ def create_tfr(shift_window_size, window_size, device_name):
     serialized_test_ds = tf.data.Dataset.from_generator(
         generator_test, output_types=tf.string, output_shapes=())
 
-    train_filename = '/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/human_activity_recognition/no0_train.tfrecord'
-    val_filename = '/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/human_activity_recognition/no0_val.tfrecord'
-    test_filename = '/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/human_activity_recognition/no0_test.tfrecord'
+    if device_name == 'iss GPU':
+        train_filename = '/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/human_activity_recognition/no0_train.tfrecord'
+        val_filename = '/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/human_activity_recognition/no0_val.tfrecord'
+        test_filename = '/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/human_activity_recognition/no0_test.tfrecord'
 
+    elif device_name == 'local':
+        train_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_train.tfrecord'
+        val_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_val.tfrecord'
+        test_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_test.tfrecord'
+
+    elif device_name == 'Colab':
+        train_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_train.tfrecord'
+        val_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_val.tfrecord'
+        test_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_test.tfrecord'
+
+    else:
+        raise ValueError
     writer = tf.data.experimental.TFRecordWriter(train_filename)
     writer.write(serialized_train_ds)
 

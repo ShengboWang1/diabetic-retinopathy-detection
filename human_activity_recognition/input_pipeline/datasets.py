@@ -62,7 +62,7 @@ def load(device_name, name, data_dir_local, data_dir_gpu, data_dir_colab):
 
 
 @gin.configurable
-def prepare(ds_train, ds_val, ds_test, batch_size, window_size, caching):
+def prepare(ds_train, ds_val, ds_test, window_size, batch_size, caching):
 
     # Prepare training dataset
     ds_train = ds_train.map(

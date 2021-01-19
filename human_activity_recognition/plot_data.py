@@ -23,12 +23,12 @@ def _parse_function(exam_proto):
 
 ds_test = raw_ds_test.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
-multi_lstm.n_lstm = 3
-multi_lstm.n_dense = 3
-multi_lstm.rnn_units = 256
-multi_lstm.dense_units = 256
-multi_lstm.dropout_rate = 0.4209
-multi_lstm.window_size = 120
+# multi_lstm.n_lstm = 3
+# multi_lstm.n_dense = 3
+# multi_lstm.rnn_units = 256
+# multi_lstm.dense_units = 256
+# multi_lstm.dropout_rate = 0.4209
+# multi_lstm.window_size = 120
 from models.multi_lstm import multi_lstm
 def plot(dataset, model):
     for feature, label in dataset:
