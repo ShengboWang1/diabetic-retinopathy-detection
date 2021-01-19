@@ -38,10 +38,10 @@ def train_func(config):
     utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
     # setup pipeline
-    ds_train, ds_val, ds_test = load(device_name=device_name)
+    ds_train, ds_val, ds_test, window_size, _ = load(device_name=device_name)
 
     # model
-    model = multi_lstm(rnn_type='GRU')
+    model = multi_lstm(rnn_type='GRU', window_size=window_size)
 
     trainer = Trainer(model, ds_train, ds_val, run_paths)
     for val_accuracy in trainer.train():

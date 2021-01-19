@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
 
-val_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/' + "no0_val.tfrecord"
+
+test_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/' + "no0_test.tfrecord"
 
 raw_ds_test = tf.data.TFRecordDataset(val_filename)
 
@@ -22,10 +23,28 @@ def _parse_function(exam_proto):
 
 ds_test = raw_ds_test.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
+multi_lstm.n_lstm = 3
+multi_lstm.n_dense = 3
+multi_lstm.rnn_units = 256
+multi_lstm.dense_units = 256
+multi_lstm.dropout_rate = 0.4209
+multi_lstm.window_size = 120
+from models.multi_lstm import multi_lstm
+def plot(dataset, model):
+    for feature, label in dataset:
+        predictions = model(feature, training=False)
+        label_preds = np.argmax(predictions, -1)
+        print(label_preds.shape)
 
-def plot_data(dataset):
+
+model = multi_lstm(rnn_type='GRU',dense_units=256,dropout_rate = 0.4209,window_size = 250)
+plot(ds_test, model)
+
+
+
+def plot_data(dataset, model):
     i = 0
-
+    # dataset.unbatch()
     for feature, label in dataset:
         i += 1
         if i == 1:
@@ -36,7 +55,7 @@ def plot_data(dataset):
             gyro_y_component = feature.numpy()[:, 1]
             gyro_z_component = feature.numpy()[:, 2]
             labels = label.numpy()
-        elif i < 100:
+        else:
             acc_x_component = np.append(acc_x_component, feature.numpy()[:, 0])
             acc_y_component = np.append(acc_y_component, feature.numpy()[:, 1])
             acc_z_component = np.append(acc_z_component, feature.numpy()[:, 2])
@@ -44,6 +63,9 @@ def plot_data(dataset):
             gyro_y_component = np.append(gyro_y_component, feature.numpy()[:, 4])
             gyro_z_component = np.append(gyro_z_component, feature.numpy()[:, 5])
             labels = np.append(labels, label)
+
+
+
 
     # chosing colors : red for X component blue for Y component and green for Z component
     len_ds = len(acc_x_component)  # number of rows in this dataframe to be visualized(depends on 'act' variable)
@@ -112,5 +134,5 @@ def plot_data(dataset):
     # showing the figure
     plt.show()
 
-plot_data(ds_test)
+#plot_data(ds_test)
 
