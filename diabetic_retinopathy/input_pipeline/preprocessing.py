@@ -7,16 +7,17 @@ import tensorflow_addons as tfa
 @gin.configurable
 def preprocess(image, label, img_height, img_width, model_name):
     """Dataset preprocessing: Normalizing and resizing"""
+    image = tf.image.resize(image, size=(img_height, img_width))
     image = tf.cast(image, tf.float32)
 
     if model_name == 'vgg':
-        image = 2 * image / 255. - 0.5
+        image = image / 255.0
 
     elif model_name == 'resnet18':
-        image = 2 * image / 255. - 0.5
+        image = image / 255.0
 
     elif model_name == 'resnet34':
-        image = 2 * image / 255. - 0.5
+        image = image / 255.0
 
     elif model_name == 'resnet50':
         image = tf.keras.applications.resnet.preprocess_input(image)
@@ -25,7 +26,7 @@ def preprocess(image, label, img_height, img_width, model_name):
         image = tf.keras.applications.densenet.preprocess_input(image)
 
     elif model_name == 'inception_v3':
-        image = tf.keras.applications.inception_v3.preprocess_input(image)
+        image = image / 255.0
 
     elif model_name == 'inception_resnet_v2':
         image = tf.keras.applications.inception_resnet_v2.preprocess_input(image)
@@ -33,7 +34,7 @@ def preprocess(image, label, img_height, img_width, model_name):
     else:
         raise ValueError
 
-    image = tf.image.resize(image, size=(img_height, img_width))
+
 
     # Normalize image: `uint8` -> `float32`.
     # image = tf.cast(image, tf.float32)

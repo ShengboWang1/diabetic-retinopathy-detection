@@ -11,14 +11,14 @@ from models.resnet_1 import ResNet18, ResNet34, ResNet50
 from models.inception_resnet_v2 import inception_resnet_v2
 from models.architectures import vgg_like
 from models.densenet import densenet121,densenet121_bigger
-from models.inception_v3 import inception_v3
+#from models.mobilenet_v3 import MobileNetV3Small
 
 FLAGS = flags.FLAGS
-flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')
-flags.DEFINE_string('model_name', 'vgg', 'Name of the model')
+flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
+flags.DEFINE_string('model_name', 'resnet18', 'Name of the model')
 flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
 flags.DEFINE_string('problem_type', 'classification', 'Specify whether to solve a regression or a classification problem')
-flags.DEFINE_string('dataset_name', 'eyepacs', 'Specify whether to use idrid or eyepacs')
+flags.DEFINE_string('dataset_name', 'idrid', 'Specify whether to use idrid or eyepacs')
 
 
 @gin.configurable
@@ -43,6 +43,7 @@ def main(argv):
     # setup pipeline
     ds_train, ds_val, ds_test, ds_info = datasets.load(device_name=FLAGS.device_name, dataset_name=FLAGS.dataset_name)
 
+    # select model as you wish
     if FLAGS.dataset_name == 'idrid':
         num_classes = 2
     elif FLAGS.dataset_name == 'eyepacs':
@@ -69,8 +70,9 @@ def main(argv):
     elif FLAGS.model_name == 'densenet121_bigger':
         model = densenet121_bigger()
 
-    elif FLAGS.model_name == 'inception_v3':
-        model = inception_v3()
+    # elif FLAGS.model_name == 'mobilenet_v3':
+    #     model = MobileNetV3Small(num_classes=num_classes)
+    #     model.build(input_shape=(None, 256, 256, 3))
 
     elif FLAGS.model_name == 'inception_resnet_v2':
         model = inception_resnet_v2()
@@ -78,9 +80,9 @@ def main(argv):
     else:
         raise ValueError
 
+    model.summary()
 
     if FLAGS.train:
-        model.summary()
         trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths, problem_type=FLAGS.problem_type)
         for _ in trainer.train():
             continue
@@ -90,7 +92,6 @@ def main(argv):
                  ds_info,
                  run_paths)
     else:
-
         evaluate(model,
                  ds_test,
                  ds_info,

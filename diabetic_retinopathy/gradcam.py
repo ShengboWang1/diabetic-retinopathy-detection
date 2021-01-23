@@ -4,7 +4,7 @@ import numpy as np
 from tensorflow.keras.models import Model
 from models.resnet import resnet50
 from matplotlib import pyplot as plt
-
+# from input_pipeline.preprocessing import preprocess
 
 class GradCAM:
     # Adapted with some modification from https://www.pyimagesearch.com/2020/03/09/grad-cam-visualize-class-activation-maps-with-keras-tensorflow-and-deep-learning/
@@ -63,13 +63,14 @@ def overlay_gradCAM(img, cam3):
     cam3 = cv2.applyColorMap(cam3, cv2.COLORMAP_JET)
 
     new_img = 0.3 * cam3 + 0.5 * img
-    new_img = 0.3 * cam3 + img
+    #new_img = 0.3 * cam3 + img
 
     return (new_img * 255.0 / new_img.max()).astype("uint8")
 
 def get_img_array(img_path, size):
     img = tf.keras.preprocessing.image.load_img(img_path, target_size=size)
     array = tf.keras.preprocessing.image.img_to_array(img)
+    #array, _ = preprocess(array, 0)
     array = np.expand_dims(array, axis=0)
     return array
 
