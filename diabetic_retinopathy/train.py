@@ -24,9 +24,10 @@ class Trainer(object):
         self.current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         # Summary Writer
         # ....
-        self.summary_path = self.run_paths['path_summary']
-        self.train_summary_writer = tf.summary.create_file_writer(self.summary_path + self.current_time + 'train')
-        self.test_summary_writer = tf.summary.create_file_writer(self.summary_path + self.current_time + 'train')
+        self.summary_path_train = self.run_paths['path_summary_train']
+        self.summary_path_val = self.run_pathsrun_paths['path_summary_val']
+        self.train_summary_writer = tf.summary.create_file_writer(self.summary_path_train)
+        self.test_summary_writer = tf.summary.create_file_writer(self.summary_path_val)
 
         # Optimizer
         self.optimizer = tf.keras.optimizers.Adam()
@@ -51,6 +52,7 @@ class Trainer(object):
         print(self.current_time)
         # self.checkpoint_path = './checkpoint/train/' + self.current_time
         self.checkpoint_path = self.run_paths["path_ckpts_train"]
+
         self.ckpt = tf.train.Checkpoint(optimizer=self.optimizer, model=self.model)
         self.ckpt_manager = tf.train.CheckpointManager(self.ckpt, self.checkpoint_path, max_to_keep=5)
 

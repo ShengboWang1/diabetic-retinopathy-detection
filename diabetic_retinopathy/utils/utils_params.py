@@ -21,7 +21,8 @@ def gen_run_folder(path_model_id=''):
     #run_paths['path_ckpts_eval'] = os.path.join(run_paths['path_model_id'], 'ckpts', 'eval')
     run_paths['path_gin'] = os.path.join(run_paths['path_model_id'], 'config_operative.gin')
     run_paths['path_plt'] = os.path.join(run_paths['path_model_id'], 'plts')
-    run_paths['path_summary'] = os.path.join(run_paths['path_model_id'], 'summary')
+    run_paths['path_summary_train'] = os.path.join(run_paths['path_model_id'], 'train_summary')
+    run_paths['path_summary_val'] = os.path.join(run_paths['path_model_id'], 'val_summary')
 
     # Create folders
     for k, v in run_paths.items():

@@ -15,10 +15,10 @@ def evaluate(model, ds_test, ds_info, num_classes, run_paths):
 
     # Restore the model from the corresponding checkpoint
 
-    # checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
+    #checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
     # checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
 
-    # checkpoint.restore(tf.train.latest_checkpoint('/Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2021-01-23T19-06-28-618151/ckpts'))
+    #checkpoint.restore(tf.train.latest_checkpoint('/Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2021-01-23T19-34-36-063044/ckpts'))
 
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
 
@@ -34,7 +34,7 @@ def evaluate(model, ds_test, ds_info, num_classes, run_paths):
 
         plot_roc(labels=test_labels, predictions=test_predictions[:, 1], plot_path=plot_path)
 
-    print('Accuracy on Test Data: %2.2f%%' % (accuracy_score(test_labels, label_preds)))
+    # print('Accuracy on Test Data: %2.2f%%' % (accuracy_score(test_labels, label_preds)))
     print(classification_report(test_labels, label_preds))
 
     template = 'Test Loss: {}, Test Accuracy: {}'
