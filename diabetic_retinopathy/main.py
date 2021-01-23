@@ -83,6 +83,7 @@ def main(argv):
     model.summary()
 
     if FLAGS.train:
+        logging.info(f"Training model {FLAGS.model_name}...")
         trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths, problem_type=FLAGS.problem_type)
         for _ in trainer.train():
             continue
@@ -92,6 +93,7 @@ def main(argv):
                  ds_info,
                  run_paths)
     else:
+        logging.info(f"Evaluate model {FLAGS.model_name}...")
         evaluate(model,
                  ds_test,
                  ds_info,
