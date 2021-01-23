@@ -25,7 +25,7 @@ class Trainer(object):
         # Summary Writer
         # ....
         self.summary_path_train = self.run_paths['path_summary_train']
-        self.summary_path_val = self.run_pathsrun_paths['path_summary_val']
+        self.summary_path_val = self.run_paths['path_summary_val']
         self.train_summary_writer = tf.summary.create_file_writer(self.summary_path_train)
         self.test_summary_writer = tf.summary.create_file_writer(self.summary_path_val)
 
