@@ -16,7 +16,7 @@ vgg_like.dropout_rate = 0.44263689454130856
 vgg_block.kernel_size = (3, 3)
 
 # Training
-Trainer.total_steps = 200000
+Trainer.total_steps = 50000
 Trainer.log_interval = 100
 Trainer.ckpt_interval = 100
 

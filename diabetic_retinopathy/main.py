@@ -81,12 +81,12 @@ def main(argv):
         raise ValueError
 
     model.summary()
+    logging.info(f"A {FLAGS.problem_type} Problem")
+    if FLAGS.problem_type == 'classification':
+        logging.info(f"{num_classes} classes")
 
     if FLAGS.train:
         logging.info(f"Training model {FLAGS.model_name}...")
-        logging.info(f"A {FLAGS.problem_type} Problem")
-        if FLAGS.problem_type == 'classification':
-            logging.info(f"{num_classes} classes")
         trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths, problem_type=FLAGS.problem_type)
         for _ in trainer.train():
             continue
@@ -94,6 +94,7 @@ def main(argv):
         evaluate(model,
                  ds_test,
                  ds_info,
+                 num_classes,
                  run_paths)
     else:
         logging.info(f"Evaluate model {FLAGS.model_name}...")
