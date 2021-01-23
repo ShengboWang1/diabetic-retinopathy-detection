@@ -9,7 +9,7 @@ import tensorflow as tf
 
 # set up the model
 def visualize(model, layerName, save_path):
-    image_path = "./IDRID_dataset/images/train/IDRiD_005.jpg"
+    image_path = "/home/RUS_CIP/st169852/IDRID_dataset/images/train/IDRiD_005.jpg"
     image = get_img_array(image_path, (256, 256))
 
 

@@ -143,22 +143,22 @@ class ResNet(keras.Model):
 
 ###########################################################################################################
 """ Resnet18 """
-def ResNet18(problem_type):
-    return ResNet(BasicBlock, [2, 2, 2, 2], problem_type=problem_type)
+def ResNet18(problem_type, num_classes):
+    return ResNet(BasicBlock, [2, 2, 2, 2], problem_type=problem_type, num_classes=num_classes)
 
 """ ResNet-34，那34是怎样的配置呢？只需要改一下这里就可以了。# 4个Res Block，第1个包含3个Basic Block,第2为4，第3为6，第4为3 """
 # 如果我们要使用
-def ResNet34(problem_type):
-    return ResNet(BasicBlock, [3, 4, 6, 3], problem_type=problem_type)
+def ResNet34(problem_type, num_classes):
+    return ResNet(BasicBlock, [3, 4, 6, 3], problem_type=problem_type, num_classes=num_classes)
 
 """ Resnet50 """
-def ResNet50(problem_type):
-    return ResNet(Bottleneck, [3, 4, 6, 3], problem_type=problem_type)
+def ResNet50(problem_type, num_classes):
+    return ResNet(Bottleneck, [3, 4, 6, 3], problem_type=problem_type, num_classes=num_classes)
 
 """ Resnet101 """
-def ResNet101(problem_type):
-    return ResNet(Bottleneck, [3, 4, 23, 3], problem_type=problem_type)
+def ResNet101(problem_type, num_classes):
+    return ResNet(Bottleneck, [3, 4, 23, 3], problem_type=problem_type, num_classes=num_classes)
 
 """ Resnet152 """
-def ResNet152(problem_type):
-    return ResNet(Bottleneck, [3, 8, 36, 3], problem_type=problem_type)
+def ResNet152(problem_type, num_classes):
+    return ResNet(Bottleneck, [3, 8, 36, 3], problem_type=problem_type, num_classes=num_classes)

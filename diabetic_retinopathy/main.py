@@ -54,7 +54,7 @@ def main(argv):
         # model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
 
     elif FLAGS.model_name == 'resnet18':
-        model = ResNet18(problem_type=FLAGS.problem_type)
+        model = ResNet18(problem_type=FLAGS.problem_type, num_classes=num_classes)
         model.build(input_shape=(None, 256, 256, 3))
 
     elif FLAGS.model_name == 'resnet34':
@@ -84,6 +84,9 @@ def main(argv):
 
     if FLAGS.train:
         logging.info(f"Training model {FLAGS.model_name}...")
+        logging.info(f"A {FLAGS.problem_type} Problem")
+        if FLAGS.problem_type == 'classification':
+            logging.info(f"{num_classes} classes")
         trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths, problem_type=FLAGS.problem_type)
         for _ in trainer.train():
             continue
