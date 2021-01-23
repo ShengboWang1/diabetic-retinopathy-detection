@@ -97,6 +97,7 @@ def main(argv):
         evaluate(model,
                  ds_test,
                  ds_info,
+                 num_classes,
                  run_paths)
 
 

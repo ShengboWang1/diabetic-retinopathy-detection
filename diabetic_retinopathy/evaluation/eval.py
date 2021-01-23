@@ -10,43 +10,45 @@ from sklearn import metrics
 from visualization import visualize
 
 
-def evaluate(model, ds_test, ds_info, run_paths):
-    test_cm = ConfusionMatrixMetric(num_classes=2)
+def evaluate(model, ds_test, ds_info, num_classes, run_paths):
+    test_cm = ConfusionMatrixMetric(num_classes=num_classes)
 
     # Restore the model from the corresponding checkpoint
 
     checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
     # checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
 
-    checkpoint.restore(tf.train.latest_checkpoint('/Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2021-01-23T10-38-41-264252/ckpts'))
+    checkpoint.restore(tf.train.latest_checkpoint('/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/experiments/run_2021-01-23T16-33-33-209706/'))
 
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
-    visualize(model, layerName='conv4_block24_2_conv', save_path=run_paths)
-    # plot_path = os.path.join(run_paths['path_plt'], 'roc.png')
-    # print(plot_path)
-    #
-    # # Compute accuracy and loss for test set and the corresponding confusion matrix
-    # for test_images, test_labels in ds_test:
-    #     test_loss, test_accuracy = model.evaluate(test_images, test_labels, verbose=1)
-    #     test_predictions = model(test_images, training=False)
-    #     label_preds = np.argmax(test_predictions, -1)
-    #     _ = test_cm.update_state(test_labels, test_predictions)
-    #
-    #     plot_roc(labels=test_labels, predictions=test_predictions[:, 1], plot_path=plot_path)
-    #
-    # print('Accuracy on Test Data: %2.2f%%' % (accuracy_score(test_labels, label_preds)))
-    # print(classification_report(test_labels, label_preds))
-    #
-    # template = 'Test Loss: {}, Test Accuracy: {}'
-    # logging.info(template.format(test_loss, test_accuracy * 100))
-    #
-    # template = 'Confusion Matrix:\n{}'
-    # logging.info(template.format(test_cm.result().numpy()))
-    #
-    # # Compute sensitivity and specificity from the confusion matrix
-    # sensitivity, specificity = test_cm.process_confusion_matrix()
-    # template = 'Sensitivity: {}, Specificity: {}'
-    # logging.info(template.format(sensitivity, specificity))
+
+    plot_path = os.path.join(run_paths['path_plt'], 'roc.png')
+    print(plot_path)
+
+    # Compute accuracy and loss for test set and the corresponding confusion matrix
+    for test_images, test_labels in ds_test:
+        test_loss, test_accuracy = model.evaluate(test_images, test_labels, verbose=1)
+        test_predictions = model(test_images, training=False)
+        label_preds = np.argmax(test_predictions, -1)
+        _ = test_cm.update_state(test_labels, test_predictions)
+
+        plot_roc(labels=test_labels, predictions=test_predictions[:, 1], plot_path=plot_path)
+
+    print('Accuracy on Test Data: %2.2f%%' % (accuracy_score(test_labels, label_preds)))
+    print(classification_report(test_labels, label_preds))
+
+    template = 'Test Loss: {}, Test Accuracy: {}'
+    logging.info(template.format(test_loss, test_accuracy * 100))
+
+    template = 'Confusion Matrix:\n{}'
+    logging.info(template.format(test_cm.result().numpy()))
+
+    # Compute sensitivity and specificity from the confusion matrix
+    sensitivity, specificity = test_cm.process_confusion_matrix()
+    template = 'Sensitivity: {}, Specificity: {}'
+    logging.info(template.format(sensitivity, specificity))
+
+    visualize(model, layerName='sequential_6', save_path=run_paths)
 
     return
 

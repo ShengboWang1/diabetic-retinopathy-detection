@@ -87,7 +87,7 @@ class ResNet(keras.Model):
 
     # 第一个参数layer_dims：[2, 2, 2, 2] 4个Res Block，每个包含2个Basic Block
     # 第二个参数num_classes：我们的全连接输出，取决于输出有多少类。
-    def __init__(self, blocks, layer_dims, problem_type, initial_filters=64, num_classes=5):
+    def __init__(self, blocks, layer_dims, problem_type, initial_filters=64, num_classes=2):
         super(ResNet, self).__init__()
         self.in_channels = initial_filters
 
