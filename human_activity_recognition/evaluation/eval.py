@@ -16,10 +16,10 @@ def evaluate(model, ds_test, run_paths):
 
     # Restore the model from the corresponding checkpoint
 
-    checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
+    #checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
     # checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
 
-    checkpoint.restore(tf.train.latest_checkpoint('/Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2021-01-17T20-18-52-373438/ckpts/'))
+    #checkpoint.restore(tf.train.latest_checkpoint('/Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2021-01-17T20-18-52-373438/ckpts/'))
 
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
     test_loss = tf.keras.metrics.Mean(name='test_loss')
@@ -53,3 +53,4 @@ def evaluate(model, ds_test, run_paths):
 
     template = 'Confusion Matrix:\n{}'
     logging.info(template.format(test_cm.result().numpy()))
+

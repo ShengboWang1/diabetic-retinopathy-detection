@@ -8,10 +8,11 @@ from utils import utils_params, utils_misc
 from models.simple_rnn import simple_rnn
 from models.cnn_lstm import cnn_lstm
 from models.multi_lstm import multi_lstm
+from input_pipeline import plot_data
 
 
 FLAGS = flags.FLAGS
-flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
+flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')
 flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
 flags.DEFINE_string('model_name', 'multi_lstm', 'Prepare different models')
 
@@ -39,6 +40,7 @@ def main(argv):
     # setup pipeline
     ds_train, ds_val, ds_test, window_size = datasets.load(device_name=FLAGS.device_name)
 
+    # select a suitable model
     if FLAGS.model_name == 'simple_rnn':
         model = simple_rnn(rnn_type='GRU', window_size=window_size)
     elif FLAGS.model_name == 'cnn_lstm':
@@ -48,6 +50,7 @@ def main(argv):
     else:
         raise ValueError
 
+    # train or evaluate
     if FLAGS.train:
         model.summary()
         trainer = Trainer(model, ds_train, ds_val, run_paths)
@@ -55,9 +58,10 @@ def main(argv):
             continue
 
     else:
-        evaluate(model,
-                 ds_test,
-                 run_paths)
+        plot_data.plot_data(model, ds_test, run_paths)
+        # evaluate(model,
+        #          ds_test,
+        #          run_paths)
 
 
 if __name__ == "__main__":

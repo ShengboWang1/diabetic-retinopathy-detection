@@ -1,6 +1,6 @@
 # TFRecord
-create_tfr.shift_window_size = 60
-create_tfr.window_size = 120
+create_tfr.shift_window_size = 125
+create_tfr.window_size = 250
 
 # Models
 #simple_rnn.n_neurons = 256

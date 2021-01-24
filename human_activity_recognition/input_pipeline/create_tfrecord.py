@@ -95,9 +95,9 @@ def create_tfr(shift_window_size, window_size, device_name):
             ds_y = ds_y.append(y[i], ignore_index=True)
 
         ds_all = pd.concat([ds_x, ds_y], axis=1)
-        print(ds_all)
+        # print(ds_all)
         ds_all = ds_all.drop(ds_all[ds_all.label == 0].index)
-        print(ds_all)
+        # print(ds_all)
         ds_x = ds_all[['a_x', 'a_y', 'a_z', 'g_x', 'g_y', 'g_z']]
         ds_y = ds_all[['label']]
 
@@ -231,9 +231,9 @@ def create_tfr(shift_window_size, window_size, device_name):
         test_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_test.tfrecord'
 
     elif device_name == 'Colab':
-        train_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_train.tfrecord'
-        val_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_val.tfrecord'
-        test_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_test.tfrecord'
+        train_filename = '/content/drive/MyDrive/human_activity_recognition/no0_train.tfrecord'
+        val_filename = '/content/drive/MyDrive/human_activity_recognition/no0_val.tfrecord'
+        test_filename = '/content/drive/MyDrive/human_activity_recognition/no0_test.tfrecord'
 
     else:
         raise ValueError

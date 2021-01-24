@@ -32,10 +32,10 @@ def evaluate(model, ds_test, ds_info, num_classes, run_paths):
         label_preds = np.argmax(test_predictions, -1)
         _ = test_cm.update_state(test_labels, test_predictions)
 
-        plot_roc(labels=test_labels, predictions=test_predictions[:, 1], plot_path=plot_path)
+        #plot_roc(labels=test_labels, predictions=test_predictions[:, 1], plot_path=plot_path)
 
     # print('Accuracy on Test Data: %2.2f%%' % (accuracy_score(test_labels, label_preds)))
-    print(classification_report(test_labels, label_preds))
+    # print(classification_report(test_labels, label_preds))
 
     template = 'Test Loss: {}, Test Accuracy: {}'
     logging.info(template.format(test_loss, test_accuracy * 100))
