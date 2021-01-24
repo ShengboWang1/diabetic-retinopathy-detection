@@ -63,12 +63,15 @@ def main(argv):
 
     elif FLAGS.model_name == 'resnet50':
         model = ResNet50(problem_type=FLAGS.problem_type, num_classes=num_classes)
+        model.build(input_shape=(None, 256, 256, 3))
 
     elif FLAGS.model_name == 'resnet101':
         model = ResNet101(problem_type=FLAGS.problem_type, num_classes=num_classes)
+        model.build(input_shape=(None, 256, 256, 3))
 
     elif FLAGS.model_name == 'resnet152':
         model = ResNet152(problem_type=FLAGS.problem_type, num_classes=num_classes)
+        model.build(input_shape=(None, 256, 256, 3))
 
     elif FLAGS.model_name == 'densenet121':
         model = densenet121(num_classes, problem_type=FLAGS.problem_type)
