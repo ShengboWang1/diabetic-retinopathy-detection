@@ -7,14 +7,14 @@ from evaluation.eval import evaluate
 from input_pipeline import datasets
 from utils import utils_params, utils_misc
 from models.resnet import resnet18, resnet34, resnet50, resnet50_original
-from models.resnet_1 import ResNet18, ResNet34, ResNet50
+from models.resnet_1 import ResNet18, ResNet34, ResNet50, ResNet101, ResNet152
 from models.inception_resnet_v2 import inception_resnet_v2
 from models.architectures import vgg_like
 from models.densenet import densenet121,densenet121_bigger
 #from models.mobilenet_v3 import MobileNetV3Small
 
 FLAGS = flags.FLAGS
-flags.DEFINE_boolean('train', True, 'Specify whether to train or evaluate a model.')
+flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')
 flags.DEFINE_string('model_name', 'resnet18', 'Name of the model')
 flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
 flags.DEFINE_string('problem_type', 'classification', 'Specify whether to solve a regression or a classification problem')
@@ -58,11 +58,17 @@ def main(argv):
         model.build(input_shape=(None, 256, 256, 3))
 
     elif FLAGS.model_name == 'resnet34':
-        model = ResNet34(problem_type=FLAGS.problem_type)
+        model = ResNet34(problem_type=FLAGS.problem_type, num_classes=num_classes)
         model.build(input_shape=(None, 256, 256, 3))
 
     elif FLAGS.model_name == 'resnet50':
-        model = ResNet50(problem_type=FLAGS.problem_type)
+        model = ResNet50(problem_type=FLAGS.problem_type, num_classes=num_classes)
+
+    elif FLAGS.model_name == 'resnet101':
+        model = ResNet101(problem_type=FLAGS.problem_type, num_classes=num_classes)
+
+    elif FLAGS.model_name == 'resnet152':
+        model = ResNet152(problem_type=FLAGS.problem_type, num_classes=num_classes)
 
     elif FLAGS.model_name == 'densenet121':
         model = densenet121(num_classes, problem_type=FLAGS.problem_type)
