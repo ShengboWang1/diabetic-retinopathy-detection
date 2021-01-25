@@ -7,6 +7,8 @@ import tensorflow_addons as tfa
 @gin.configurable
 def preprocess(image, label, img_height, img_width, model_name):
     """Dataset preprocessing: Normalizing and resizing"""
+    image = tf.image.crop_to_bounding_box(image, 0, 266, 2848, 3426)
+    image = tf.image.pad_to_bounding_box(image, 288, 0, 3424, 3426)
     image = tf.image.resize(image, size=(img_height, img_width))
     image = tf.cast(image, tf.float32)
 
@@ -56,8 +58,8 @@ def preprocess(image, label, img_height, img_width, model_name):
 def augment(image, label):
     """Data augmentation"""
 
-    # random rotate the image by +- 0.25pi
-    random_angles = tf.random.uniform(shape=(), minval=-np.pi / 4, maxval=np.pi / 4)
+    # random rotate the image by +- 0.125pi
+    random_angles = tf.random.uniform(shape=(), minval=-np.pi / 8, maxval=np.pi / 8)
     image = tfa.image.rotate(image, random_angles)
     # image = tf.image.rot90(image, k=tf.random.uniform([1], minval=0, maxval=4, dtype=tf.int32)[0])
 
@@ -67,7 +69,7 @@ def augment(image, label):
     # 50% possibility left to right
     image = tf.image.random_flip_left_right(image)
 
-    # random crop the image from left and right sides and scale it to the original size
+    # randomly crop the image from left and right sides and scale it to the original size
     image = tf.image.convert_image_dtype(image, dtype=tf.float32)
     in_h = image.shape[0]
     in_w = image.shape[1]
