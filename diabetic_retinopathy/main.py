@@ -89,7 +89,7 @@ def main(argv):
     model.summary()
     logging.info(f"A {FLAGS.problem_type} Problem")
     if FLAGS.problem_type == 'classification':
-        logging.info(f"{num_classes} classes")
+        logging.info(f"{FLAGS.num_classes} classes")
 
     if FLAGS.train:
         logging.info(f"Training model {FLAGS.model_name}...")
