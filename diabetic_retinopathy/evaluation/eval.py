@@ -15,10 +15,10 @@ def evaluate(model, ds_test, ds_info, num_classes, run_paths):
 
     # Restore the model from the corresponding checkpoint
 
-    checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
-    # checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
-
-    checkpoint.restore(tf.train.latest_checkpoint('/Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2021-01-25T18-54-18-524245/ckpts'))
+    # checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
+    #checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
+    #
+    # checkpoint.restore(tf.train.latest_checkpoint('/Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2021-01-06T12-01-24-409828/ckpts'))
 
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
 
