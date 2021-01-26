@@ -4,6 +4,7 @@ import tensorflow as tf
 import tensorflow_datasets as tfds
 from input_pipeline.preprocessing import preprocess, augment
 import matplotlib.pyplot as plt
+import os
 
 @gin.configurable
 def load(device_name, dataset_name, data_dir_local, data_dir_GPU, data_dir_Colab):
@@ -103,15 +104,31 @@ def load(device_name, dataset_name, data_dir_local, data_dir_GPU, data_dir_Colab
 def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
 
     # Visualize the input image
-    image, label = next(iter(ds_train))
-    plt.imshow(tf.cast(image, tf.int64))
-    plt.axis('off')
-    plt.show()
+    # i = 0
+    # for image, label in iter(ds_train):
+    #     if i < 10:
+    #         plt.imshow(tf.cast(image, tf.int64))
+    #         plt.axis('off')
+    #         plt.savefig(os.path.join('/Users/shengbo/Documents/idrid_pictures', str(i) + 'original' + '.png'))
+    #         plt.show()
+    #
+    #         image, label = preprocess(image, label)
+    #         image = image * 255.0
+    #         plt.imshow(tf.cast(image, tf.int64))
+    #         plt.axis('off')
+    #         plt.savefig(os.path.join('/Users/shengbo/Documents/idrid_pictures', str(i) + 'preprocess' + '.png'))
+    #         plt.show()
+    #
+    #         image, label = augment(image, label)
+    #         plt.imshow(tf.cast(image, tf.int64))
+    #         plt.axis('off')
+    #         plt.savefig(os.path.join('/Users/shengbo/Documents/idrid_pictures', str(i) + 'augmentation' + '.png'))
+    #         plt.show()
+    #     i += 1
 
     # Prepare training dataset
     ds_train = ds_train.map(
         preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-
 
     if caching:
         ds_train = ds_train.cache("train_cache")

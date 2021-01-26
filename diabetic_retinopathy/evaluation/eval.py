@@ -15,13 +15,15 @@ def evaluate(model, ds_test, ds_info, num_classes, run_paths):
 
     # Restore the model from the corresponding checkpoint
 
-    #checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
+    checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
     # checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
 
-    #checkpoint.restore(tf.train.latest_checkpoint('/Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2021-01-23T19-34-36-063044/ckpts'))
+    checkpoint.restore(tf.train.latest_checkpoint('/Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2021-01-25T18-54-18-524245/ckpts'))
 
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
 
+    dictionary = {i: v for i, v in enumerate(model.layers)}
+    print(dictionary)
     plot_path = os.path.join(run_paths['path_plt'], 'roc.png')
     print(plot_path)
 
@@ -48,7 +50,7 @@ def evaluate(model, ds_test, ds_info, num_classes, run_paths):
     template = 'Sensitivity: {}, Specificity: {}'
     logging.info(template.format(sensitivity, specificity))
 
-    # visualize(model, layerName='sequential_6', save_path=run_paths)
+    #visualize(model, layerindex=4, save_path=run_paths)
 
     return
 
