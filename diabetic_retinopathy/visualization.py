@@ -8,8 +8,9 @@ import tensorflow as tf
 
 
 # set up the model
-def visualize(model, layerName, save_path):
-    image_path = "/home/RUS_CIP/st169852/IDRID_dataset/images/train/IDRiD_005.jpg"
+def visualize(model, layerindex, save_path):
+    image_path = "./IDRID_dataset/images/train/IDRiD_005.jpg"
+    #image_path = "/home/RUS_CIP/st169852/IDRID_dataset/images/train/IDRiD_005.jpg"
     image = get_img_array(image_path, (256, 256))
 
 
@@ -22,7 +23,7 @@ def visualize(model, layerName, save_path):
     plt.show()
 
     # Show the result of GradCAM
-    gradcam = GradCAM(model=model, layerName=layerName)
+    gradcam = GradCAM(model=model, layerindex=layerindex)
     # gradcam = GradCAM(model=model, layerName="conv5_block3_out")
     cam3 = gradcam.compute_heatmap(image=image, classIdx=1, upsample_size=(4288, 2848))
     plt.matshow(cam3)

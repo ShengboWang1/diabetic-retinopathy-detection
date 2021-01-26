@@ -8,15 +8,15 @@ from matplotlib import pyplot as plt
 
 class GradCAM:
     # Adapted with some modification from https://www.pyimagesearch.com/2020/03/09/grad-cam-visualize-class-activation-maps-with-keras-tensorflow-and-deep-learning/
-    def __init__(self, model, layerName=None):
+    def __init__(self, model, layerindex):
         """
         model: pre-softmax layer (logit layer)
         """
         self.model = model
-        self.layerName = layerName
+        self.layerindex = layerindex
 
-        if self.layerName == None:
-            self.layerName = self.find_target_layer()
+        # if self.layerName == None:
+        #     self.layerName = self.find_target_layer()
 
     def find_target_layer(self):
         for layer in reversed(self.model.layers):
@@ -27,7 +27,7 @@ class GradCAM:
     def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
         gradModel = Model(
             inputs=[self.model.inputs],
-            outputs=[self.model.get_layer(self.layerName).output, self.model.output]
+            outputs=[self.model.get_layer(index=self.layerindex).output, self.model.output]
         )
         # record operations for automatic differentiation
 

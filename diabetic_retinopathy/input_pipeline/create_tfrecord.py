@@ -46,10 +46,23 @@ plt.show()
 # Balance the distribution in the new sets
 train_df = raw_train_df.groupby(['Retinopathy grade']).apply(lambda x: x.sample(150, replace=True)).reset_index(
     drop=True)
+train_df[['Retinopathy grade']].hist(figsize=(10, 5))
+plt.title('Retinopathy grade of new train set')
+plt.show()
+test_df[['Retinopathy grade']].hist(figsize=(10, 5))
+plt.title('Retinopathy grade of new test set')
+plt.show()
 print(raw_train_df)
 print('New Data Size:', raw_train_df.shape[0], 'Old Size:', raw_train_df.shape[0])
+
+# two classes
 train_df = five2two(raw_train_df)
 test_df = five2two(test_df)
+
+# five classes
+# train_df = raw_train_df
+# test_df = test_df
+
 train_df[['Retinopathy grade']].hist(figsize=(10, 5))
 plt.title('Retinopathy grade of new train set')
 plt.show()
@@ -133,6 +146,8 @@ def write(record_file, image_labels, path):
 
 train2_file = 'idrid-2balanced-train.tfrecord-00000-of-00001'
 test2_file = 'idrid-2balanced-test.tfrecord-00000-of-00001'
+train5_file = 'idrid-5balanced-train.tfrecord-00000-of-00001'
+test5_file = 'idrid-5balanced-test.tfrecord-00000-of-00001'
 
 train_image_labels = row_csv2dict(
         '/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/IDRID_dataset/labels/balanced-train-2.csv')

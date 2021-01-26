@@ -83,9 +83,19 @@ class Bottleneck(tf.keras.Model):
 ###########################################################################################################
 # 2. ResBlock 模块。继承keras.Model或者keras.Layer都可以
 class ResNet(keras.Model):
+    """Defines a ResNet architecture.
 
-    # 第一个参数layer_dims：[2, 2, 2, 2] 4个Res Block，每个包含2个Basic Block
-    # 第二个参数num_classes：我们的全连接输出，取决于输出有多少类。
+        Parameters:
+            input_shape (tuple: 3): input shape of the neural network
+            n_classes (int): number of classes, corresponding to the number of output neurons
+            base_filters (int): number of base filters, which are doubled for every VGG block
+            n_blocks (int): number of VGG blocks
+            dense_units (int): number of dense units
+            dropout_rate (float): dropout rate
+
+        Returns:
+            (keras.Model): keras model object
+        """
     def __init__(self, blocks, layer_dims, problem_type, initial_filters=64, num_classes=2):
         super(ResNet, self).__init__()
         self.in_channels = initial_filters

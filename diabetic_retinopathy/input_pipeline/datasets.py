@@ -7,20 +7,20 @@ import matplotlib.pyplot as plt
 import os
 
 @gin.configurable
-def load(device_name, dataset_name, data_dir_local, data_dir_GPU, data_dir_Colab):
+def load(device_name, dataset_name, n_classes, data_dir_local, data_dir_GPU, data_dir_Colab):
     if dataset_name == "idrid":
         logging.info(f"Preparing dataset {dataset_name}...")
         # 2 classes
         print(device_name)
         if device_name == 'local':
-            train_filename = "/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/idrid-2balanced-train.tfrecord-00000-of-00001"
-            test_filename = "/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/idrid-2balanced-test.tfrecord-00000-of-00001"
+            train_filename = "/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/idrid-" + n_classes + "balanced-train.tfrecord-00000-of-00001"
+            test_filename = "/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/idrid-" + n_classes + "balanced-test.tfrecord-00000-of-00001"
         elif device_name == 'iss GPU':
-            train_filename = "/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/idrid-2balanced-train.tfrecord-00000-of-00001"
-            test_filename = "/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/idrid-2balanced-test.tfrecord-00000-of-00001"
+            train_filename = "/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/idrid-" + n_classes + "balanced-train.tfrecord-00000-of-00001"
+            test_filename = "/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/diabetic_retinopathy/idrid-" + n_classes + "balanced-test.tfrecord-00000-of-00001"
         elif device_name == 'Colab':
-            train_filename = "/content/drive/MyDrive/diabetic_retinopathy/idrid-2balanced-train.tfrecord-00000-of-00001"
-            test_filename = "/content/drive/MyDrive/diabetic_retinopathy/idrid-2balanced-test.tfrecord-00000-of-00001"
+            train_filename = "/content/drive/MyDrive/diabetic_retinopathy/idrid-" + n_classes + "balanced-train.tfrecord-00000-of-00001"
+            test_filename = "/content/drive/MyDrive/diabetic_retinopathy/idrid-" + n_classes + "balanced-test.tfrecord-00000-of-00001"
         else:
             raise ValueError
 
