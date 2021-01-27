@@ -10,7 +10,7 @@ def regularized_padded_conv(*args, **kwargs):
     kernel_initializer='he_normal'
     '''
     return layers.Conv2D(*args, **kwargs, padding='same', kernel_regularizer=regularizers.l2(5e-5),
-                         use_bias=False, kernel_initializer='he_normal')
+                         use_bias=False, kernel_initializer='glorot_normal')
 
 # Define Basic Block for Resnet18 and Resnet34
 class BasicBlock(layers.Layer):
