@@ -100,14 +100,14 @@ def main(argv):
         evaluate(model,
                  ds_test,
                  ds_info,
-                 num_classes,
+                 FLAGS.num_classes,
                  run_paths)
     else:
         logging.info(f"Evaluate model {FLAGS.model_name}...")
         evaluate(model,
                  ds_test,
                  ds_info,
-                 num_classes,
+                 FLAGS.num_classes,
                  run_paths)
 
 
