@@ -72,7 +72,7 @@ def main(argv):
     if FLAGS.device_name == 'local':
         resources_per_trial = {'gpu': 0, 'cpu': 1}
     elif FLAGS.device_name == 'iss GPU':
-        resources_per_trial = {'gpu': 1, 'cpu': 10}
+        resources_per_trial = {'gpu': 1, 'cpu': 48}
     elif FLAGS.device_name == 'Colab':
         resources_per_trial = {'gpu': 1, 'cpu': 2}
     else:

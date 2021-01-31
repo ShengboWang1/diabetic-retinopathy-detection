@@ -14,11 +14,11 @@ from models.densenet import densenet121,densenet121_bigger
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')
-flags.DEFINE_string('model_name', 'vgg', 'Name of the model')
+flags.DEFINE_string('model_name', 'resnet18', 'Name of the model')
 flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
 flags.DEFINE_string('problem_type', 'classification', 'Specify whether to solve a regression or a classification problem')
 flags.DEFINE_string('dataset_name', 'idrid', 'Specify whether to use idrid or eyepacs')
-flags.DEFINE_integer('num_classes', 2, '2 or 5 classes classification problem')
+flags.DEFINE_integer('num_classes', 5, '2 or 5 classes classification problem')
 
 
 @gin.configurable

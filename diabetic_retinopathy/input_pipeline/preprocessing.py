@@ -7,8 +7,11 @@ import tensorflow_addons as tfa
 @gin.configurable
 def preprocess(image, label, img_height, img_width, model_name):
     """Dataset preprocessing: Normalizing and resizing"""
+    # print(image.shape)
     image = tf.image.crop_to_bounding_box(image, 0, 266, 2848, 3426)
-    image = tf.image.pad_to_bounding_box(image, 288, 0, 3424, 3426)
+    # print(image.shape)
+    image = tf.image.pad_to_bounding_box(image, 289, 0, 3426, 3426)
+    # print(image.shape)
     image = tf.image.resize(image, size=(img_height, img_width))
     image = tf.cast(image, tf.float32)
 
@@ -28,7 +31,10 @@ def preprocess(image, label, img_height, img_width, model_name):
         image = tf.keras.applications.densenet.preprocess_input(image)
 
     elif model_name == 'inception_v3':
-        image = image / 255.0
+        image = tf.keras.applications.inception_v3.preprocess_input(image)
+
+    elif model_name == 'mobilenet':
+        image = tf.keras.applications.mobilenet.preprocess_input(image)
 
     elif model_name == 'inception_resnet_v2':
         image = tf.keras.applications.inception_resnet_v2.preprocess_input(image)
@@ -36,20 +42,6 @@ def preprocess(image, label, img_height, img_width, model_name):
     else:
         raise ValueError
 
-
-
-    # Normalize image: `uint8` -> `float32`.
-    # image = tf.cast(image, tf.float32)
-    # image = image / 255.
-    # image = tf.cast(image, tf.float32) * (1. / 127.5) - 1.0
-    # image = tf.cast(image, tf.float32)
-    #### image = 2 * tf.cast(image, dtype=tf.float32) / 255. - 0.5
-    # Resize image
-    #### image = tf.image.resize(image, size=(img_height, img_width))
-    # image = tf.keras.applications.resnet.preprocess_input(image)
-    # image = tf.keras.applications.inception_resnet_v2.preprocess_input(image)
-    # image = tf.keras.applications.densenet.preprocess_input(image)
-    # image = tf.keras.applications.inception_v3.preprocess_input(image)
     return image, label
 
 
