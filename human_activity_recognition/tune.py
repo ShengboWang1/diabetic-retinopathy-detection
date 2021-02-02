@@ -49,20 +49,20 @@ def train_func(config):
 
 
 config = {
-        "Trainer.total_steps": tune.grid_search([3000]),
+        "Trainer.total_steps": tune.grid_search([4000]),
         "create_tfr.window_size": tune.choice([250, 200, 150, 100]),
         "create_tfr.shift_window_size": tune.choice([125, 100, 75, 50]),
         "multi_lstm.dense_units": tune.choice([16, 32, 64, 128, 256]),
         "multi_lstm.n_lstm": tune.choice([1, 2, 3]),
         "multi_lstm.n_dense": tune.choice([1, 2, 3]),
         "multi_lstm.rnn_units": tune.choice([16, 32, 64, 128, 256]),
-        "multi_lstm.dropout_rate": tune.uniform(0.1, 0.8),
+        "multi_lstm.dropout_rate": tune.uniform(0.1, 0.6),
     }
 
 if device_name == 'local':
     resources_per_trial = {'gpu': 0, 'cpu': 1}
 elif device_name == 'iss GPU':
-    resources_per_trial = {'gpu': 1, 'cpu': 10}
+    resources_per_trial = {'gpu': 1, 'cpu': 48}
 elif device_name == 'Colab':
     resources_per_trial = {'gpu': 1, 'cpu': 2}
 else:

@@ -24,8 +24,8 @@ def evaluate(model, ds_test, run_paths):
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
     test_loss = tf.keras.metrics.Mean(name='test_loss')
     test_accuracy = tf.keras.metrics.Mean(name='test_accuracy')
-    # plot_path = os.path.join(run_paths['path_plt'], 'roc.png')
-    # print(plot_path)
+    cm_path = os.path.join(run_paths['path_plt'], 'cm.png')
+
 
     # Compute accuracy and loss for test set and the corresponding confusion matrix
     for test_features, test_labels in ds_test:
@@ -39,11 +39,14 @@ def evaluate(model, ds_test, run_paths):
         _ = test_cm.update_state(test_labels.numpy().flatten(), label_preds.flatten())
         test_loss(t_loss)
         test_accuracy(t_accuracy)
-        sns.set()
+
+        # show the confusion matrix
+        plt.figure()
         sns.heatmap(confusion_matrix(test_labels.numpy().flatten(), label_preds.flatten()),
                     annot=True, fmt="d", cbar=False, cmap=plt.cm.Blues)
+        plt.savefig(cm_path)
+        plt.show()
 
-        # plot_roc(labels=test_labels, predictions=test_predictions[:, 1], plot_path=plot_path)
 
     # print('Accuracy on Test Data: %2.2f%%' % (accuracy_score(test_labels, label_preds)))
     # print(classification_report(test_labels, label_preds))

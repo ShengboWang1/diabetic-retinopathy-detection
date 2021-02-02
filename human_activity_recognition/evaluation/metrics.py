@@ -24,6 +24,7 @@ class ConfusionMatrixMetric(tf.keras.metrics.Metric):
         # y_true = tf.cast(y_true, tf.bool)
         # apply confusion matrix
         cm = tf.math.confusion_matrix(y_true, y_pred, dtype=tf.float32, num_classes=self.num_classes)
+        cm = tf.transpose(cm)
         self.total_cm.assign_add(cm)
 
     def result(self):

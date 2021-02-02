@@ -3,6 +3,31 @@ import tensorflow as tf
 import numpy as np
 import os
 
+# Display colormap
+activity_labels = ['WALKING', 'WALKING_UPSTAIRS', 'WALKING_DOWNSTAIRS', 'SITTING', 'STANDING',
+                   'LAYING', 'STAND_TO_SIT', 'SIT_TO_STAND', 'SIT_TO_LIE', 'LIE_TO_SIT', 'STAND_TO_LIE',
+                   'LIE_TO_STAND']
+color_dict = {0: 'cyan', 1: 'lightgreen', 2: 'orange', 3: 'yellow', 4: 'limegreen', 5: 'greenyellow', 6: 'sandybrown', 7: 'violet',
+                  8: 'red', 9: 'green', 10: 'darkblue', 11: 'blueviolet', 12: 'white'}
+colors = ['cyan', 'lightgreen', 'orange', 'yellow', 'limegreen', 'greenyellow', 'sandybrown',
+          'violet', 'red', 'green', 'blueviolet', 'lightpink']
+x = np.arange(0, 12, 1)
+plt.bar(x, height=1, width=1, align='center', color=colors)
+plt.xticks(x, activity_labels, rotation=60)
+plt.yticks([])
+plt.title('Colormap')
+plt.margins(0)
+ax = plt.gca()
+ax.spines['left'].set_color('black')
+ax.spines['right'].set_color('black')
+ax.spines['top'].set_color('black')
+ax.spines['bottom'].set_color('black')
+# change figure size
+fig = plt.gcf()
+fig.set_size_inches(8, 4)
+plt.tight_layout()
+plt.show()
+
 
 def plot(len_ds, values, x, y, z, legend_x, legend_y, legend_z, title, run_paths):
 
@@ -61,7 +86,7 @@ def plot_data(model, dataset, run_paths):
             gyro_z_component = feature.numpy()[:, :, 5].flatten()
             labels = label.numpy().flatten()
             label_preds = label_pred.flatten()
-        elif i < 10:
+        elif i < 3:
             acc_x_component = np.append(acc_x_component, feature.numpy()[:, :, 0].flatten())
             print(acc_x_component.shape)
             acc_y_component = np.append(acc_y_component, feature.numpy()[:, :, 1].flatten())
@@ -87,8 +112,8 @@ def plot_data(model, dataset, run_paths):
     # gyro_legend_y = 'gyro_Y'
     # gyro_legend_z = 'gyro_Z'
 
-    color_dict = {0: 'cyan', 1: 'red', 2: 'orange', 3: 'yellow', 4: 'green', 5: 'pink', 6: 'brown', 7: 'violet',
-                  8: 'lightgreen', 9: 'cyan', 10: 'darkblue', 11: 'tan', 12: 'white'}
+    color_dict = {0: 'cyan', 1: 'lightgreen', 2: 'orange', 3: 'yellow', 4: 'limegreen', 5: 'greenyellow', 6: 'sandybrown', 7: 'violet',
+                  8: 'red', 9: 'green', 10: 'darkblue', 11: 'blueviolet', 12: 'white'}
 
     true_color_values = []
     pred_color_values = []
