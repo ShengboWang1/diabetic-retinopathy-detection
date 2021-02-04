@@ -4,15 +4,15 @@ from tensorflow.keras.layers import Dense, Dropout, LSTM, SimpleRNN, GRU
 
 
 @gin.configurable
-def multi_lstm(n_lstm, n_dense, dropout_rate, window_size, rnn_units, dense_units, rnn_type):
+def multi_lstm(n_lstm, n_dense, dropout_rate, window_size, rnn_units, dense_units, rnn_type, kernel_initializer):
     model = Sequential()
     for i in range(1, n_lstm):
         if rnn_type == 'LSTM':
-            model.add(LSTM(rnn_units, input_shape=(window_size, 6), return_sequences=True))
+            model.add(LSTM(rnn_units, input_shape=(window_size, 6), return_sequences=True, kernel_initializer=kernel_initializer))
         elif rnn_type == 'simeple_rnn':
-            model.add(SimpleRNN(rnn_units, input_shape=(window_size, 6), return_sequences=True))
+            model.add(SimpleRNN(rnn_units, input_shape=(window_size, 6), return_sequences=True, kernel_initializer=kernel_initializer))
         elif rnn_type == 'GRU':
-            model.add(GRU(rnn_units, input_shape=(window_size, 6), return_sequences=True))
+            model.add(GRU(rnn_units, input_shape=(window_size, 6), return_sequences=True, kernel_initializer=kernel_initializer))
         else:
             return ValueError
 

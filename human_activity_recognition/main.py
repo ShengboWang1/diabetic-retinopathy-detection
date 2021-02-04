@@ -15,6 +15,7 @@ FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')
 flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
 flags.DEFINE_string('model_name', 'multi_lstm', 'Prepare different models')
+flags.DEFINE_string('kernel_initializer', 'he_normal', 'try different kernel initializers for ensemble learning')
 
 
 @gin.configurable
@@ -42,11 +43,11 @@ def main(argv):
 
     # select a suitable model
     if FLAGS.model_name == 'simple_rnn':
-        model = simple_rnn(rnn_type='GRU', window_size=window_size)
+        model = simple_rnn(rnn_type='GRU', window_size=window_size, kernel_initializer=FLAGS.kernel_initializer)
     elif FLAGS.model_name == 'cnn_lstm':
-        model = cnn_lstm(window_size=window_size)
+        model = cnn_lstm(window_size=window_size, kernel_initializer=FLAGS.kernel_initializer)
     elif FLAGS.model_name == 'multi_lstm':
-        model = multi_lstm(rnn_type='GRU', window_size=window_size)
+        model = multi_lstm(rnn_type='GRU', window_size=window_size, kernel_initializer=FLAGS.kernel_initializer)
     else:
         raise ValueError
 
@@ -59,9 +60,9 @@ def main(argv):
 
     else:
         plot_data.plot_data(model, ds_test, run_paths)
-        # evaluate(model,
-        #          ds_test,
-        #          run_paths)
+        evaluate(model,
+                 ds_test,
+                 run_paths)
 
 
 if __name__ == "__main__":
