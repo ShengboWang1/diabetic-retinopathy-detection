@@ -4,7 +4,7 @@ from tensorflow.keras.layers import Dense, Dropout, LSTM, SimpleRNN, GRU
 
 
 @gin.configurable
-def multi_lstm(n_lstm, n_dense, dropout_rate, window_size, rnn_units, dense_units, rnn_type, kernel_initializer):
+def multi_lstm(n_lstm, n_dense, dropout_rate, window_size, rnn_units, dense_units, rnn_type, kernel_initializer='glorot_uniform'):
     model = Sequential()
     for i in range(1, n_lstm):
         if rnn_type == 'LSTM':
