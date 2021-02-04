@@ -1,5 +1,5 @@
 # TFRecord
-create_tfr.shift_window_size = 75
+create_tfr.shift_window_size = 125
 create_tfr.window_size = 250
 
 # Models
@@ -20,9 +20,10 @@ create_tfr.window_size = 250
 #Multi lstm
 multi_lstm.n_lstm = 3
 multi_lstm.n_dense = 3
-multi_lstm.rnn_units = 256
+multi_lstm.rnn_units = 215
 multi_lstm.dense_units = 256
 multi_lstm.dropout_rate = 0.4209
+multi_lstm.kernel_initializer = 'glorot_uniform'
 # multi_lstm.window_size = 120
 
 # Training

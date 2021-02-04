@@ -52,11 +52,12 @@ config = {
         "Trainer.total_steps": tune.grid_search([5000]),
         #"create_tfr.window_size": tune.choice([250, 200, 150, 100]),
         #"create_tfr.shift_window_size": tune.choice([125, 100, 75, 50]),
-        "multi_lstm.dense_units": tune.choice([16, 32, 64, 128, 256, 512]),
-        "multi_lstm.n_lstm": tune.choice([1, 2, 3]),
-        "multi_lstm.n_dense": tune.choice([1, 2, 3]),
-        "multi_lstm.rnn_units": tune.choice([16, 32, 64, 128, 256, 512]),
-        "multi_lstm.dropout_rate": tune.uniform(0.1, 0.6),
+        #"multi_lstm.dense_units": tune.choice([512]),
+        #"multi_lstm.n_lstm": tune.choice([1, 2, 3]),
+        #"multi_lstm.n_dense": tune.choice([1, 2, 3]),
+        #"multi_lstm.rnn_units": tune.choice([16, 32, 64, 128, 256, 512]),
+        #"multi_lstm.dropout_rate": tune.uniform(0.1, 0.8),
+        "multi_lstm.kernel_initializer": tune.choice(['glorot_uniform', 'glorot_normal', 'random_uniform', 'he_uniform', 'he_normal', 'lecun_normal', 'lecun_uniform', 'TruncatedNormal'])
     }
 
 if device_name == 'local':
@@ -71,7 +72,7 @@ else:
 # resources_per_trial = {'gpu': 1, 'cpu': 2}
 
 analysis = tune.run(
-    train_func, num_samples=500, resources_per_trial=resources_per_trial,
+    train_func, num_samples=30, resources_per_trial=resources_per_trial,
     config=config
     )
 
