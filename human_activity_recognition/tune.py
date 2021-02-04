@@ -57,7 +57,7 @@ config = {
         #"multi_lstm.n_dense": tune.choice([1, 2, 3]),
         #"multi_lstm.rnn_units": tune.choice([16, 32, 64, 128, 256, 512]),
         #"multi_lstm.dropout_rate": tune.uniform(0.1, 0.8),
-        "multi_lstm.kernel_initializer": tune.choice(["glorot_uniform", "glorot_normal", "random_uniform", "he_uniform", "he_normal", "lecun_normal", "lecun_uniform", "TruncatedNormal"])
+        "multi_lstm.kernel_initializer": tune.choice(["'glorot_uniform'", "'glorot_normal'", "'random_uniform'", "'he_uniform'", "'he_normal'", "'lecun_normal'", "'lecun_uniform'", "'TruncatedNormal'"])
     }
 
 if device_name == 'local':
