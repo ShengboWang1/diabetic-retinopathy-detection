@@ -6,14 +6,13 @@ import tensorflow.keras as keras
 # 0. 定义一个3x3卷积！
 def regularized_padded_conv(*args, **kwargs):
     '''
-    kernel_initializer='glorot_normal': Glorot正态分布初始化方法，也称作Xavier正态分布初始化，参数由0均值，标准差为
-                        sqrt(2 / (fan_in + fan_out))的正态分布产生，其中fan_in和fan_out是权重张量的扇入扇出（即输入和输出单元数目;
-    kernel_initializer='he_normal': He正态分布初始化方法，参数由0均值，标准差为sqrt(2 / fan_in) 的正态分布产生，其中fan_in权重张量的扇入
+    kernel_initializer='glorot_normal':
+    kernel_initializer='he_normal'
     '''
     return layers.Conv2D(*args, **kwargs, padding='same', kernel_regularizer=regularizers.l2(5e-5),
                          use_bias=False, kernel_initializer='he_normal')
 
-# 1.定义 Basic Block 模块。对于Resnet18和Resnet34
+# Define Basic Block for Resnet18 and Resnet34
 class BasicBlock(layers.Layer):
     expansion = 1
 
@@ -50,7 +49,7 @@ class BasicBlock(layers.Layer):
         return out
 
 ###########################################################################################################
-# 1.定义 Bottleneck 模块。对于Resnet50,Resnet101和Resnet152;
+# Define Bottleneck for Resnet50,Resnet101 and Resnet152;
 class Bottleneck(tf.keras.Model):
     expansion = 4
 
@@ -84,18 +83,28 @@ class Bottleneck(tf.keras.Model):
 ###########################################################################################################
 # 2. ResBlock 模块。继承keras.Model或者keras.Layer都可以
 class ResNet(keras.Model):
+    """Defines a ResNet architecture.
 
-    # 第一个参数layer_dims：[2, 2, 2, 2] 4个Res Block，每个包含2个Basic Block
-    # 第二个参数num_classes：我们的全连接输出，取决于输出有多少类。
-    def __init__(self, blocks, layer_dims, problem_type, initial_filters=64, num_classes=5):
+        Parameters:
+            input_shape (tuple: 3): input shape of the neural network
+            n_classes (int): number of classes, corresponding to the number of output neurons
+            base_filters (int): number of base filters, which are doubled for every VGG block
+            n_blocks (int): number of VGG blocks
+            dense_units (int): number of dense units
+            dropout_rate (float): dropout rate
+
+        Returns:
+            (keras.Model): keras model object
+        """
+    def __init__(self, blocks, layer_dims, problem_type, initial_filters=64, num_classes=2):
         super(ResNet, self).__init__()
         self.in_channels = initial_filters
 
-        # 0. 预处理卷积层；实现比较灵活可以加MAXPool2D，或者不加，这里没加。注意这里的channels需要和layer1的channels是一样的，不然能add。
+        # preprocess the convolutional layers with initializing
         self.stem = Sequential([regularized_padded_conv(initial_filters, kernel_size=3, strides=1),
                                 layers.BatchNormalization()])
 
-        # 1. 创建4个ResBlock；注意第1项不一定以2倍形式扩张，都是比较随意的，这里都是经验值。
+        # build 4 resblocks
         self.layer1 = self.build_resblock(blocks, initial_filters,    layer_dims[0], stride=1)
         self.layer2 = self.build_resblock(blocks, initial_filters*2,  layer_dims[1], stride=2)
         self.layer3 = self.build_resblock(blocks, initial_filters*4,  layer_dims[2], stride=2)
@@ -106,11 +115,11 @@ class ResNet(keras.Model):
         if problem_type == 'regression':
             self.fc = layers.Dense(1)
         elif problem_type == 'classification':
-            self.fc = layers.Dense(num_classes)
+            self.fc = layers.Dense(num_classes, activation='softmax')
         else:
             raise ValueError
 
-    # 2. 创建ResBlock
+    # build ResBlock
     def build_resblock(self, blocks, out_channels, num_blocks, stride):
         strides = [stride] + [1] * (num_blocks - 1)                    # [1]*3 = [1, 1, 1]
         res_blocks = Sequential()
@@ -143,22 +152,21 @@ class ResNet(keras.Model):
 
 ###########################################################################################################
 """ Resnet18 """
-def ResNet18(problem_type):
-    return ResNet(BasicBlock, [2, 2, 2, 2], problem_type=problem_type)
+def ResNet18(problem_type, num_classes):
+    return ResNet(BasicBlock, [2, 2, 2, 2], problem_type=problem_type, num_classes=num_classes)
 
-""" ResNet-34，那34是怎样的配置呢？只需要改一下这里就可以了。# 4个Res Block，第1个包含3个Basic Block,第2为4，第3为6，第4为3 """
-# 如果我们要使用
-def ResNet34(problem_type):
-    return ResNet(BasicBlock, [3, 4, 6, 3])
+""" ResNet-34"""
+def ResNet34(problem_type, num_classes):
+    return ResNet(BasicBlock, [3, 4, 6, 3], problem_type=problem_type, num_classes=num_classes)
 
 """ Resnet50 """
-def ResNet50(problem_type):
-    return ResNet(Bottleneck, [3, 4, 6, 3])
+def ResNet50(problem_type, num_classes):
+    return ResNet(Bottleneck, [3, 4, 6, 3], problem_type=problem_type, num_classes=num_classes)
 
 """ Resnet101 """
-def ResNet101(problem_type):
-    return ResNet(Bottleneck, [3, 4, 23, 3])
+def ResNet101(problem_type, num_classes):
+    return ResNet(Bottleneck, [3, 4, 23, 3], problem_type=problem_type, num_classes=num_classes)
 
 """ Resnet152 """
-def ResNet152(problem_type):
-    return ResNet(Bottleneck, [3, 8, 36, 3])
+def ResNet152(problem_type, num_classes):
+    return ResNet(Bottleneck, [3, 8, 36, 3], problem_type=problem_type, num_classes=num_classes)

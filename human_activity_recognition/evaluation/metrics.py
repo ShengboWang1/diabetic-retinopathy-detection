@@ -20,10 +20,11 @@ class ConfusionMatrixMetric(tf.keras.metrics.Metric):
         # self.total_cm.assign_add(self.confusion_matrix(y_true, y_pred))
         # return self.total_cm
         # convert predictions from probability to boolean
-        y_pred = tf.math.argmax(y_pred, axis=1)
+        #y_pred = tf.math.argmax(y_pred, axis=1)
         # y_true = tf.cast(y_true, tf.bool)
         # apply confusion matrix
         cm = tf.math.confusion_matrix(y_true, y_pred, dtype=tf.float32, num_classes=self.num_classes)
+        cm = tf.transpose(cm)
         self.total_cm.assign_add(cm)
 
     def result(self):

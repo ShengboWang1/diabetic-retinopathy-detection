@@ -7,50 +7,64 @@ import os
 from sklearn.metrics import accuracy_score, classification_report
 import numpy as np
 from sklearn import metrics
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
 
 
-def evaluate(model, ds_test, ds_info, run_paths):
-    test_cm = ConfusionMatrixMetric(num_classes=2)
+def evaluate(model, ds_test, run_paths):
+    test_cm = ConfusionMatrixMetric(num_classes=12)
 
     # Restore the model from the corresponding checkpoint
-    checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
-    checkpoint.restore(
-        tf.train.latest_checkpoint("/content/drive/MyDrive/experiments/run_2021-01-01T15-51-31-698506/ckpts/"))
+
+    #checkpoint = tf.train.Checkpoint(optimizer=tf.keras.optimizers.Adam(), model=model)
+    # checkpoint.restore(tf.train.latest_checkpoint(run_paths['path_ckpts_train']))
+
+    #checkpoint.restore(tf.train.latest_checkpoint('/Users/shengbo/Documents/Github/dl-lab-2020-team06/experiments/run_2021-01-17T20-18-52-373438/ckpts/'))
 
     model.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics=['SparseCategoricalAccuracy'])
-    plot_path = os.path.join(run_paths['path_plt'], 'roc.png')
-    print(plot_path)
+    test_loss = tf.keras.metrics.Mean(name='test_loss')
+    test_accuracy = tf.keras.metrics.Mean(name='test_accuracy')
+    cm_path = os.path.join(run_paths['path_plt'], 'cm.png')
+
 
     # Compute accuracy and loss for test set and the corresponding confusion matrix
-    for test_images, test_labels in ds_test:
-        test_loss, test_accuracy = model.evaluate(test_images, test_labels, verbose=1)
-        test_predictions = model(test_images, training=False)
+    for test_features, test_labels in ds_test:
+        t_loss, t_accuracy = model.evaluate(test_features, test_labels, verbose=1)
+        print("predictions")
+
+        test_predictions = model(test_features, training=False)
+        print(test_predictions.numpy().flatten().shape)
+        print(test_labels.shape)
         label_preds = np.argmax(test_predictions, -1)
-        _ = test_cm.update_state(test_labels, test_predictions)
+        _ = test_cm.update_state(test_labels.numpy().flatten(), label_preds.flatten())
+        test_loss(t_loss)
+        test_accuracy(t_accuracy)
 
-        # label_preds = np.argmax(predictions, -1)
-        labels = test_labels.numpy()
-        binary_true = np.squeeze(labels)
-        binary_pred = np.squeeze(label_preds)
+        # show the confusion matrix
+        plt.figure()
+        sns.heatmap(confusion_matrix(test_labels.numpy().flatten(), label_preds.flatten()),
+                    annot=True, fmt="d", cbar=False, cmap=plt.cm.Blues)
+        plt.savefig(cm_path)
+        plt.show()
 
-        binary_accuracy = metrics.accuracy_score(binary_true, binary_pred)
-        binary_confusion_matrix = metrics.confusion_matrix(binary_true, binary_pred)
-        tf.print(binary_accuracy)
-        tf.print(binary_confusion_matrix)
-        plot_roc(labels=test_labels, predictions=test_predictions[:, 1], plot_path=plot_path)
 
-    print('Accuracy on Test Data: %2.2f%%' % (accuracy_score(test_labels, label_preds)))
-    print(classification_report(test_labels, label_preds))
+    # print('Accuracy on Test Data: %2.2f%%' % (accuracy_score(test_labels, label_preds)))
+    # print(classification_report(test_labels, label_preds))
 
     template = 'Test Loss: {}, Test Accuracy: {}'
-    logging.info(template.format(test_loss, test_accuracy * 100))
+    logging.info(template.format(test_loss.result(), test_accuracy.result() * 100))
 
     template = 'Confusion Matrix:\n{}'
     logging.info(template.format(test_cm.result().numpy()))
-
-    # Compute sensitivity and specificity from the confusion matrix
-    sensitivity, specificity = test_cm.process_confusion_matrix()
-    template = 'Sensitivity: {}, Specificity: {}'
-    logging.info(template.format(sensitivity, specificity))
-
-    return
+    
+    plot_path = os.path.join(run_paths['path_plt'], ' confusion_matrix.png')
+    cm = np.array(test_cm.result().numpy().tolist())
+    cm= cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+    print(cm)
+    plt.figure(figsize=(18, 16))
+    sns.heatmap(cm, annot=True, fmt='.1%')
+    #plt.title('With 0 Label', fontsize=20)  # title with fontsize 20
+    plt.xlabel('True', fontsize=15)  # x-axis label with fontsize 15
+    plt.ylabel('Predict', fontsize=15)  # y-axis label with fontsize 15
+    plt.savefig(plot_path)
+    plt.show()

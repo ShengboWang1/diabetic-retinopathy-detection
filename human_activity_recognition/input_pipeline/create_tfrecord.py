@@ -95,11 +95,12 @@ def create_tfr(shift_window_size, window_size, device_name):
             ds_y = ds_y.append(y[i], ignore_index=True)
 
         ds_all = pd.concat([ds_x, ds_y], axis=1)
-        print(ds_all)
+        # print(ds_all)
         ds_all = ds_all.drop(ds_all[ds_all.label == 0].index)
-        print(ds_all)
+        # print(ds_all)
         ds_x = ds_all[['a_x', 'a_y', 'a_z', 'g_x', 'g_y', 'g_z']]
         ds_y = ds_all[['label']]
+
         return ds_x, ds_y
 
     train_x, train_y = create_dataset(start_num=0, end_num=43, ds_x=train_x, ds_y=train_y)
@@ -219,10 +220,23 @@ def create_tfr(shift_window_size, window_size, device_name):
     serialized_test_ds = tf.data.Dataset.from_generator(
         generator_test, output_types=tf.string, output_shapes=())
 
-    train_filename = 'no0_train.tfrecord'
-    val_filename = 'no0_val.tfrecord'
-    test_filename = 'no0_test.tfrecord'
+    if device_name == 'iss GPU':
+        train_filename = '/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/human_activity_recognition/no0_train.tfrecord'
+        val_filename = '/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/human_activity_recognition/no0_val.tfrecord'
+        test_filename = '/home/RUS_CIP/st169852/st169852/dl-lab-2020-team06/human_activity_recognition/no0_test.tfrecord'
 
+    elif device_name == 'local':
+        train_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_train.tfrecord'
+        val_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_val.tfrecord'
+        test_filename = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/human_activity_recognition/no0_test.tfrecord'
+
+    elif device_name == 'Colab':
+        train_filename = '/content/drive/MyDrive/human_activity_recognition/no0_train.tfrecord'
+        val_filename = '/content/drive/MyDrive/human_activity_recognition/no0_val.tfrecord'
+        test_filename = '/content/drive/MyDrive/human_activity_recognition/no0_test.tfrecord'
+
+    else:
+        raise ValueError
     writer = tf.data.experimental.TFRecordWriter(train_filename)
     writer.write(serialized_train_ds)
 
@@ -232,4 +246,6 @@ def create_tfr(shift_window_size, window_size, device_name):
     writer = tf.data.experimental.TFRecordWriter(test_filename)
     writer.write(serialized_test_ds)
 
+    return window_size
 
+# create_tfr(device_name='local', shift_window_size=125, window_size=250)

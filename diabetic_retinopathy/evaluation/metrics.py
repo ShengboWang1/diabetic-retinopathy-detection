@@ -73,6 +73,7 @@ class ConfusionMatrixMetric(tf.keras.metrics.Metric):
         # y_true = tf.cast(y_true, tf.bool)
         # apply confusion matrix
         cm = tf.math.confusion_matrix(y_true, y_pred, dtype=tf.float32, num_classes=self.num_classes)
+        cm = tf.transpose(cm)
         self.total_cm.assign_add(cm)
 
     def result(self):
@@ -92,13 +93,13 @@ class ConfusionMatrixMetric(tf.keras.metrics.Metric):
         "returns sensitivity and specificity along with overall accuracy"
         cm = self.total_cm
         diag_part = tf.linalg.diag_part(cm)
-        # precision = diag_part / (tf.reduce_sum(cm, 0) + tf.constant(1e-15))
-        # recall = diag_part / (tf.reduce_sum(cm, 1) + tf.constant(1e-15))
-        # f1 = 2 * precision * recall / (precision + recall + tf.constant(1e-15))
+        precision = diag_part / (tf.reduce_sum(cm, 1) + tf.constant(1e-15))
+        precision = precision.numpy()[1]
         sensitivity_specificity = diag_part / (tf.reduce_sum(cm, 0) + tf.constant(1e-15))
         sensitivity = sensitivity_specificity.numpy()[1]
         specificity = sensitivity_specificity.numpy()[0]
-        return sensitivity, specificity
+        f1 = 2 * precision * sensitivity / (precision + sensitivity + tf.constant(1e-15))
+        return sensitivity, specificity, precision, f1
 
     def fill_output(self, output):
         results = self.result()

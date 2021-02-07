@@ -2,8 +2,6 @@ import gin
 import tensorflow as tf
 import logging
 import datetime
-import numpy as np
-from sklearn import metrics
 
 
 @gin.configurable
@@ -56,17 +54,6 @@ class Trainer(object):
             predictions = self.model(features, training=True)
             loss = self.loss_object(labels, predictions)
         gradients = tape.gradient(loss, self.model.trainable_variables)
-
-        # label_preds = np.argmax(predictions, -1)
-        # label=labels.numpy()
-        # binary_true=np.squeeze(labels)
-        # binary_pred=np.squeeze(label_preds)
-
-        # binary_accuracy = metrics.accuracy_score(binary_true, binary_pred)
-        # binary_confusion_matrix = metrics.confusion_matrix(binary_true, binary_pred)
-
-        # tf.print(binary_accuracy)
-        # tf.print(binary_confusion_matrix)
 
         self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
 
@@ -161,14 +148,13 @@ class Trainer(object):
                         # ...
                         self.ckpt_manager.save()
 
-                #     # Nothing happens
+                    # Nothing happens
                 #     else:
                 #         print("Validation loss is not better, no new checkpoint")
-                #
+
                 # # Nothing happens
                 # else:
                 #     print("Validation loss is not better, no new checkpoint")
-
 
             if step % self.total_steps == 0:
                 logging.info(f'Finished training after {step} steps.')

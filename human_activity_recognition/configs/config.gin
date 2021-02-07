@@ -2,19 +2,13 @@
 create_tfr.shift_window_size = 125
 create_tfr.window_size = 250
 
-# Architectures
-#rnn.n_recurrent_layers = 1
-#rnn.n_dense_layers = 1
-#rnn.dense_units = 16
-#rnn.dropout_rate = 0.2
-
 # Models
 #simple_rnn.n_neurons = 256
 #simple_rnn.dense_units = 64
 ## simple_rnn.rnn_units = 128
 #simple_rnn.dropout_rate = 0.5
 #simple_rnn.window_size = 250
-## simple_rnn.n_batch = 32
+# simple_rnn.n_batch = 32
 #
 ## CNN plus LSTM
 #cnn_lstm.n_filters = 64
@@ -24,16 +18,16 @@ create_tfr.window_size = 250
 #cnn_lstm.dense_units = 64
 
 #Multi lstm
-multi_lstm.n_lstm = 2
-multi_lstm.n_dense = 2
-multi_lstm.lstm_units = 256
-multi_lstm.dense_units = 64
-# simple_rnn.rnn_units = 128
-multi_lstm.dropout_rate = 0.5
-multi_lstm.window_size = 250
+multi_lstm.n_lstm = 3
+multi_lstm.n_dense = 3
+multi_lstm.rnn_units = 215
+multi_lstm.dense_units = 256
+multi_lstm.dropout_rate = 0.4209
+multi_lstm.kernel_initializer = "glorot_uniform"
+# multi_lstm.window_size = 120
 
 # Training
-Trainer.total_steps = 200000
+Trainer.total_steps = 50000
 Trainer.log_interval = 100
 Trainer.ckpt_interval = 100
 

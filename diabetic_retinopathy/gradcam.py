@@ -4,11 +4,11 @@ import numpy as np
 from tensorflow.keras.models import Model
 from models.resnet import resnet50
 from matplotlib import pyplot as plt
-
+from input_pipeline.preprocessing import preprocess
 
 class GradCAM:
     # Adapted with some modification from https://www.pyimagesearch.com/2020/03/09/grad-cam-visualize-class-activation-maps-with-keras-tensorflow-and-deep-learning/
-    def __init__(self, model, layerName=None):
+    def __init__(self, model, layerName):
         """
         model: pre-softmax layer (logit layer)
         """
@@ -27,7 +27,7 @@ class GradCAM:
     def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
         gradModel = Model(
             inputs=[self.model.inputs],
-            outputs=[self.model.get_layer(self.layerName).output, self.model.output]
+            outputs=[self.model.get_layer(name=self.layerName).output, self.model.output]
         )
         # record operations for automatic differentiation
 
@@ -50,12 +50,13 @@ class GradCAM:
         # Apply reLU
         cam = np.maximum(cam, 0)
         cam = cam / np.max(cam)
-        cam = cv2.resize(cam, upsample_size,cv2.INTER_LINEAR)
+        cam = cv2.resize(cam, upsample_size, cv2.INTER_LINEAR)
 
         # convert to 3D
         cam3 = np.expand_dims(cam, axis=2)
         cam3 = np.tile(cam3, [1, 1, 3])
-
+        cam3 = tf.image.crop_to_bounding_box(cam3, 289, 0, 2848, 3426)
+        cam3 = tf.image.pad_to_bounding_box(cam3, 0, 266, 2848, 4288)
         return cam3
 
 def overlay_gradCAM(img, cam3):
@@ -63,13 +64,14 @@ def overlay_gradCAM(img, cam3):
     cam3 = cv2.applyColorMap(cam3, cv2.COLORMAP_JET)
 
     new_img = 0.3 * cam3 + 0.5 * img
-    new_img = 0.3 * cam3 + img
+    #new_img = 0.3 * cam3 + img
 
     return (new_img * 255.0 / new_img.max()).astype("uint8")
 
-def get_img_array(img_path, size):
-    img = tf.keras.preprocessing.image.load_img(img_path, target_size=size)
+def get_img_array(img_path):
+    img = tf.keras.preprocessing.image.load_img(img_path)
     array = tf.keras.preprocessing.image.img_to_array(img)
+    array, _ = preprocess(array, 0)
     array = np.expand_dims(array, axis=0)
     return array
 
