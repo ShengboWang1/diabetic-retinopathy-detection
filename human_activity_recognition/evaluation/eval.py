@@ -56,4 +56,15 @@ def evaluate(model, ds_test, run_paths):
 
     template = 'Confusion Matrix:\n{}'
     logging.info(template.format(test_cm.result().numpy()))
-
+    
+    plot_path = os.path.join(run_paths['path_plt'], ' confusion_matrix.png')
+    cm = np.array(test_cm.result().numpy().tolist())
+    cm= cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+    print(cm)
+    plt.figure(figsize=(18, 16))
+    sns.heatmap(cm, annot=True, fmt='.1%')
+    #plt.title('With 0 Label', fontsize=20)  # title with fontsize 20
+    plt.xlabel('True', fontsize=15)  # x-axis label with fontsize 15
+    plt.ylabel('Predict', fontsize=15)  # y-axis label with fontsize 15
+    plt.savefig(plot_path)
+    plt.show()
