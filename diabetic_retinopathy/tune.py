@@ -48,7 +48,7 @@ def main(argv):
         model = vgg_like(input_shape=(256, 256, 3), n_classes=2)
         # model = densenet121(num_classes=2, problem_type='classification')
 
-        trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
+        trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths, problem_type='classification')
         for val_accuracy in trainer.train():
             tune.report(val_accuracy=val_accuracy)
 
