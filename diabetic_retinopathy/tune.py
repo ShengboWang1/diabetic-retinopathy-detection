@@ -42,7 +42,7 @@ def main(argv):
         utils_params.save_config(run_paths['path_gin'], gin.config_str())
 
         # Setup pipeline
-        ds_train, ds_val, ds_test, ds_info = load(device_name=device_name, dataset_name='idrid')
+        ds_train, ds_val, ds_test, ds_info = load(device_name=device_name, dataset_name='idrid', n_classes=2)
 
         # model
         model = vgg_like(input_shape=(256, 256, 3), n_classes=2)
