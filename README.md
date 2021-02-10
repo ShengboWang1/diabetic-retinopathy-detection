@@ -61,20 +61,17 @@ Ensemble learning, evaluate and visualization:
 ## Human activity recognition
 
 Hyperparameter optimization:
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-
-
-
-| Trial | GRU layers | Desne layers | GRU units | Dense units | Window size | Shift size | Dropout rate | Val accuracy |
-| ----- | ---------- |
-| Trial | GRU layers | Desne layers | GRU units | Dense units | Window size | Shift size | Dropout rate | Val accuracy |
-
-
-
-
-
+| Trial  | GRU layers | Desne layers  | GRU units | Dense units  | Window size | Shift size  | Dropout rate | Val accuracy |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+|   |   |   |   |   |   |   |   |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+|   |   |   |   |   |   |   |   |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+|   |   |   |   |   |   |   |   |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+|   |   |   |   |   |   |   |   |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+|   |   |   |   |   |   |   |   |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
 
 
