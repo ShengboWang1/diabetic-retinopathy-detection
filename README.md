@@ -70,6 +70,12 @@ Hyperparameter Optimization:
 | 4 | 1 | 1 | 256 | 128 | 100 | 50 | 0.454 | 85.8% |
 | 5 | 1 | 1 | 256 | 128 | 250 | 125 | 0.248 | 88.4% |
 
+Kernel initializers and test accuracy:
+
+| He_normal | Glorot_uniform | Glorot_normal |
+| :---: | :---: | :---: |
+| 0.930 | 0.929 | 0.941 | 
+
 
 Visualization of test label and predictions:
 
@@ -85,3 +91,8 @@ Confusion Matrix:
 Normalised confusion matrix
 ![normal_cm_6](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/human_activity_recognition/evaluation/normal_cm_6.png)
 
+Results of ensemble learning
+
+| Architecture | LSTM | GRU |
+| :---: | :---: | :---: |
+| Test Accuracy | 91.73% | 94.48% | 
