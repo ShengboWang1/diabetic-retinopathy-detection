@@ -60,7 +60,7 @@ Ensemble learning, evaluate and visualization:
 
 ## Human activity recognition
 
-Hyperparameter optimization:
+Hyperparameter Optimization:
 
 | Trial | GRU layers | Desne layers | GRU units | Dense units | Window size | Shift size | Dropout rate | Val accuracy |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -71,4 +71,7 @@ Hyperparameter optimization:
 | 5 | 1 | 1 | 256 | 128 | 250 | 125 | 0.248 | 88.4% |
 
 
+Confusion Matrix:
+
+![cm_6](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/human_activity_recognition/evaluation/normal_cm_6.png)
 
