@@ -5,6 +5,18 @@ import gin
 
 @gin.configurable
 def densenet121(num_classes, problem_type, dropout_rate, layer_index, dense_units):
+    """A model consisting of a densenet_121 model and a small output model on the top.
+
+        Parameters:
+            num_classes (int): number of classification classes, used in  the final dense layer
+            problem_type(string): to specify a classification or a regression output
+            dropout_rate(float): dropout rate
+            layer_index(int): number of layer that we reserve for base model
+            dense_units(int): number of dense units
+        Returns:
+            model(keras.Model): keras model object
+        """
+
     # Create base model
     base_model = keras.applications.DenseNet121(
         weights='imagenet',
@@ -32,7 +44,8 @@ def densenet121(num_classes, problem_type, dropout_rate, layer_index, dense_unit
 
 
 @gin.configurable
-def densenet121_bigger(dropout_rate, layer_index, dense_units):
+def densenet121_bigger(dropout_rate, dense_units):
+    """A model consisting of a densenet_121 model and a bigger output model on the top."""
     base_model = DenseNet121(
         weights='imagenet',
         include_top=False,

@@ -2,32 +2,33 @@ import tensorflow as tf
 from tensorflow.python.keras.api._v2.keras import layers, Sequential, regularizers
 import tensorflow.keras as keras
 
-###########################################################################################################
-# 0. 定义一个3x3卷积！
+
 def regularized_padded_conv(*args, **kwargs):
-    '''
-    kernel_initializer='glorot_normal':
-    kernel_initializer='he_normal'
-    '''
+    """
+    Define a 3x3 convolution with l2 regularizer and different kernel_initializers
+    kernel_initializer='glorot_normal', 'he_normal', 'lecun_normal'...
+
+    """
     return layers.Conv2D(*args, **kwargs, padding='same', kernel_regularizer=regularizers.l2(5e-5),
                          use_bias=False, kernel_initializer='he_normal')
 
-# Define Basic Block for Resnet18 and Resnet34
+
 class BasicBlock(layers.Layer):
+    """Define Basic Block for Resnet18 and Resnet34"""
     expansion = 1
 
     def __init__(self, in_channels, out_channels, stride=1):
         super(BasicBlock, self).__init__()
 
-        # 1. BasicBlock模块中的第1个卷积层;
+        # The first conv+bn
         self.conv1 = regularized_padded_conv(out_channels, kernel_size=3, strides=stride)
         self.bn1 = layers.BatchNormalization()
 
-        # 2. BasicBlock模块中的第2个卷积;第1个卷积如果做stride就会有一个下采样，在这个里面就不做下采样了。这一块始终保持size一致，把stride固定为1
+        # The second conv+bn
         self.conv2 = regularized_padded_conv(out_channels, kernel_size=3, strides=1)
         self.bn2 = layers.BatchNormalization()
 
-        # 3. 判断stride是否等于1,如果为1就是没有降采样。
+        # Define shortcut
         if stride != 1 or in_channels != self.expansion * out_channels:
             self.shortcut = Sequential([regularized_padded_conv(self.expansion * out_channels, kernel_size=1, strides=stride),
                                         layers.BatchNormalization()])
@@ -35,7 +36,6 @@ class BasicBlock(layers.Layer):
             self.shortcut = lambda x, _: x
 
     def call(self, inputs, training=False):
-        # if training: print("=> training network ... ")
         out = self.conv1(inputs)
         out = self.bn1(out, training=training)
         out = tf.nn.relu(out)
@@ -48,9 +48,9 @@ class BasicBlock(layers.Layer):
 
         return out
 
-###########################################################################################################
-# Define Bottleneck for Resnet50,Resnet101 and Resnet152;
+
 class Bottleneck(tf.keras.Model):
+    """Define Bottleneck for Resnet50,Resnet101 and Resnet152"""
     expansion = 4
 
     def __init__(self, in_channels, out_channels, strides=1):
@@ -68,7 +68,7 @@ class Bottleneck(tf.keras.Model):
             self.shortcut = Sequential([layers.Conv2D(self.expansion * out_channels, kernel_size=1, strides=strides, use_bias=False),
                                         layers.BatchNormalization()])
         else:
-            self.shortcut = lambda x,_: x
+            self.shortcut = lambda x, _: x
 
     def call(self, x, training=False):
         out = tf.nn.relu(self.bn1(self.conv1(x), training))
@@ -80,22 +80,10 @@ class Bottleneck(tf.keras.Model):
 
         return out
 
-###########################################################################################################
-# 2. ResBlock 模块。继承keras.Model或者keras.Layer都可以
+
 class ResNet(keras.Model):
-    """Defines a ResNet architecture.
+    """Defines a ResNet architecture."""
 
-        Parameters:
-            input_shape (tuple: 3): input shape of the neural network
-            n_classes (int): number of classes, corresponding to the number of output neurons
-            base_filters (int): number of base filters, which are doubled for every VGG block
-            n_blocks (int): number of VGG blocks
-            dense_units (int): number of dense units
-            dropout_rate (float): dropout rate
-
-        Returns:
-            (keras.Model): keras model object
-        """
     def __init__(self, blocks, layer_dims, problem_type, initial_filters=64, num_classes=2):
         super(ResNet, self).__init__()
         self.in_channels = initial_filters
@@ -130,8 +118,7 @@ class ResNet(keras.Model):
 
         return res_blocks
 
-    def call(self,inputs, training=False):
-        # __init__中准备工作完毕；下面完成前向运算过程。
+    def call(self, inputs, training=False):
         out = self.stem(inputs, training)
         out = tf.nn.relu(out)
 
@@ -142,31 +129,33 @@ class ResNet(keras.Model):
         # out = self.final_bn(out, training=training)
         # out = tf.nn.relu(out)
 
-        # 做一个global average pooling，得到之后只会得到一个channel，不需要做reshape操作了。
-        # shape为 [batchsize, channel]
+
         out = self.avgpool(out)
-        # # [b, 100]
         out = self.fc(out)
 
         return out
 
-###########################################################################################################
-""" Resnet18 """
+
 def ResNet18(problem_type, num_classes):
+    """ Resnet18 """
     return ResNet(BasicBlock, [2, 2, 2, 2], problem_type=problem_type, num_classes=num_classes)
 
-""" ResNet-34"""
+
 def ResNet34(problem_type, num_classes):
+    """ ResNet-34"""
     return ResNet(BasicBlock, [3, 4, 6, 3], problem_type=problem_type, num_classes=num_classes)
 
-""" Resnet50 """
+
 def ResNet50(problem_type, num_classes):
+    """ Resnet50 """
     return ResNet(Bottleneck, [3, 4, 6, 3], problem_type=problem_type, num_classes=num_classes)
 
-""" Resnet101 """
+
 def ResNet101(problem_type, num_classes):
+    """ Resnet101 """
     return ResNet(Bottleneck, [3, 4, 23, 3], problem_type=problem_type, num_classes=num_classes)
 
-""" Resnet152 """
+
 def ResNet152(problem_type, num_classes):
+    """ Resnet152 """
     return ResNet(Bottleneck, [3, 8, 36, 3], problem_type=problem_type, num_classes=num_classes)

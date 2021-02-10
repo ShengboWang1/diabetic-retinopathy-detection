@@ -2,9 +2,8 @@ import tensorflow as tf
 import cv2
 import numpy as np
 from tensorflow.keras.models import Model
-from models.resnet import resnet50
-from matplotlib import pyplot as plt
 from input_pipeline.preprocessing import preprocess
+
 
 class GradCAM:
     # Adapted with some modification from https://www.pyimagesearch.com/2020/03/09/grad-cam-visualize-class-activation-maps-with-keras-tensorflow-and-deep-learning/
@@ -25,7 +24,7 @@ class GradCAM:
         raise ValueError("Could not find 4D layer. Cannot apply GradCAM")
 
     def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
-        gradModel = Model(
+        gradmodel = Model(
             inputs=[self.model.inputs],
             outputs=[self.model.get_layer(name=self.layerName).output, self.model.output]
         )
@@ -33,7 +32,7 @@ class GradCAM:
 
         with tf.GradientTape() as tape:
             inputs = tf.cast(image, tf.float32)
-            (convOuts, preds) = gradModel(inputs)  # preds after softmax
+            (convOuts, preds) = gradmodel(inputs)  # preds after softmax
             loss = preds[:, classIdx]
 
         # compute gradients with automatic differentiation
@@ -59,14 +58,16 @@ class GradCAM:
         cam3 = tf.image.pad_to_bounding_box(cam3, 0, 266, 2848, 4288)
         return cam3
 
+
 def overlay_gradCAM(img, cam3):
     cam3 = np.uint8(255 * cam3)
     cam3 = cv2.applyColorMap(cam3, cv2.COLORMAP_JET)
 
     new_img = 0.3 * cam3 + 0.5 * img
-    #new_img = 0.3 * cam3 + img
+    # new_img = 0.3 * cam3 + img
 
     return (new_img * 255.0 / new_img.max()).astype("uint8")
+
 
 def get_img_array(img_path):
     img = tf.keras.preprocessing.image.load_img(img_path)

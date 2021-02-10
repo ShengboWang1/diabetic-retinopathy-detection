@@ -3,7 +3,6 @@
 # availabel values: 'densenet121','inception_v3', 'inception_resnet_v2', 'densenet121_bigger'
 
 preprocess.model_name = 'resnet18'
-# main.model_name = 'densenet121'
 
 
 # Architectures

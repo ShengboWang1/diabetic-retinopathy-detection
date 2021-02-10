@@ -3,15 +3,16 @@ import logging
 import tensorflow as tf
 import tensorflow_datasets as tfds
 from input_pipeline.preprocessing import preprocess, augment
-import matplotlib.pyplot as plt
-import os
+
 
 @gin.configurable
-def load(device_name, dataset_name, n_classes, data_dir_local, data_dir_GPU, data_dir_Colab):
+def load(device_name, dataset_name, n_classes, data_dir_local, data_dir_gpu, data_dir_colab):
+    # Load idrid dataset
     if dataset_name == "idrid":
         logging.info(f"Preparing dataset {dataset_name}...")
         # 2 classes
         print(device_name)
+        # Find corresponding TFRecord files for 2/5 classes problem and for differnet devices
         if device_name == 'local':
             train_filename = "/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/idrid-" + str(n_classes) + "balanced-train.tfrecord-00000-of-00001"
             test_filename = "/Users/shengbo/Documents/Github/dl-lab-2020-team06/diabetic_retinopathy/idrid-" + str(n_classes) + "balanced-test.tfrecord-00000-of-00001"
@@ -24,6 +25,7 @@ def load(device_name, dataset_name, n_classes, data_dir_local, data_dir_GPU, dat
         else:
             raise ValueError
 
+        # Get datasets from TFRecords
         raw_ds_train = tf.data.TFRecordDataset(train_filename)
         ds_test = tf.data.TFRecordDataset(test_filename)
         ds_info = "idrid"
@@ -36,6 +38,7 @@ def load(device_name, dataset_name, n_classes, data_dir_local, data_dir_GPU, dat
         }
 
         def _parse_function(exam_proto):
+            """Get images and labels"""
             temp = tf.io.parse_single_example(exam_proto, feature_description)
             img = tf.io.decode_jpeg(temp['image'], channels=3)
             img = tf.reshape(img, [2848, 4288, 3])
@@ -51,21 +54,18 @@ def load(device_name, dataset_name, n_classes, data_dir_local, data_dir_GPU, dat
         ds_val = raw_ds_train.take(150)
         ds_train = raw_ds_train.skip(150)
 
-        # resamping imbalanced data
-        # nonref_ds = (ds_train.filter(lambda features, label: label == 0).repeat())
-        # ref_ds = (ds_train.filter(lambda features, label: label == 1).repeat())
-        # ds_train = tf.data.experimental.sample_from_datasets([nonref_ds, ref_ds], [0.5, 0.5])
-
         return prepare(ds_train, ds_val, ds_test, ds_info)
 
+    # Load eyepacs dataset
     elif dataset_name == "eyepacs":
         logging.info(f"Preparing dataset {dataset_name}...")
         if device_name == 'local':
             data_dir = data_dir_local
         if device_name == 'iss GPU':
-            data_dir = data_dir_GPU
+            data_dir = data_dir_gpu
         if device_name == 'Colab':
-            data_dir = data_dir_Colab
+            data_dir = data_dir_colab
+
         (ds_train, ds_val, ds_test), ds_info = tfds.load(
             'diabetic_retinopathy_detection/btgraham-300:3.0.0',
             split=['train', 'validation', 'test'],
@@ -82,22 +82,6 @@ def load(device_name, dataset_name, n_classes, data_dir_local, data_dir_GPU, dat
         ds_test = ds_test.map(_preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
         return prepare(ds_train, ds_val, ds_test, ds_info)
-
-    elif dataset_name == "mnist":
-        logging.info(f"Preparing dataset {dataset_name}...")
-        (ds_train, ds_val, ds_test), ds_info = tfds.load(
-            'mnist',
-            split=['train[:90%]', 'train[90%:]', 'test'],
-            shuffle_files=True,
-            as_supervised=True,
-            with_info=True,
-            data_dir=data_dir
-        )
-
-        return prepare(ds_train, ds_val, ds_test, ds_info)
-
-    else:
-        raise ValueError
 
 
 @gin.configurable

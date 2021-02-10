@@ -3,21 +3,22 @@ from guided_backpropagation import GuidedBackprop, deprocess_image
 import cv2
 from matplotlib import pyplot as plt
 import os
-from models.resnet import resnet50
 import tensorflow as tf
 
 image_paths = ["./IDRID_dataset/images/train/IDRiD_003.jpg",
                "./IDRID_dataset/images/train/IDRiD_010.jpg",
                "./IDRID_dataset/images/train/IDRiD_087.jpg"]
 
+
 def visualize(model, layername, save_path):
+    """Perform visalization on a series of images"""
     i = 0
     plt.figure()
     for image_path in image_paths:
         i += 1
         image = get_img_array(image_path)
 
-        # plot original image
+        # Plot original image
         original_image = cv2.imread(image_path)
         plt.matshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
         plt.title("original_image 0" + str(i))
