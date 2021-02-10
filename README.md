@@ -41,9 +41,11 @@ Eyepacs:
 Train model:
 
 `python3 main.py --train=True  --model_name='multi-rnn' --device_name='iss GPU' --kernel_initializer='he_normal'`
+
 Evaluate model:
 
 `python3 main.py --train=False  --model_name='multi-rnn' --device_name='iss GPU' --kernel_initializer='he_normal'`
+
 Ensemble learning, evaluate and visualization:
 
 `python3 ensemble.py`
