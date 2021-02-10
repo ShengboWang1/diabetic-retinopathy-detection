@@ -69,6 +69,19 @@ Comparison between different initializers:
 | :---: |:---: | :---: | :---: | :---: |
 | Test accuracy | 86.41% | 78.64% | 82.52% | 78.64% | 
 
+Results of the hyperparameter optimization:
+
+|  | Accuracy | Sensitivity/Recall | Specificity | Precision | F1 score |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| VGG | 88.34% | 0.875 | 0.897 | 0.933 | 0.903 |
+| ResNet18 | 86.41% | 0.828 | 0.9231 | 0.946 | 0.883 |
+| ResNet34 | 86.41% | 0.797 | 0.974 | 0.981 | 0.879 |
+| MobileNet | 73.44% | 0.821 | 0.821 | 0.870 | 0.797 |
+| InceptionV3 | 80.58% | 0.875 | 0.692 | 0.824 | 0.849 |
+| InceptionResNetV2 | 80.58% | 0.797 | 0.821 | 0.879 | 0.836 |
+| DenseNet | 80.58% | 0.797 | 0.821 | 0.879 | 0.836 |
+| Voting | 89.32% | 0.844 | 0.974 | 0.982 | 0.908 |
+| Averaging | 89.32% | 0.844 | 0.974 | 0.982 | 0.908 |
 
 ## Human activity recognition
 
