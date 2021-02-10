@@ -2,9 +2,7 @@ import tensorflow as tf
 import cv2
 import numpy as np
 from tensorflow.keras.models import Model
-from tensorflow.python.framework import ops
 from tensorflow.keras import backend as K
-from gradcam import get_img_array
 
 
 @tf.custom_gradient
@@ -76,5 +74,3 @@ def deprocess_image(x):
         x = x.transpose((1, 2, 0))
     x = np.clip(x, 0, 255).astype('uint8')
     return x
-
-

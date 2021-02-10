@@ -7,14 +7,13 @@ from input_pipeline import datasets
 from utils import utils_params, utils_misc
 from models.simple_rnn import simple_rnn
 from models.cnn_lstm import cnn_lstm
-from models.multi_lstm import multi_lstm
-from input_pipeline import plot_data
+from models.multi_rnn import multi_rnn
 
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')
 flags.DEFINE_string('device_name', 'local', 'Prepare different paths for local, iss GPU and Colab')
-flags.DEFINE_string('model_name', 'multi_lstm', 'Prepare different models')
+flags.DEFINE_string('model_name', 'multi_rnn', 'Prepare different models')
 flags.DEFINE_string('kernel_initializer', 'he_normal', 'try different kernel initializers for ensemble learning')
 
 
@@ -46,8 +45,8 @@ def main(argv):
         model = simple_rnn(rnn_type='GRU', window_size=window_size, kernel_initializer=FLAGS.kernel_initializer)
     elif FLAGS.model_name == 'cnn_lstm':
         model = cnn_lstm(window_size=window_size, kernel_initializer=FLAGS.kernel_initializer)
-    elif FLAGS.model_name == 'multi_lstm':
-        model = multi_lstm(rnn_type='GRU', window_size=window_size, kernel_initializer=FLAGS.kernel_initializer)
+    elif FLAGS.model_name == 'multi_rnn':
+        model = multi_rnn(rnn_type='GRU', window_size=window_size, kernel_initializer=FLAGS.kernel_initializer)
     else:
         raise ValueError
 
@@ -59,7 +58,6 @@ def main(argv):
             continue
 
     else:
-        plot_data.plot_data(model, ds_test, run_paths)
         evaluate(model,
                  ds_test,
                  run_paths)

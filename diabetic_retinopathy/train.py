@@ -167,8 +167,7 @@ class Trainer(object):
                 yield self.val_accuracy.result().numpy()
 
             if step % self.ckpt_interval == 0:
-
-                # Check if val_loss decrease or not
+                # Save checkpoint if val accuracy is better
                 if self.max_acc < acc:
                     self.min_loss = loss
                     self.max_acc = acc

@@ -4,7 +4,7 @@ from ray import tune
 from input_pipeline.datasets import load
 from train import Trainer
 from utils import utils_params, utils_misc
-from models.multi_lstm import multi_lstm
+from models.multi_rnn import multi_rnn
 from absl import app, flags
 
 
@@ -41,7 +41,7 @@ def train_func(config):
     ds_train, ds_val, ds_test, window_size = load(device_name=device_name)
 
     # model
-    model = multi_lstm(rnn_type='GRU', window_size=window_size)
+    model = multi_rnn(rnn_type='GRU', window_size=window_size)
 
     trainer = Trainer(model, ds_train, ds_val, run_paths)
     for val_accuracy in trainer.train():
@@ -52,12 +52,12 @@ config = {
         "Trainer.total_steps": tune.grid_search([5000]),
         #"create_tfr.window_size": tune.choice([250, 200, 150, 100]),
         #"create_tfr.shift_window_size": tune.choice([125, 100, 75, 50]),
-        #"multi_lstm.dense_units": tune.choice([512]),
-        #"multi_lstm.n_lstm": tune.choice([1, 2, 3]),
-        #"multi_lstm.n_dense": tune.choice([1, 2, 3]),
-        #"multi_lstm.rnn_units": tune.choice([16, 32, 64, 128, 256, 512]),
-        #"multi_lstm.dropout_rate": tune.uniform(0.1, 0.8),
-        "multi_lstm.kernel_initializer": tune.choice(["'glorot_uniform'", "'glorot_normal'", "'random_uniform'", "'he_uniform'", "'he_normal'", "'lecun_normal'", "'lecun_uniform'", "'TruncatedNormal'"])
+        #"multi_rnn.dense_units": tune.choice([512]),
+        #"multi_rnn.n_lstm": tune.choice([1, 2, 3]),
+        #"multi_rnn.n_dense": tune.choice([1, 2, 3]),
+        #"multi_rnn.rnn_units": tune.choice([16, 32, 64, 128, 256, 512]),
+        #"multi_rnn.dropout_rate": tune.uniform(0.1, 0.8),
+        "multi_rnn.kernel_initializer": tune.choice(["glorot_uniform", "glorot_normal", "random_uniform", "he_uniform", "he_normal", "lecun_normal", "lecun_uniform", "TruncatedNormal"])
     }
 
 if device_name == 'local':

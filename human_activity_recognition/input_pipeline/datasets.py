@@ -6,13 +6,18 @@ import tensorflow_datasets as tfds
 from input_pipeline.preprocessing import preprocess
 from input_pipeline.create_tfrecord import create_tfr
 
+
 @gin.configurable
 def load(device_name, name, data_dir_local, data_dir_gpu, data_dir_colab):
+    """Load hapt dataset"""
     if name == "hapt":
         logging.info(f"Preparing dataset {name}...")
-        # 2 classes
         print(device_name)
+
+        # Get window size
         window_size = create_tfr(device_name=device_name)
+
+        # Find corresponding TFRecord files for differnet devices
         if device_name == 'local':
             train_filename = data_dir_local + "no0_train.tfrecord"
             val_filename = data_dir_local + "no0_val.tfrecord"
@@ -28,6 +33,7 @@ def load(device_name, name, data_dir_local, data_dir_gpu, data_dir_colab):
         else:
             raise ValueError
 
+        # Get datasets from TFRecords
         raw_ds_train = tf.data.TFRecordDataset(train_filename)
         raw_ds_val = tf.data.TFRecordDataset(val_filename)
         raw_ds_test = tf.data.TFRecordDataset(test_filename)
@@ -37,20 +43,12 @@ def load(device_name, name, data_dir_local, data_dir_gpu, data_dir_colab):
             'label': tf.io.FixedLenFeature([], tf.string, default_value=''),
         }
 
-
         def _parse_function(exam_proto):
+            """Get features and labels"""
             temp = tf.io.parse_single_example(exam_proto, feature_description)
             feature = tf.io.parse_tensor(temp['feature'], out_type=tf.float64)
-            # temp_tensor = tf.convert_to_tensor(feature)
-            # feature = tf.strings.to_number(tf.strings.split(temp_tensor, sep=" "))
-
-
-            # tf.strings.split(feature, sep=","
-            # feature = tf.strings.to_number(feature, tf.float32)
-            # feature = tf.reshape(feature, [250, 6])
             label = tf.io.parse_tensor(temp['label'], out_type=tf.int64)
             return (feature, label)
-
 
         ds_train = raw_ds_train.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         ds_val = raw_ds_val.map(_parse_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)

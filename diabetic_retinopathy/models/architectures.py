@@ -3,6 +3,7 @@ import tensorflow as tf
 
 from models.layers import vgg_block
 
+
 @gin.configurable
 def vgg_like(input_shape, n_classes, base_filters, n_blocks, dense_units, dropout_rate):
     """Defines a VGG-like architecture.
@@ -31,4 +32,3 @@ def vgg_like(input_shape, n_classes, base_filters, n_blocks, dense_units, dropou
     outputs = tf.keras.layers.Dense(n_classes, activation='softmax')(out)
 
     return tf.keras.Model(inputs=inputs, outputs=outputs, name='vgg_like')
-

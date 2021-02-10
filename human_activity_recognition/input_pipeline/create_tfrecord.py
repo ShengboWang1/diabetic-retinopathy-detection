@@ -8,6 +8,7 @@ import gin
 
 @gin.configurable
 def create_tfr(shift_window_size, window_size, device_name):
+    """Create TFRecord files according to the shift size and window size"""
     if device_name == 'local':
         base_datadir = '/Users/shengbo/Documents/Github/dl-lab-2020-team06/HAPT_dataset/'
     elif device_name == 'iss GPU':
@@ -16,23 +17,24 @@ def create_tfr(shift_window_size, window_size, device_name):
         base_datadir = '/content/drive/MyDrive/HAPT_dataset/'
     else:
         raise ValueError
-    # load file to transfer txt file into pandas dataframe
+
     def load_file(filepath, names):
+        """Load file to transfer txt file into pandas dataframe"""
         dataframe = pd.read_table(filepath, names=names, delim_whitespace=True)
         return dataframe
 
-    # load activity labels
+    # Load activity labels
     activity_labels_df = load_file(base_datadir + 'activity_labels.txt',
                                    names=["number", "label"])
 
-    # load raw labels
+    # Load raw labels
     rawdata_path = base_datadir + 'RawData/'
     raw_labels_df = load_file(rawdata_path + 'labels.txt',
                               names=["experiment", "user_id",
                                      "activity", "start_pos",
                                      "end_pos"])
 
-    # sort all acc and gyro files and load them into pandas dataframe
+    # Sort all acc and gyro files and load them into pandas dataframe
     acc_pattern = 'acc_exp*.txt'
     gyro_pattern = 'gyro_exp*.txt'
     acc_files = glob(os.path.join(rawdata_path, acc_pattern))
@@ -45,8 +47,8 @@ def create_tfr(shift_window_size, window_size, device_name):
     file_info['experiment'] = file_info['acc'].apply(lambda x: x[7:9])
     file_info['user_ID'] = file_info['acc'].apply(lambda x: x[14:16])
 
-    # read contents of single file to a dataframe with acc and gyro data.
     def read_rawdata(experiment, user_id):
+        """Read contents of single file to a dataframe with acc and gyro data."""
         read_rawdata_acc_path = rawdata_path + 'acc' + '_exp' + experiment + '_user' + user_id + '.txt'
         read_rawdata_gyro_path = rawdata_path + 'gyro' + '_exp' + experiment + '_user' + user_id + '.txt'
         rawfile_acc_df = load_file(read_rawdata_acc_path, ['a_x', 'a_y', 'a_z'])
@@ -54,8 +56,8 @@ def create_tfr(shift_window_size, window_size, device_name):
         rawfile_df = pd.concat([rawfile_acc_df, rawfile_gyro_df], axis=1)
         return rawfile_df
 
-    # function to read a given file and get the labels of the observations
     def label_rawdata(experiment, user_id):
+        """Function to read a given file and get the labels of the observations"""
         get_raw_labels_df = raw_labels_df[
             (raw_labels_df["experiment"] == int(experiment)) & (raw_labels_df["user_id"] == int(user_id))]
         label_list_df = pd.DataFrame(0, index=np.arange(read_rawdata(experiment, user_id).shape[0]), columns=['label'])
@@ -78,8 +80,8 @@ def create_tfr(shift_window_size, window_size, device_name):
     val_y = pd.DataFrame()
     test_y = pd.DataFrame()
 
-
     def create_dataset(start_num, end_num, ds_x, ds_y, file_info=file_info, x={}, y={}):
+        """Conbine the files to create training, validation and test set, return 6-axial data and label pandas dataframe"""
         for i in range(start_num, end_num):
             x[i] = read_rawdata(file_info['experiment'][i], file_info['user_ID'][i])
             a = len(x[i])
@@ -107,10 +109,8 @@ def create_tfr(shift_window_size, window_size, device_name):
     val_x, val_y = create_dataset(start_num=56, end_num=61, ds_x=val_x, ds_y=val_y)
     test_x, test_y = create_dataset(start_num=44, end_num=55, ds_x=test_x, ds_y=test_y)
 
-
-    # input normalization, Z-score normalization
-    # apply the z-score method in Pandas using the .mean() and .std() methods
     def z_score(df):
+        """Z-score normalization"""
         # copy the dataframe
         df_std = df.copy()
         # apply the z-score method
@@ -118,7 +118,7 @@ def create_tfr(shift_window_size, window_size, device_name):
             df_std[column] = (df_std[column] - df_std[column].mean()) / df_std[column].std()
 
         return df_std
-    #
+
     train_x = z_score(train_x)
     val_x = z_score(val_x)
     test_x = z_score(test_x)
@@ -184,12 +184,12 @@ def create_tfr(shift_window_size, window_size, device_name):
         return example_proto.SerializeToString()
 
     def tf_window_example(f_acc_gyro, label):
+        """Specify the shape and type information that is otherwise unavailable"""
         tf_string = tf.py_function(
             window_example,
             (f_acc_gyro, label),  # pass these args to the above function.
             tf.string)  # the return type is `tf.string`.
         return tf.reshape(tf_string, ())  # The result is a scalar
-
 
     train_map_ds = train_ds.map(tf_window_example)
     val_map_ds = val_ds.map(tf_window_example)
@@ -237,6 +237,7 @@ def create_tfr(shift_window_size, window_size, device_name):
 
     else:
         raise ValueError
+
     writer = tf.data.experimental.TFRecordWriter(train_filename)
     writer.write(serialized_train_ds)
 

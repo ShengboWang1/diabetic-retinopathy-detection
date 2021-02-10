@@ -67,17 +67,6 @@ class Trainer(object):
         predictions = self.model(features, training=False)
         v_loss = self.loss_object(labels, predictions)
 
-        # label_preds = np.argmax(predictions, -1)
-        # labels = labels.numpy()
-        # binary_true = np.squeeze(labels)
-        # binary_pred = np.squeeze(label_preds)
-        #
-        # binary_accuracy = metrics.accuracy_score(binary_true, binary_pred)
-        # binary_confusion_matrix = metrics.confusion_matrix(binary_true, binary_pred)
-        #
-        # tf.print(binary_accuracy)
-        # tf.print(binary_confusion_matrix)
-
         self.val_loss(v_loss)
         self.val_accuracy(labels, predictions)
 
@@ -107,10 +96,7 @@ class Trainer(object):
                 # ...train test loss accuracy
                 with self.train_summary_writer.as_default():
                     tf.summary.scalar('train_loss', self.train_loss.result(), step=step)
-                    # tf.summary.scalar('train_loss', self.train_loss.result(), step=self.optimizer.iterations)
                     tf.summary.scalar('train_accuracy', self.train_accuracy.result() * 100, step=step)
-                    # tf.summary.scalar('train_accuracy', self.train_accuracy.result() * 100,
-                    #                  step=self.optimizer.iterations)
                 with self.test_summary_writer.as_default():
                     tf.summary.scalar('val_loss', self.val_loss.result(), step=step)
                     tf.summary.scalar('val_accuracy', self.val_accuracy.result() * 100, step=step)

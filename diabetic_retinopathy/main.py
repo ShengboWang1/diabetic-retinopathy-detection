@@ -1,6 +1,5 @@
 import gin
 import logging
-import tensorflow as tf
 from absl import app, flags
 from train import Trainer
 from evaluation.eval import evaluate
@@ -10,7 +9,7 @@ from models.resnet import resnet18, resnet34, resnet50, resnet50_original
 from models.resnet_1 import ResNet18, ResNet34, ResNet50, ResNet101, ResNet152
 from models.transfer_models import inception_resnet_v2, inception_v3, mobilenet
 from models.architectures import vgg_like
-from models.densenet import densenet121,densenet121_bigger
+from models.densenet import densenet121, densenet121_bigger
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('train', False, 'Specify whether to train or evaluate a model.')

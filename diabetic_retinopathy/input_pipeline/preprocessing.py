@@ -7,12 +7,13 @@ import tensorflow_addons as tfa
 @gin.configurable
 def preprocess(image, label, img_height, img_width, model_name):
     """Dataset preprocessing: Normalizing and resizing"""
-    # print(image.shape)
+    # original shpae (2848, 4288, 3)print(image.shape)
     image = tf.image.crop_to_bounding_box(image, 0, 266, 2848, 3426)
-    # print(image.shape)
+    # (2848, 3426, 3)
     image = tf.image.pad_to_bounding_box(image, 289, 0, 3426, 3426)
-    # print(image.shape)
+    # (3426, 2436, 3)
     image = tf.image.resize(image, size=(img_height, img_width))
+    # (256,256,3)
     image = tf.cast(image, tf.float32)
 
     if model_name == 'vgg':
@@ -45,23 +46,21 @@ def preprocess(image, label, img_height, img_width, model_name):
     return image, label
 
 
-# all the possible operations here, need to separate them afterwards
 @gin.configurable
 def augment(image, label):
     """Data augmentation"""
 
-    # random rotate the image by +- 0.125pi
+    # Randomly rotate the image by +- 0.125pi
     random_angles = tf.random.uniform(shape=(), minval=-np.pi / 8, maxval=np.pi / 8)
     image = tfa.image.rotate(image, random_angles)
-    # image = tf.image.rot90(image, k=tf.random.uniform([1], minval=0, maxval=4, dtype=tf.int32)[0])
 
-    # likely tp flipp the image from left to right
-    # 50% possibility up to down
+    # 50% possibility up to down flipping
     image = tf.image.random_flip_up_down(image)
-    # 50% possibility left to right
+
+    # 50% possibility left to right flipping
     image = tf.image.random_flip_left_right(image)
 
-    # randomly crop the image from left and right sides and scale it to the original size
+    # Randomly crop the image from left and right sides and scale it to the original size
     image = tf.image.convert_image_dtype(image, dtype=tf.float32)
     in_h = image.shape[0]
     in_w = image.shape[1]
@@ -79,16 +78,16 @@ def augment(image, label):
     y_shear = tf.random.uniform([1], minval=-0.1, maxval=0.1, dtype=tf.float32)[0]
     image = tfa.image.transform(image, [1.0, x_shear, 0, y_shear, 1.0, 0.0, 0.0, 0.0])
 
-    # Random_brightness
+    # Random brightness
     image = tf.image.random_brightness(image, max_delta=0.1)
 
-    # Random_saturation
+    # Random saturation
     image = tf.image.random_saturation(image, lower=0.75, upper=1.5)
 
-    # Random_hue
+    # Random hue
     image = tf.image.random_hue(image, max_delta=0.01)
 
-    # Random_contrast
+    # Random contrast
     image = tf.image.random_contrast(image, lower=0.75, upper=1.5)
 
     return image, label

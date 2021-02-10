@@ -6,13 +6,26 @@ from input_pipeline import datasets
 from sklearn.metrics import accuracy_score
 import numpy as np
 import gin
-from absl import app, flags
 from utils import utils_params, utils_misc
 import logging
 from evaluation.eval import plot_roc
 
 
 def ensemble_averaging(ds_test, models, num_models):
+    """ Combine models by averaging the predictions
+
+    Parameters:
+        ds_test (dataset): tensorflow dataset object
+        models (tuple: 3 keras.model): the models models that we use for ensemble
+        num_models (int): number of models that we use for ensemble
+
+    Returns:
+        accuracy_score(float): accuracy of this ensemble model
+        test_cm(keras.metric): confusion matrix
+        test_labels(np array): true labels of the dataset
+        ensembled_predictions(Tensor): predictions of ensemble model
+    """
+
     test_cm = ConfusionMatrixMetric(num_classes=2)
     for test_images, test_labels in ds_test:
         total_pred_predictions = 0
@@ -32,10 +45,22 @@ def ensemble_averaging(ds_test, models, num_models):
 
 
 def ensemble_voting(ds_test, models, num_models):
+    """ Combine models by voting
+
+    Parameters:
+        ds_test (dataset): tensorflow dataset object
+        models (tuple: 3 keras.model): the models models that we use for ensemble
+        num_models (int): number of models that we use for ensemble
+
+    Returns:
+        accuracy_score(float): accuracy of this ensemble model
+        test_cm(keras.metric): confusion matrix
+        test_labels(np array): true labels of the dataset
+        ensembled_predictions(Tensor): predictions of ensemble model
+    """
     test_cm = ConfusionMatrixMetric(num_classes=2)
     for test_images, test_labels in ds_test:
         total_pred_labels = 0
-        i = 0
         for model in models:
             predictions = model(test_images, training=False)
             # label_pred = np.argmax(predictions, -1)
@@ -54,6 +79,7 @@ def ensemble_voting(ds_test, models, num_models):
         print(ensembled_labels)
 
     return accuracy_score(test_labels, ensembled_labels), test_cm, test_labels, one_hot_predictions
+
 
 # generate folder structures
 run_paths = utils_params.gen_run_folder()
@@ -89,23 +115,27 @@ model3.compile(optimizer='adam', loss='SparseCategoricalCrossentropy', metrics='
 
 models = [model1, model2, model3]
 
-acc, test_cm, test_labels, ensembled_predictions = ensemble_voting(ds_test, models, num_models=3)
+acc, cm, test_labels, predictions = ensemble_voting(ds_test, models, num_models=3)
 
-print(acc)
+# Show accuracy
+template = 'accuracy{}'
+logging.info(template.format(acc))
 
+# Confusion matrix
 template = 'Confusion Matrix:\n{}'
-logging.info(template.format(test_cm.result().numpy()))
+logging.info(template.format(cm.result().numpy()))
 
-# Compute sensitivity and specificity from the confusion matrix
-sensitivity, specificity, precision, f1 = test_cm.process_confusion_matrix()
+# Compute some other metrics from the confusion matrix
+sensitivity, specificity, precision, f1 = cm.process_confusion_matrix()
 template = 'Sensitivity: {}, Specificity: {}, Precision: {}, F1: {}'
 logging.info(template.format(sensitivity, specificity, precision, f1))
-print(test_cm.result().numpy())
+print(cm.result().numpy())
 print("sensitivity, specificity")
 print(sensitivity)
 print(specificity)
 print(precision)
 print(f1.numpy())
 
+# Plot roc and compute auc
 plot_path = '/content/drive/MyDrive/diabetic_retinopathy/'
-plot_roc(labels=test_labels, predictions= ensembled_predictions[:, 1], plot_path=plot_path)
+plot_roc(labels=test_labels, predictions=predictions[:, 1], plot_path=plot_path)

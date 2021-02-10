@@ -3,7 +3,7 @@ from tensorflow.keras.applications import InceptionResNetV2, InceptionV3, Mobile
 
 
 def output(base_model, inputs, num_classes):
-    # make a small uniform model on the top of following transfer models
+    """Make a small uniform model on the top of following transfer models"""
     x = base_model(inputs, training=False)
     x = layers.GlobalAveragePooling2D()(x)
     x = layers.Dropout(0.2)(x)
@@ -12,6 +12,7 @@ def output(base_model, inputs, num_classes):
 
 
 def inception_resnet_v2(num_classes=2):
+    """Inception_resnet_v2 + a output model"""
     base_model = InceptionResNetV2(
         weights='imagenet',
         include_top=False,
@@ -28,6 +29,7 @@ def inception_resnet_v2(num_classes=2):
 
 
 def inception_v3(num_classes=2):
+    """Inception_v3 + a output model"""
     base_model = InceptionV3(
         weights='imagenet',
         include_top=False,
@@ -43,6 +45,7 @@ def inception_v3(num_classes=2):
 
 
 def mobilenet(num_classes=2):
+    """Mobilenet + a output model"""
     base_model = MobileNet(
         weights='imagenet',
         include_top=False,
