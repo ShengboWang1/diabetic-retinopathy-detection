@@ -52,15 +52,20 @@ Ensemble learning, evaluate and visualization:
 
 # Results
 ## Diabetic retinopathy recognition
+Best configurations of VGG
 
-
-
-
+| base filters | n blocks | dense units | dropout rate | validation accuracy |
+| :---: | :---: | :---: | :---: | :---: |
+| 16 | 5 | 64 | 0.442636894 | 93.34% |
+| 16 | 4 | 32 | 0.259024206 | 91.13% |
+| 16 | 6 | 128 | 0.162307297 | 88.64% |
+| 8 | 3 | 32 | 0.502084817 | 78.02% |
+| 8 | 2 | 16 | 0.502084817 | 68.13% |
 
 
 ## Human activity recognition
 
-Hyperparameter Optimization:
+Hyperparameter optimization:
 
 | Trial | GRU layers | Desne layers | GRU units | Dense units | Window size | Shift size | Dropout rate | Val accuracy |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -69,6 +74,7 @@ Hyperparameter Optimization:
 | 3 | 1 | 2 | 32 | 128 | 250 | 75 | 0.566 | 85.1% |
 | 4 | 1 | 1 | 256 | 128 | 100 | 50 | 0.454 | 85.8% |
 | 5 | 1 | 1 | 256 | 128 | 250 | 125 | 0.248 | 88.4% |
+
 
 Kernel initializers and test accuracy:
 
@@ -85,13 +91,16 @@ Visualization of test label and predictions:
 ![04_gyro_pred](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/human_activity_recognition/04_gyro%20signals%20with%20predictions%20visualization.png)
 ![05_colormap](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/human_activity_recognition/05_colormap.png)
 
+
 Confusion Matrix:
 ![cm_6](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/human_activity_recognition/evaluation/cm_6.png)
 
-Normalised confusion matrix
+
+Normalised confusion matrix:
 ![normal_cm_6](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/human_activity_recognition/evaluation/normal_cm_6.png)
 
-Results of ensemble learning
+
+Results of ensemble learning:
 
 | Architecture | LSTM | GRU |
 | :---: | :---: | :---: |
