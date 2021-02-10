@@ -63,7 +63,7 @@ Ensemble learning, evaluate and visualization:
 Hyperparameter optimization:
 
 | Trial | GRU layers | Desne layers | GRU units | Dense units | Window size | Shift size | Dropout rate | Val accuracy |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- | :---: |
 | 1 | 2 | 3 | 512 | 256 | 250 | 125 | 0.471 | 92.9% |
 | 2 | 2 | 3 | 128 | 64 | 250 | 125 | 0.387 | 90.8% |
 | 3 | 1 | 2 | 32 | 128 | 250 | 75 | 0.566 | 85.1% |
