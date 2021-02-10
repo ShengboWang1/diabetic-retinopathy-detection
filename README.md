@@ -3,7 +3,7 @@
 - Junmao Liao (st165800)
 
 # How to run the code
-## Diabetic retinopathy recognition
+## [Diabetic retinopathy recognition](./diabetic retinopathy recognition)
 Train ResNet18 with idrid dataset:
 
 `python3 main.py --train=True  --model_name='resnet18' --num_classes=2 --problem_type='classification' --device_name='iss GPU' --dataset_name='idrid'`
