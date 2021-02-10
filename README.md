@@ -16,7 +16,7 @@ Try another model:
 
 `python3 main.py --train=True  --model_name='vgg' --num_classes=2 --problem_type='classification' --device_name='iss GPU' --dataset_name='idrid'`
 
-Ensemble learning:
+Ensemble learning and evaluate:
 
 `python3 ensemble.py`
 
@@ -44,7 +44,7 @@ Train model:
 Evaluate model:
 
 `python3 main.py --train=False  --model_name='multi-rnn' --device_name='iss GPU' --kernel_initializer='he_normal'`
-Ensemble learning:
+Ensemble learning, evaluate and visualization:
 
 `python3 ensemble.py`
 
