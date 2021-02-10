@@ -54,13 +54,20 @@ Ensemble learning, evaluate and visualization:
 ## Diabetic retinopathy recognition
 Best configurations of VGG
 
-| base filters | n blocks | dense units | dropout rate | validation accuracy |
+| Base filters | n Blocks | Dense units | Dropout rate | Val accuracy |
 | :---: | :---: | :---: | :---: | :---: |
 | 16 | 5 | 64 | 0.442636894 | 93.34% |
 | 16 | 4 | 32 | 0.259024206 | 91.13% |
 | 16 | 6 | 128 | 0.162307297 | 88.64% |
 | 8 | 3 | 32 | 0.502084817 | 78.02% |
 | 8 | 2 | 16 | 0.502084817 | 68.13% |
+
+
+Comparison between different initializers:
+
+| Initializer | He_normal | Glorot_normal | Lecun_normal | Orginial |
+| :---: |:---: | :---: | :---: | :---: |
+| Test accuracy | 86.41% | 78.64% | 82.52% | 78.64% | 
 
 
 ## Human activity recognition
@@ -76,11 +83,11 @@ Hyperparameter optimization:
 | 5 | 1 | 1 | 256 | 128 | 250 | 125 | 0.248 | 88.4% |
 
 
-Kernel initializers and test accuracy:
+Comparison between different initializers:
 
-| He_normal | Glorot_uniform | Glorot_normal |
-| :---: | :---: | :---: |
-| 0.930 | 0.929 | 0.941 | 
+| Initializer | He_normal | Glorot_uniform | Glorot_normal |
+| :---: |:---: | :---: | :---: |
+| Test accuracy | 0.930 | 0.929 | 0.941 | 
 
 
 Visualization of test label and predictions:
