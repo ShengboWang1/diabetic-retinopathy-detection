@@ -69,7 +69,7 @@ Hyperparameter optimization:
 
 
 | Trial | GRU layers | Desne layers | GRU units | Dense units | Window size | Shift size | Dropout rate | Val accuracy |
-|-------|------------|
+| ----- | ---------- |
 | Trial | GRU layers | Desne layers | GRU units | Dense units | Window size | Shift size | Dropout rate | Val accuracy |
 
 
