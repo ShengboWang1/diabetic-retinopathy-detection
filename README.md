@@ -53,11 +53,11 @@ Ensemble learning, evaluate and visualization:
 # Results
 ## Diabetic retinopathy recognition
 Resample and refine labels:
-![resample_and_refine](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/01_Resampling%20and%20refine%20labels.JPG)
+![resample_and_refine](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/01_dr/01_Resampling%20and%20refine%20labels.JPG)
 
 
 Data augmentation:
-![data_aug](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/02_data%20augmentation.JPG)
+![data_aug](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/01_dr/02_data%20augmentation.JPG)
 
 
 The best configurations of VGG:
@@ -93,11 +93,11 @@ Results of the hyperparameter optimization:
 | Averaging | 89.32% | 0.844 | 0.974 | 0.982 | 0.908 |
 
 Deep visualization:
-![deep_visual](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/03_deep%20visualization.JPG)
+![deep_visual](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/01_dr/03_deep%20visualization.JPG)
 
 
 Confusion matrix of multi-class classification:
-![con_mat](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/04_confusion%20matrix.JPG)
+![con_mat](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/01_dr/04_confusion%20matrix.JPG)
 
 
 
