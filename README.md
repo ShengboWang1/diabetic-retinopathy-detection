@@ -96,7 +96,7 @@ Deep visualization:
 ![deep_visual](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/03_deep%20visualization.JPG)
 
 
-Confusion matrix:
+Confusion matrix of multi-class classification:
 ![con_mat](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/04_confusion%20matrix.JPG)
 
 
