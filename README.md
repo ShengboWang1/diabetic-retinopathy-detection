@@ -124,19 +124,19 @@ Comparison between different initializers:
 
 Visualization of test label and predictions:
 
-![01_acc_true](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/human_activity_recognition/01_acc%20signals%20with%20true%20labels%20visualization.png)
-![02_acc_pred](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/human_activity_recognition/02_acc%20signals%20with%20predictions%20visualization.png)
-![03_gyro_true](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/human_activity_recognition/03_gyro%20signals%20with%20true%20labels%20visualization.png)
-![04_gyro_pred](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/human_activity_recognition/04_gyro%20signals%20with%20predictions%20visualization.png)
-![05_colormap](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/human_activity_recognition/05_colormap.png)
+![01_acc_true](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/02_har/01_acc%20signals%20with%20true%20labels%20visualization.png)
+![02_acc_pred](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/02_har/02_acc%20signals%20with%20predictions%20visualization.png)
+![03_gyro_true](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/02_har/03_gyro%20signals%20with%20true%20labels%20visualization.png)
+![04_gyro_pred](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/02_har/04_gyro%20signals%20with%20predictions%20visualization.png)
+![05_colormap](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/02_har/05_colormap.png)
 
 
 Confusion Matrix:
-![cm_6](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/human_activity_recognition/evaluation/cm_6.png)
+![cm_6](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/02_har/cm_6.png)
 
 
 Normalised confusion matrix:
-![normal_cm_6](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/human_activity_recognition/evaluation/normal_cm_6.png)
+![normal_cm_6](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/02_har/normal_cm_6.png)
 
 
 Results of ensemble learning:
