@@ -52,6 +52,13 @@ Ensemble learning, evaluate and visualization:
 
 # Results
 ## Diabetic retinopathy recognition
+Resample and refine labels:
+![resample_and_refine](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/01_Resampling%20and%20refine%20labels.JPG)
+
+Data augmentation:
+![data_aug](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/02_data%20augmentation.JPG)
+
+
 The best configurations of VGG:
 
 | Base filters | n Blocks | Dense units | Dropout rate | Val accuracy |
@@ -82,6 +89,14 @@ Results of the hyperparameter optimization:
 | DenseNet | 80.58% | 0.797 | 0.821 | 0.879 | 0.836 |
 | Voting | 89.32% | 0.844 | 0.974 | 0.982 | 0.908 |
 | Averaging | 89.32% | 0.844 | 0.974 | 0.982 | 0.908 |
+
+Deep visualization:
+![deep_visual](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/03_deep%20visualization.JPG)
+
+Confusion matrix:
+![con_mat](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/04_confusion%20matrix.JPG)
+
+
 
 ## Human activity recognition
 
