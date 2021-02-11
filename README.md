@@ -52,7 +52,7 @@ Ensemble learning, evaluate and visualization:
 
 # Results
 ## Diabetic retinopathy recognition
-Best configurations of VGG
+The best configurations of VGG:
 
 | Base filters | n Blocks | Dense units | Dropout rate | Val accuracy |
 | :---: | :---: | :---: | :---: | :---: |
@@ -65,7 +65,7 @@ Best configurations of VGG
 
 Comparison between different initializers:
 
-| Initializer | He_normal | Glorot_normal | Lecun_normal | Orginial |
+| Initializer | He_normal | Glorot_normal | Lecun_normal | Original |
 | :---: |:---: | :---: | :---: | :---: |
 | Test accuracy | 86.41% | 78.64% | 82.52% | 78.64% | 
 
@@ -87,7 +87,7 @@ Results of the hyperparameter optimization:
 
 Hyperparameter optimization:
 
-| Trial | GRU layers | Desne layers | GRU units | Dense units | Window size | Shift size | Dropout rate | Val accuracy |
+| Trial | GRU layers | Dense layers | GRU units | Dense units | Window size | Shift size | Dropout rate | Val accuracy |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 1 | 2 | 3 | 512 | 256 | 250 | 125 | 0.471 | 92.9% |
 | 2 | 2 | 3 | 128 | 64 | 250 | 125 | 0.387 | 90.8% |
