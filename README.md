@@ -55,6 +55,7 @@ Ensemble learning, evaluate and visualization:
 Resample and refine labels:
 ![resample_and_refine](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/01_Resampling%20and%20refine%20labels.JPG)
 
+
 Data augmentation:
 ![data_aug](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/02_data%20augmentation.JPG)
 
@@ -76,6 +77,7 @@ Comparison between different initializers:
 | :---: |:---: | :---: | :---: | :---: |
 | Test accuracy | 86.41% | 78.64% | 82.52% | 78.64% | 
 
+
 Results of the hyperparameter optimization:
 
 |  | Accuracy | Sensitivity/Recall | Specificity | Precision | F1 score |
@@ -93,8 +95,10 @@ Results of the hyperparameter optimization:
 Deep visualization:
 ![deep_visual](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/03_deep%20visualization.JPG)
 
+
 Confusion matrix:
 ![con_mat](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/diabetic_retinopathy/04_confusion%20matrix.JPG)
+
 
 
 
