@@ -55,6 +55,7 @@ Please see details in paper poster and presentation slides.
 ## Diabetic retinopathy recognition
 
 Results of different models for binary classification:
+The best accuracy on test set could be 89.32%
 
 |  | Accuracy | Sensitivity/Recall | Specificity | Precision | F1 score |
 | :---: | :---: | :---: | :---: | :---: | :---: |
