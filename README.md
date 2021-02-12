@@ -51,34 +51,10 @@ Ensemble learning, evaluate and visualization:
 `python3 ensemble.py`
 
 # Results
+Please see details in paper poster and presentation slides.
 ## Diabetic retinopathy recognition
-Resample and refine labels:
-![resample_and_refine](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/01_dr/01_Resampling%20and%20refine%20labels.JPG)
 
-
-Data augmentation:
-![data_aug](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/01_dr/02_data%20augmentation.JPG)
-
-
-The best configurations of VGG:
-
-| Base filters | n Blocks | Dense units | Dropout rate | Val accuracy |
-| :---: | :---: | :---: | :---: | :---: |
-| 16 | 5 | 64 | 0.442636894 | 93.34% |
-| 16 | 4 | 32 | 0.259024206 | 91.13% |
-| 16 | 6 | 128 | 0.162307297 | 88.64% |
-| 8 | 3 | 32 | 0.502084817 | 78.02% |
-| 8 | 2 | 16 | 0.502084817 | 68.13% |
-
-
-Comparison between different initializers:
-
-| Initializer | He_normal | Glorot_normal | Lecun_normal | Original |
-| :---: |:---: | :---: | :---: | :---: |
-| Test accuracy | 86.41% | 78.64% | 82.52% | 78.64% | 
-
-
-Results of the hyperparameter optimization:
+Results of different models for binary classification:
 
 |  | Accuracy | Sensitivity/Recall | Specificity | Precision | F1 score |
 | :---: | :---: | :---: | :---: | :---: | :---: |
