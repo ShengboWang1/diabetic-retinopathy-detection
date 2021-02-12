@@ -55,7 +55,7 @@ Please see details in paper poster and presentation slides.
 ## Diabetic retinopathy recognition
 
 Results of different models for binary classification:
-The best accuracy on test set could be 89.32%
+The best accuracy on test set could be 89.32%(Ensemble model)
 
 |  | Accuracy | Sensitivity/Recall | Specificity | Precision | F1 score |
 | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -73,7 +73,7 @@ Deep visualization:
 ![deep_visual](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/01_dr/03_deep%20visualization.JPG)
 
 
-Confusion matrix of multi-class classification:
+Confusion matrix of multi-class classification(resnet18):
 ![con_mat](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/01_dr/04_confusion%20matrix.JPG)
 
 
