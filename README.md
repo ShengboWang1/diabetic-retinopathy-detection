@@ -103,23 +103,16 @@ Confusion matrix of multi-class classification:
 
 
 ## Human activity recognition
+Results of ensemble model with He_normal Glorot_uniform and Glorot_normal initializers:
+| Architecture | LSTM | GRU |
+| :---: | :---: | :---: |
+| Test Accuracy | 91.73% | 94.48% | 
 
-Hyperparameter optimization:
+Corresponding Hyperparameters for the best GRU-based model:
 
-| Trial | GRU layers | Dense layers | GRU units | Dense units | Window size | Shift size | Dropout rate | Val accuracy |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| 1 | 2 | 3 | 512 | 256 | 250 | 125 | 0.471 | 92.9% |
-| 2 | 2 | 3 | 128 | 64 | 250 | 125 | 0.387 | 90.8% |
-| 3 | 1 | 2 | 32 | 128 | 250 | 75 | 0.566 | 85.1% |
-| 4 | 1 | 1 | 256 | 128 | 100 | 50 | 0.454 | 85.8% |
-| 5 | 1 | 1 | 256 | 128 | 250 | 125 | 0.248 | 88.4% |
-
-
-Comparison between different initializers:
-
-| Initializer | He_normal | Glorot_uniform | Glorot_normal |
-| :---: |:---: | :---: | :---: |
-| Test accuracy | 0.930 | 0.929 | 0.941 | 
+| GRU layers | Dense layers | GRU units | Dense units | Window size | Shift size | Dropout rate | Val accuracy |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 2 | 3 | 512 | 256 | 250 | 125 | 0.471 | 92.9% |
 
 
 Visualization of test label and predictions:
@@ -139,8 +132,3 @@ Normalised confusion matrix:
 ![normal_cm_6](https://github.tik.uni-stuttgart.de/iss/dl-lab-2020-team06/blob/master/results/02_har/normal_cm_6.png)
 
 
-Results of ensemble learning:
-
-| Architecture | LSTM | GRU |
-| :---: | :---: | :---: |
-| Test Accuracy | 91.73% | 94.48% | 
